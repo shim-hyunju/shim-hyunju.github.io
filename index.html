@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>친절한 한국어 검색 사전</title>
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="icon" href="../static/images/favicon.png" type="image/x-icon">
+  <style>
+    /* 스타일 최적화 */
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh; /* 전체 화면 높이 */
+      margin: 0; /* 기본 여백 제거 */
+    }
+    .button {
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #afcdec;
+      color: rgb(0, 0, 0);
+      border: none;
+      border-radius: 5px;
+    }
+    footer {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f2f2f2;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #555;
+    }
+    .entry-box {
+    border: 2px solid #444;
+    padding: 10px;
+    margin: 10px 10px 10px 10px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    }
+
+  </style>
+</head>
+<body class="container">
+  <div id="top-frame">
+    <h1 id="title">
+      <span style="color: RED;">친</span><span style="color: rgb(92, 92, 234);">절</span><span style="color: rgb(15, 129, 36);">한</span>
+      <span style="color: rgb(255, 123, 0);">한</span><span style="color: rgb(101, 101, 253);">국</span><span style="color: rgb(240, 44, 44);">어</span>
+      <span style="color: rgb(244, 186, 40);">검</span><span style="color: rgb(101, 101, 253);">색</span>
+      <span style="color: green;">사</span><span style="color: rgb(128, 50, 183);">전</span>
+    </h1>
+
+        <div class="entry-box">
+            <h3 style="text-align: justify; padding: 10px 10px 0px 10px;">한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요! 검색 결과는 구글 번역기를 통해 여러분이 선택한 언어로 번역되어 제공됩니다.</h3>
+            <h3 style="text-align: justify; padding: 0px 10px 10px 10px;">Find Korean words, compound vocabulary, and sentences easily and conveniently! Search results are translated into the language of your choice through Google Translator.</h3>
+        </div>
+        <div style="text-align: center; padding: 40px 0px 80px 0px;">
+            <button type="button" class="button" onclick ="location.href = 'https://shim.pythonanywhere.com/'">Let's get started!</button>
+        </div>
+        <div style="text-align: center;">
+            <img src="../static/images/drShim.png">
+
+        <div class="entry-box">
+            <h4 style="text-align: center;">= 공지 =</h>
+            <h4 style="text-align: justify; padding: 0px 10px 0px 10px;">이 프로그램은 '한국어기초사전', 'googletrans', 'kiwipiepy', 'pythonanywhere', 'git page' 등 무료 API와 호스팅 서비스를 이용하고 있습니다. 따라서 처리 속도가 느리거나 일일 접속자 및 트레픽 제한 등의 사유로 실행 오류가 발생할 수 있으니 이점 양해 부탁드립니다.</h4>
+            <h4 style="text-align: center;">= Notice =</h4>
+            <h4 style="text-align: justify; padding: 0px 10px 0px 10px;">This program uses free APIs and hosting services such as 'Korean Basic Dictionary', 'googletrans', 'kiwipiepy', 'pythonanywhere', and 'git page'. Therefore, please understand that execution errors may occur due to slow processing or restrictions on daily users and traffic.</h4>
+        </div>       
+    </body>
+
+    <footer>
+        © Dr. Shim-Goon
+    </footer>
+</html>
