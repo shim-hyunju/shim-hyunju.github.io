@@ -2,7 +2,7 @@ name: Send Monthly Report
 
 on:
   schedule:
-    - cron: '0 0 11 * *'  # 매달 15일 00:00 UTC
+    - cron: '0 0 15 * *'  # 매달 15일 00:00 UTC
   workflow_dispatch:       # 수동 실행도 허용
 
 jobs:
