@@ -17,10 +17,6 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def send_monthly_report():
     today = datetime.now()
-    if today.day != 12:
-        print(f"[{today}] 오늘은 12일이 아니므로 리포트 전송을 건너뜁니다.")
-        return
-
     response = supabase.table("kind_dict").select("*").execute()
     rows = response.data
 
