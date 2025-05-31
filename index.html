@@ -1,81 +1,93 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>Shimgoon’s Kor_lang Lab</title>
-  <link rel="stylesheet" href="../static/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <link rel="icon" href="../static/images/favicon.png" type="image/x-icon">
-  <style>
-    /* 스타일 최적화 */
-    body {
-      flex-direction: column;
-      height: 100vh; /* 전체 화면 높이 */
-      margin: 0; /* 기본 여백 제거 */
-    }
-    .button {
-      height: 40px;
-      font-size: 20px;
-      cursor: pointer;
-      background-color: #afcdec;
-      color: rgb(0, 0, 0);
-      border: none;
-      border-radius: 5px;
-    }
-    footer {
-      margin-top: 30px;
-      padding: 15px;
-      background-color: #f2f2f2;
-      text-align: center;
-      font-size: 14px;
-      font-weight: bold;
-      color: #555;
-    }
-    .entry-box {
-    border: 2px solid #444;
-    padding: 10px;
-    margin: 10px 10px 10px 10px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimgoon’s Kor_lang Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://placehold.co/32x32/000000/FFFFFF?text=SL" type="image/x-icon">
+    <style>
+        /* Custom styles for the colorful title and Inter font */
+        body {
+            font-family: 'Inter', sans-serif; /* Apply Inter font to the whole body */
+        }
+        .colorful-title span:nth-child(1) { color: #EF4444; /* red-500 */ } /* 친 */
+        .colorful-title span:nth-child(2) { color: #3B82F6; /* blue-500 */ } /* 절 */
+        .colorful-title span:nth-child(3) { color: #10B981; /* emerald-500 */ } /* 한 */
+        .colorful-title span:nth-child(4) { color: #F97316; /* orange-500 */ } /* 한 */
+        .colorful-title span:nth-child(5) { color: #6366F1; /* indigo-500 */ } /* 국 */
+        .colorful-title span:nth-child(6) { color: #EF4444; /* red-500 */ } /* 어 */
+        .colorful-title span:nth-child(7) { color: #FBBF24; /* amber-400 */ } /* 검 */
+        .colorful-title span:nth-child(8) { color: #6366F1; /* indigo-500 */ } /* 색 */
+        .colorful-title span:nth-child(9) { color: #10B981; /* emerald-500 */ } /* 사 */
+        .colorful-title span:nth-child(10) { color: #8B5CF6; /* violet-500 */ } /* 전 */
+    </style>
 </head>
-<body class="container">
-  <div id="top-frame">
-    <h1 id="title">
-      <span style="color: RED;">친</span><span style="color: rgb(92, 92, 234);">절</span><span style="color: rgb(15, 129, 36);">한</span>
-      <span style="color: rgb(255, 123, 0);">한</span><span style="color: rgb(101, 101, 253);">국</span><span style="color: rgb(240, 44, 44);">어</span>
-      <span style="color: rgb(244, 186, 40);">검</span><span style="color: rgb(101, 101, 253);">색</span>
-      <span style="color: green;">사</span><span style="color: rgb(128, 50, 183);">전</span>
-    </h1>
+<body class="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800">
 
-        <div class="entry-box">
-            <h3 style="text-align: justify; padding: 10px 10px 0px 10px;">한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요! 검색 결과는 구글 번역기를 통해 여러분이 선택한 언어로 번역되어 제공됩니다.</h3>
-            <h3 style="text-align: justify; padding: 0px 10px 10px 10px;">Find Korean words, compound vocabulary, and sentences easily and conveniently! Search results are translated into the language of your choice through Google Translator.</h3>
-            <h3 style="text-align: justify; padding: 0px 10px 10px 10px;">이 검색 사전은 한국어 어휘만을 제공합니다. 따라서 외국어는 입력하지 마십시오.</h3>          
-            <h3 style="text-align: justify; padding: 0px 10px 10px 10px;">This only searches Korean, so you should not enter foreign language words.</h3>          
-            <h3 style="text-align: justify; padding: 0px 10px 10px 10px;">이 사전은 구와 절 이상의 단위로 검색창에 입력할 때 그 기능을 효과적으로 이용할 수 있습니다. 따라서 문장에서 특정한 한 단어나 표현의 의미를 알고 싶을지라도, 문장 전체를 검색하는 것이 알고 싶은 어휘만 검색하는 것보다 문맥상 알맞은 어휘를 찾는 데 도움이 됩니다. 예를 들어, '나는 초조한 나머지 입을 열고 말았다.'에서 '나머지'를 알고 싶을 때 문장을 입력해야 '-ㄴ 나머지'라는 표현이 검색되며, 이는 '나머지'와는 다른 의미를 가지는 표현임을 알 수 있습니다.</h3>          
-            <h3 style="text-align: justify; padding: 0px 10px 10px 10px;">This dictionary can effectively utilize its function when entering more than a phrase or clause into the search box. Therefore, even if you want to know the meaning of a specific word or expression in a sentence, searching the entire sentence helps you find the appropriate word in context rather than searching only the word you want to know. For example, in '나는 초조한 나머지 입을 열고 말았다.', even if you just want to know '나머지', it is better to type the entire sentence to find the expression '-ㄴ 나머지', which has a different meaning from '나머지'.</h3>
+    <div class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+        <div class="text-center mb-10">
+            <h1 id="title" class="text-5xl md:text-6xl font-extrabold mb-4 colorful-title">
+                <span>친</span><span>절</span><span>한</span>
+                <span>한</span><span>국</span><span>어</span>
+                <span>검</span><span>색</span>
+                <span>사</span><span>전</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600">Shimgoon’s Korean Language Lab</p>
         </div>
-        <div style="text-align: center; padding: 40px 0px 80px 0px;">
-            <button type="button" class="button" onclick ="location.href = 'https://shimgoon.pythonanywhere.com/'">Let's get started!</button>
-        </div>
-        <div style="text-align: center;">
-            <img src="../static/images/drShim.png">
-            <h3 style="text-align: center;">▼후원을 원하시면(If you would like to donate)▼</h3>
-            <a href="https://www.buymeacoffee.com/shimgoon"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=shimgoon&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00" /></a>
-        </div>
-        <div class="entry-box">
-            <h4 style="text-align: center;">= 공지 =</h>
-            <h4 style="text-align: justify; padding: 0px 10px 0px 10px;">이 프로그램은 '한국어기초사전', 'googletrans', 'kiwipiepy', 'pythonanywhere', 'git page' 등 무료 API와 호스팅 서비스를 이용하고 있습니다. 따라서 처리 속도가 느리거나 일일 접속자 및 트레픽 제한 등의 사유로 실행 오류가 발생할 수 있으니 이점 양해 부탁드립니다.</h4>
-            <h4 style="text-align: center;">= Notice =</h4>
-            <h4 style="text-align: justify; padding: 0px 10px 0px 10px;">This program uses free APIs and hosting services such as 'Korean Basic Dictionary', 'googletrans', 'kiwipiepy', 'pythonanywhere', and 'git page'. Therefore, please understand that execution errors may occur due to slow processing or restrictions on daily users and traffic.</h4>
-        </div>       
-    </body>
 
-    <footer>
-        © Dr. Shim-Goon
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 max-w-3xl w-full mb-8">
+            <h3 class="text-lg md:text-xl font-semibold text-gray-700 mb-4 leading-relaxed">
+                한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요! 검색 결과는 구글 번역기를 통해 여러분이 선택한 언어로 번역되어 제공됩니다.
+            </h3>
+            <h3 class="text-lg md:text-xl font-semibold text-gray-700 mb-4 leading-relaxed">
+                Find Korean words, compound vocabulary, and sentences easily and conveniently! Search results are translated into the language of your choice through Google Translator.
+            </h3>
+            <h3 class="text-base md:text-lg text-gray-600 mb-4 leading-relaxed">
+                이 검색 사전은 한국어 어휘만을 제공합니다. 따라서 외국어는 입력하지 마십시오.
+            </h3>
+            <h3 class="text-base md:text-lg text-gray-600 mb-4 leading-relaxed">
+                This only searches Korean, so you should not enter foreign language words.
+            </h3>
+            <h3 class="text-base md:text-lg text-gray-600 mb-0 leading-relaxed">
+                이 사전은 구와 절 이상의 단위로 검색창에 입력할 때 그 기능을 효과적으로 이용할 수 있습니다. 따라서 문장에서 특정한 한 단어나 표현의 의미를 알고 싶을지라도, 문장 전체를 검색하는 것이 알고 싶은 어휘만 검색하는 것보다 문맥상 알맞은 어휘를 찾는 데 도움이 됩니다. 예를 들어, '나는 초조한 나머지 입을 열고 말았다.'에서 '나머지'를 알고 싶을 때 문장을 입력해야 '-ㄴ 나머지'라는 표현이 검색되며, 이는 '나머지'와는 다른 의미를 가지는 표현임을 알 수 있습니다.
+            </h3>
+            <h3 class="text-base md:text-lg text-gray-600 leading-relaxed">
+                This dictionary can effectively utilize its function when entering more than a phrase or clause into the search box. Therefore, even if you want to know the meaning of a specific word or expression in a sentence, searching the entire sentence helps you find the appropriate word in context rather than searching only the word you want to know. For example, in '나는 초조한 나머지 입을 열고 말았다.', even if you just want to know '나머지', it is better to type the entire sentence to find the expression '-ㄴ 나머지', which has a different meaning from '나머지'.
+            </h3>
+        </div>
+
+        <div class="text-center mb-12">
+            <button type="button" class="px-8 py-4 bg-blue-600 text-white font-bold text-xl rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                    onclick="location.href = 'https://shimgoon.pythonanywhere.com/'">
+                Let's get started!
+            </button>
+        </div>
+
+        <div class="text-center mb-12">
+            <img src="https://placehold.co/150x150/E0E7FF/3B82F6?text=Dr.Shim" alt="Dr. Shim" class="mx-auto rounded-full shadow-md mb-4 w-32 h-32 object-cover">
+            <h3 class="text-lg font-semibold text-gray-700 mb-3">▼후원을 원하시면(If you would like to donate)▼</h3>
+            <a href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=shimgoon&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me a Coffee" class="mx-auto rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+            </a>
+        </div>
+
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 max-w-3xl w-full mb-8">
+            <h4 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-4">= 공지 =</h4>
+            <h4 class="text-base md:text-lg text-gray-600 mb-4 leading-relaxed">
+                이 프로그램은 '한국어기초사전', 'googletrans', 'kiwipiepy', 'pythonanywhere', 'git page' 등 무료 API와 호스팅 서비스를 이용하고 있습니다. 따라서 처리 속도가 느리거나 일일 접속자 및 트레픽 제한 등의 사유로 실행 오류가 발생할 수 있으니 이점 양해 부탁드립니다.
+            </h4>
+            <h4 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-4">= Notice =</h4>
+            <h4 class="text-base md:text-lg text-gray-600 leading-relaxed">
+                This program uses free APIs and hosting services such as 'Korean Basic Dictionary', 'googletrans', 'kiwipiepy', 'pythonanywhere', and 'git page'. Therefore, please understand that execution errors may occur due to slow processing or restrictions on daily users and traffic.
+            </h4>
+        </div>
+    </div>
+
+    <footer class="w-full bg-gray-800 text-white text-center py-6 mt-auto rounded-t-lg shadow-inner">
+        <p class="text-sm md:text-base font-medium">&copy; Dr. Shim-Goon</p>
     </footer>
+
+</body>
 </html>
