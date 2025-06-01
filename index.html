@@ -278,5 +278,81 @@
         문의: sfc27@naver.com
       </p>
     </footer>
+    <script type="module">
+        // Capacitor 플러그인을 사용하기 위해 import 합니다.
+        // 이 부분은 Capacitor 앱 환경에서만 작동하며, 일반 웹 브라우저에서는 오류가 발생할 수 있지만, 앱에서는 정상 작동합니다.
+        import { PushNotifications } from '@capacitor/push-notifications';
+
+        // 푸시 알림 초기화 함수 정의
+        const initializePushNotifications = async () => {
+            console.log('푸시 알림 초기화 시작...');
+
+            // 1. 푸시 알림 권한 확인 및 요청
+            let permStatus = await PushNotifications.checkPermissions();
+            console.log('현재 푸시 알림 권한 상태:', permStatus.receive);
+
+            if (permStatus.receive === 'prompt') {
+                permStatus = await PushNotifications.requestPermissions();
+                console.log('권한 요청 후 상태:', permStatus.receive);
+            }
+
+            if (permStatus.receive !== 'granted') {
+                console.error('푸시 알림 권한이 거부되었습니다.');
+                alert('푸시 알림을 받으려면 앱 설정에서 알림 권한을 허용해주세요.');
+                return; // 권한이 없으면 더 이상 진행하지 않음
+            }
+
+            // 2. 앱을 푸시 알림에 등록
+            try {
+                await PushNotifications.register();
+                console.log('앱이 푸시 알림에 성공적으로 등록되었습니다.');
+            } catch (error) {
+                console.error('푸시 알림 등록 실패:', error);
+                return; // 등록 실패 시 중단
+            }
+
+
+            // 3. 토큰 수신 리스너: 앱 등록 성공 시 호출되며 FCM 토큰을 받습니다.
+            // 이 토큰을 서버에 저장하여 특정 기기로 알림을 보낼 때 사용합니다.
+            PushNotifications.addListener('registration', (token) => {
+                console.log('FCM 토큰 수신:', token.value);
+                // alert('FCM 토큰: ' + token.value); // 개발/테스트용
+                // TODO: 이 토큰을 백엔드 서버로 전송하는 로직을 여기에 구현하세요.
+                // 예: fetch('https://your-backend.com/register-fcm-token', {
+                //         method: 'POST',
+                //         headers: { 'Content-Type': 'application/json' },
+                //         body: JSON.stringify({ token: token.value, userId: '사용자_ID_있다면' })
+                //     }).then(res => console.log('토큰 서버 전송 성공', res));
+            });
+
+            // 4. 등록 실패 리스너
+            PushNotifications.addListener('registrationError', (error) => {
+                console.error('푸시 알림 등록 중 오류 발생:', error);
+            });
+
+            // 5. 알림 수신 리스너: 앱이 포그라운드/백그라운드에서 실행 중일 때 알림을 받으면 호출됩니다.
+            PushNotifications.addListener('pushNotificationReceived', (notification) => {
+                console.log('푸시 알림 수신됨:', notification);
+                alert('알림 제목: ' + notification.title + '\n내용: ' + notification.body);
+                // notification.data 객체에 서버에서 보낸 추가 데이터가 포함될 수 있습니다.
+                // 예: 특정 페이지로 이동하거나, 앱 내 UI를 업데이트하는 로직을 여기에 구현
+            });
+
+            // 6. 알림 클릭/탭 리스너: 앱이 종료된 상태에서 알림을 클릭했을 때 호출됩니다.
+            PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+                console.log('푸시 알림 클릭됨:', notification);
+                alert('알림 클릭됨! 제목: ' + notification.notification.title + '\n데이터: ' + JSON.stringify(notification.notification.data));
+                // 알림 클릭 시 특정 액션 수행
+                // 예: window.location.href = '/dictionary?word=' + notification.notification.data.searchWord;
+            });
+
+            console.log('푸시 알림 초기화 완료.');
+        };
+
+        // DOMContentLoaded 이벤트는 HTML 문서가 완전히 로드되고 파싱되었을 때 발생합니다.
+        // 이때 푸시 알림 초기화 함수를 호출하는 것이 안전합니다.
+        document.addEventListener('DOMContentLoaded', initializePushNotifications);
+
+    </script>
   </body>
 </html>
