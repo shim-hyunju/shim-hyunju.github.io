@@ -25,7 +25,7 @@ def send_monthly_report():
         return
 
     output = StringIO()
-    csv_writer = csv.DictWriter(output, fieldnames=["id", "word_to_search", "input", "searched_at", "selected_language", "none_in_dict])
+    csv_writer = csv.DictWriter(output, fieldnames=["id", "word_to_search", "input", "searched_at", "selected_language", "none_in_dict"])
     csv_writer.writeheader()
     csv_writer.writerows(rows)
     output.seek(0)
