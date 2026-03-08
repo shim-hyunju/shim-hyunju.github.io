@@ -1,240 +1,1653 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta name="naver-site-verification" content="4d93863cf826d19c508c031e97c3de1844fb1c89" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="title" content="친절한 한국어 검색 사전 Kindly Korean Search Dictionary">
-    <meta name="description" content="A Kindly Korean Search Dictionary for learners and researchers.">
-    <meta name="keywords" content="친절한 한국어, 친절한 한국어 검색 사전, 친절한 한국어 검색, 한국어 검색 사전, 한국어 사전, Kindly Korean Search Dictionary, Kindly Korean Search, Kindly Korean, Kindly Korean Dictionary, Korean Dictionary">
-    <title>친절한 한국어 검색 사전 Kindly Korean Search Dictionary</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <link rel="icon" href="static/images/favicon.png" type="image/x-icon"/>
+<head>
+  <meta name="naver-site-verification" content="4d93863cf826d19c508c031e97c3de1844fb1c89" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="title" content="Dr.Shim's Korean Lab">
+  <meta name="description" content="Dr.Shim's Korean Lab - 한국어 학습 도구 모음">
+  <meta name="keywords" content="친절한 한국어, 친절한 한국어 검색 사전, 한국어 검색 사전, Korean Dictionary, Dr.Shim">
+  <title>Dr.Shim's Korean Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="icon" href="static/images/favicon.png" type="image/x-icon"/>
+  <style>
+    /* ── 기본 리셋 & 폰트 ── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+      min-height: 100vh;
+      color: #1f2937;
+      overflow-x: hidden;
+    }
 
-    <style>
-      /* Apply Inter font to the whole body */
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      /* Custom styles for a more vibrant, multi-color title */
-      .gradient-text {
-        background: linear-gradient(
-          to right,
-          #ef4444,
-          #f97316,
-          #fbbf24,
-          #10b981,
-          #3b82f6,
-          #6366f1,
-          #8b5cf6
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-    </style>
-  </head>
-  <body class="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800">
-    <header class="bg-white shadow-md py-3 sm:py-4 px-4 sm:px-6 md:px-12">
-      <div class="container mx-auto flex justify-between items-center">
-        <a href="#" class="text-lg sm:text-xl md:text-2xl font-bold gradient-text" >Dr.Shim’s Korean Lab</a>
-        <nav class="hidden md:block">
-          <ul class="flex space-x-4 lg:space-x-6">
-            <li>
-              <a href="#features" class="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors duration-200">특징 / Features</a>
-            </li>
-            <li>
-              <a href="#how-to-use" class="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors duration-200">사용법 / How to Use</a>
-            </li>
-            <li>
-              <a href="#contact" class="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors duration-200">문의 / Contact</a>
-            </li>
-          </ul>
-        </nav>
-        <button class="md:hidden text-gray-600 text-xl sm:text-2xl focus:outline-none">
-          <i class="fas fa-bars"></i>
-        </button>
+    /* ── 그라디언트 텍스트 (원본 그대로) ── */
+    .gradient-text {
+      background: linear-gradient(to right,
+        #ef4444, #f97316, #fbbf24, #10b981, #3b82f6, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ══════════════════════════════
+       TOP BAR
+    ══════════════════════════════ */
+    .topbar {
+      position: relative;
+      overflow: hidden;
+      padding: 22px 16px;
+      text-align: center;
+    }
+    .topbar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+        rgba(239,68,68,0.7)   0%,
+        rgba(249,115,22,0.7)  18%,
+        rgba(251,191,36,0.7)  36%,
+        rgba(16,185,129,0.7)  54%,
+        rgba(59,130,246,0.7)  72%,
+        rgba(99,102,241,0.7)  100%);
+      background-size: 200% 100%;
+      animation: topbarFlow 5s linear infinite;
+      z-index: 0;
+    }
+    .topbar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+        transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+      animation: topbarShine 3.5s ease-in-out infinite;
+      z-index: 1;
+    }
+    .topbar-inner {
+      position: relative;
+      z-index: 2;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    .topbar-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      margin: 0 12px 2px;
+      vertical-align: middle;
+      opacity: 0.9;
+      animation: blink 1.6s ease-in-out infinite;
+    }
+    .topbar-dot:last-child { animation-delay: 0.8s; }
+    @keyframes topbarFlow {
+      0%   { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+    @keyframes topbarShine {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50%       { opacity: 0.3; transform: scale(0.5); }
+    }
+
+    /* ══════════════════════════════
+       HEADER / NAV
+    ══════════════════════════════ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 68px;
+    }
+
+    /* 데스크탑 탭 */
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      flex: 1;
+      justify-content: center;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .main-nav::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      background: none;
+      border: 2px solid #e5e7eb;
+      cursor: pointer;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      padding: 10px 20px;
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: all 0.22s ease;
+      letter-spacing: 0.01em;
+    }
+    .nav-btn:hover {
+      color: #3b82f6;
+      background: #eff6ff;
+      border-color: #93c5fd;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(59,130,246,0.15);
+    }
+    .nav-btn.active {
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(135deg, #ef4444, #f97316, #fbbf24, #10b981, #3b82f6, #6366f1) border-box;
+      border: 2.5px solid transparent;
+      color: #3b82f6;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.2);
+    }
+
+    /* 헤더 오른쪽 인증 영역 */
+    .header-auth {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-login {
+      background: none;
+      border: 2px solid #6366f1;
+      color: #6366f1;
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .btn-login:hover { background: #f5f3ff; }
+    .btn-signup {
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      border: none;
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(99,102,241,0.3);
+      transition: all 0.2s ease;
+    }
+    .btn-signup:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(99,102,241,0.4); }
+    /* 로그인 후 표시되는 유저 정보 + 로그아웃 */
+    .user-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-info.visible { display: flex; }
+    .user-greeting {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      white-space: nowrap;
+    }
+    .user-greeting span { color: #6366f1; }
+    .btn-logout {
+      background: none;
+      border: 1.5px solid #d1d5db;
+      color: #9ca3af;
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-logout:hover { border-color: #ef4444; color: #ef4444; background: #fef2f2; }
+
+    /* 햄버거 */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      color: #374151;
+      padding: 8px;
+      flex-shrink: 0;
+    }
+
+    /* 모바일 드롭다운 메뉴 */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0; right: 0;
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      z-index: 199;
+      padding: 12px 16px 20px;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu .nav-btn {
+      width: 100%;
+      text-align: left;
+      border-radius: 12px;
+      font-size: 15px;
+      padding: 12px 18px;
+    }
+
+    /* ══════════════════════════════
+       AUTH MODAL (로그인 / 회원가입)
+    ══════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 460px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+      animation: modalIn 0.28s cubic-bezier(.34,1.3,.64,1);
+      position: relative;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to   { opacity: 1; transform: scale(1)   translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px; right: 20px;
+      background: #f3f4f6;
+      border: none;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      color: #6b7280;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: #e5e7eb; color: #374151; }
+    .modal-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .modal-sub {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 28px;
+    }
+    .modal-switch {
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .modal-switch a {
+      color: #6366f1;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .modal-switch a:hover { text-decoration: underline; }
+
+    /* 폼 공통 */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    .form-group label .req { color: #ef4444; margin-left: 2px; }
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      color: #111827;
+      background: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: #6366f1;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+    .form-input.error { border-color: #ef4444; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* 체크박스 동의 */
+    .agree-box {
+      background: #f8faff;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .agree-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.6;
+    }
+    .agree-label input[type=checkbox] {
+      width: 18px; height: 18px;
+      accent-color: #6366f1;
+      flex-shrink: 0;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    /* 제출 버튼 */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(99,102,241,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.45); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* 알림 메시지 */
+    .form-msg {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: none;
+    }
+    .form-msg.error   { display: block; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .form-msg.success { display: block; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+
+    /* 회원탈퇴 버튼 (헤더) */
+    .btn-withdraw {
+      background: none;
+      border: 1.5px solid #fca5a5;
+      color: #ef4444;
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-withdraw:hover { background: #fef2f2; border-color: #ef4444; }
+
+    /* 탈퇴 확인 모달 — 위험 액션 스타일 */
+    .modal-danger-zone {
+      background: #fef2f2;
+      border: 1.5px solid #fecaca;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .modal-danger-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      line-height: 1;
+      margin-top: 1px;
+    }
+    .modal-danger-text {
+      font-size: 13px;
+      color: #b91c1c;
+      line-height: 1.7;
+    }
+    .modal-danger-text strong { font-weight: 700; }
+    .btn-submit-danger {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(239,68,68,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-submit-danger:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(239,68,68,0.4); }
+    .btn-submit-danger:active { transform: scale(0.98); }
+    .btn-submit-danger:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* 로그인 보호 오버레이 */
+    #auth-gate {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+      z-index: 500;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    #auth-gate.visible { display: flex; }
+    .gate-icon {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, #eff6ff, #e0e7ff);
+      border: 2px solid #c7d2fe;
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.15);
+    }
+    .gate-title {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .gate-desc {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 32px;
+      max-width: 360px;
+      line-height: 1.7;
+    }
+    .gate-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .gate-btn-login {
+      padding: 13px 32px;
+      border: 2px solid #6366f1;
+      background: #fff;
+      color: #6366f1;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: "Inter", sans-serif;
+    }
+    .gate-btn-login:hover { background: #f5f3ff; }
+    .gate-btn-signup {
+      padding: 13px 32px;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(99,102,241,0.35);
+      transition: all 0.2s;
+      font-family: "Inter", sans-serif;
+    }
+    .gate-btn-signup:hover { transform: translateY(-2px); }
+
+    /* ══════════════════════════════
+       페이지 전환
+    ══════════════════════════════ */
+    .page { display: none; animation: pageIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════
+       HERO SECTION
+    ══════════════════════════════ */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 96px 24px 80px;
+      position: relative;
+    }
+    /* 배경 장식 원 */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid #e0e7ff;
+      border-radius: 999px;
+      padding: 6px 16px 6px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6366f1;
+      margin-bottom: 28px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(99,102,241,0.1);
+    }
+    .hero-eyebrow-dot {
+      width: 8px; height: 8px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.4); opacity: 0.7; }
+    }
+    .hero h1 {
+      font-size: clamp(38px, 7vw, 76px);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .hero-sub {
+      font-size: clamp(17px, 2.5vw, 26px);
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 18px;
+      letter-spacing: -0.01em;
+    }
+    .hero-desc {
+      font-size: clamp(14px, 1.8vw, 17px);
+      color: #9ca3af;
+      line-height: 1.85;
+      max-width: 600px;
+    }
+    /* CTA 버튼 */
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 36px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 8px 28px rgba(99,102,241,0.38);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      letter-spacing: 0.01em;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      border-radius: inherit;
+    }
+    .hero-cta:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 14px 36px rgba(99,102,241,0.48);
+    }
+    .hero-cta:active { transform: scale(0.98); }
+    .hero-cta-arrow {
+      font-size: 18px;
+      transition: transform 0.2s ease;
+    }
+    .hero-cta:hover .hero-cta-arrow { transform: translateX(4px); }
+
+    /* ══════════════════════════════
+       섹션 공통
+    ══════════════════════════════ */
+    .section-wrap {
+      padding: 56px 24px;
+      max-width: 1020px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, #eff6ff, #e0e7ff);
+      color: #6366f1;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1px solid #c7d2fe;
+      margin-bottom: 14px;
+    }
+    .section-heading {
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .section-sub {
+      font-size: 15px;
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    /* ══════════════════════════════
+       FEATURES
+    ══════════════════════════════ */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid #f3f4f6;
+      border-radius: 20px;
+      padding: 36px 30px 32px;
+      text-align: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .feature-card:nth-child(1)::after { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
+    .feature-card:nth-child(2)::after { background: linear-gradient(90deg,#22c55e,#4ade80); }
+    .feature-card:nth-child(3)::after { background: linear-gradient(90deg,#8b5cf6,#a78bfa); }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.09);
+      border-color: #e0e7ff;
+    }
+    .feature-card:hover::after { opacity: 1; }
+    .fc-icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+    }
+    .fc-icon-wrap.blue   { background: #eff6ff; color: #3b82f6; }
+    .fc-icon-wrap.green  { background: #f0fdf4; color: #22c55e; }
+    .fc-icon-wrap.purple { background: #f5f3ff; color: #8b5cf6; }
+    .fc-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .fc-title small {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #c4b5fd;
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+    .fc-desc {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.78;
+      margin-top: 10px;
+    }
+
+    /* ══════════════════════════════
+       HOW TO USE
+    ══════════════════════════════ */
+    .how-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .how-item {
+      background: #fff;
+      border: 1px solid #f3f4f6;
+      border-radius: 20px;
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 20px;
+      align-items: center;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+    .how-item:hover {
+      transform: translateX(6px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+      border-color: #dbeafe;
+    }
+    .how-icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .how-icon-wrap.blue  { background: #eff6ff; color: #3b82f6; }
+    .how-icon-wrap.green { background: #f0fdf4; color: #22c55e; }
+    .how-text h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .how-text h3 small {
+      font-size: 12px;
+      font-weight: 500;
+      color: #9ca3af;
+      letter-spacing: 0;
+    }
+    .how-text p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.82;
+    }
+    /* 사용법 아래 CTA 래퍼 */
+    .cta-wrap {
+      text-align: center;
+      margin-top: 44px;
+    }
+
+    /* ══════════════════════════════
+       DONATE
+    ══════════════════════════════ */
+    .donate-wrap {
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+      border: 1px solid #dbeafe;
+      border-radius: 24px;
+      padding: 48px 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .donate-wrap::before {
+      content: '❤';
+      position: absolute;
+      font-size: 160px;
+      opacity: 0.03;
+      top: -20px; right: -20px;
+      pointer-events: none;
+    }
+    .donate-img {
+      width: 96px; height: 96px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(59,130,246,0.18);
+    }
+    .donate-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 20px;
+    }
+
+    /* ══════════════════════════════
+       NOTICE
+    ══════════════════════════════ */
+    .notice-list { display: flex; flex-direction: column; gap: 14px; }
+    .notice-card {
+      background: #fff;
+      border: 1px solid #f3f4f6;
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .notice-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      border-radius: 4px 0 0 4px;
+    }
+    .notice-card.ko::before { background: linear-gradient(180deg,#3b82f6,#60a5fa); }
+    .notice-card.en::before { background: linear-gradient(180deg,#6366f1,#a78bfa); }
+    .notice-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .notice-flag {
+      font-size: 18px;
+      line-height: 1;
+    }
+    .notice-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: 0.04em;
+    }
+    .notice-card p {
+      font-size: 13.5px;
+      color: #6b7280;
+      line-height: 1.85;
+    }
+
+    /* ══════════════════════════════
+       COMING SOON
+    ══════════════════════════════ */
+    .coming-page {
+      min-height: calc(100vh - 68px - 70px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .coming-page::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .coming-icon-wrap {
+      width: 104px; height: 104px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #f0f4ff, #e8e0ff);
+      border: 1.5px solid #ddd6fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 32px rgba(99,102,241,0.12);
+      animation: float 3.5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    .coming-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      color: #6366f1;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+      border: 1.5px solid #e0e7ff;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.1);
+    }
+    .coming-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: linear-gradient(135deg,#6366f1,#a78bfa);
+      border-radius: 50%;
+    }
+    .coming-page h2 {
+      font-size: clamp(28px, 5vw, 50px);
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 16px;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+    }
+    .coming-page > p {
+      font-size: clamp(14px, 1.8vw, 16px);
+      color: #9ca3af;
+      max-width: 400px;
+      line-height: 1.85;
+      margin-bottom: 40px;
+    }
+    .progress-track {
+      width: 220px; height: 5px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 999px;
+      animation: progressAnim 2.4s ease-in-out infinite alternate;
+    }
+    @keyframes progressAnim { from { width: 6%; } to { width: 75%; } }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: #1e293b;
+      color: #fff;
+      text-align: center;
+      padding: 36px 16px;
+      margin-top: 8px;
+    }
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    footer p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 4px;
+    }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    /* ══════════════════════════════
+       반응형
+    ══════════════════════════════ */
+    @media (max-width: 760px) {
+      .main-nav  { display: none; }
+      .hamburger { display: block; }
+      .how-item  { grid-template-columns: 1fr; gap: 14px; }
+      .how-icon-wrap { width: 48px; height: 48px; font-size: 20px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .section-wrap { padding: 40px 16px; }
+      .donate-wrap { padding: 36px 20px; }
+    }
+    @media (min-width: 761px) {
+      .hamburger { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 로그인 보호 게이트 (로그인 전 표시) -->
+  <div id="auth-gate" class="visible">
+    <div class="gate-icon">🔐</div>
+    <h2 class="gate-title gradient-text">Dr.Shim's Korean Lab</h2>
+    <p class="gate-desc">서비스를 이용하려면 로그인이 필요합니다.<br/>Please log in to use the service.</p>
+    <div class="gate-btns">
+      <button class="gate-btn-login" onclick="openModal('login')">로그인 / Login</button>
+      <button class="gate-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
+    </div>
+  </div>
+
+  <!-- 로그인 모달 -->
+  <div class="modal-overlay" id="modal-login">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('login')">✕</button>
+      <div class="modal-title gradient-text">로그인</div>
+      <div class="modal-sub">Welcome back! / 돌아오신 것을 환영합니다</div>
+      <div class="form-group">
+        <label>아이디 (ID)<span class="req">*</span></label>
+        <input class="form-input" id="login-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username"/>
       </div>
-    </header>
+      <div class="form-group">
+        <label>비밀번호 (Password)<span class="req">*</span></label>
+        <input class="form-input" id="login-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password"/>
+      </div>
+      <div class="form-msg" id="login-msg"></div>
+      <button class="btn-submit" id="login-submit" onclick="doLogin()">로그인 / Login</button>
+      <div class="modal-switch">
+        계정이 없으신가요? <a onclick="switchModal('login','signup')">회원가입 하기</a>
+      </div>
+    </div>
+  </div>
 
-    <section class="flex-grow flex items-center justify-center py-10 sm:py-12 md:py-16 px-4 text-center">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-3 sm:mb-4 leading-tight gradient-text" >친절한 한국어 검색 사전</h1>
-        <p class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-700 mb-4 sm:mb-6" >A Kindly Korean Search Dictionary</p>
-        <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 mb-6 sm:mb-8" >한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요!<br/>
+  <!-- 회원가입 모달 -->
+  <div class="modal-overlay" id="modal-signup">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('signup')">✕</button>
+      <div class="modal-title gradient-text">회원가입</div>
+      <div class="modal-sub">Create your account / 계정을 만들어 보세요</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>아이디 (ID)<span class="req">*</span></label>
+          <input class="form-input" id="su-username" type="text" placeholder="영문+숫자, 4자 이상" autocomplete="username"/>
+        </div>
+        <div class="form-group">
+          <label>비밀번호 (Password)<span class="req">*</span></label>
+          <input class="form-input" id="su-password" type="password" placeholder="6자 이상" autocomplete="new-password"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>이름 (Name)<span class="req">*</span></label>
+          <input class="form-input" id="su-name" type="text" placeholder="홍길동"/>
+        </div>
+        <div class="form-group">
+          <label>국적 (Nationality)<span class="req">*</span></label>
+          <input class="form-input" id="su-nationality" type="text" placeholder="한국 / Korea"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>이메일 (Email)<span class="req">*</span></label>
+        <input class="form-input" id="su-email" type="email" placeholder="example@email.com" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label>전화번호 (Phone)</label>
+        <input class="form-input" id="su-phone" type="tel" placeholder="010-0000-0000 (선택사항)"/>
+      </div>
+      <div class="agree-box">
+        <label class="agree-label">
+          <input type="checkbox" id="su-agree"/>
+          <span>회원정보(이름, 국적, 이메일, 전화번호)는 공지사항 전달, 더 나은 서비스 제공 및 광고 목적으로 제3자에게 제공될 수 있음에 동의합니다.<br/>
+          <small style="color:#9ca3af;">I agree that my information may be shared with third parties for notices, service improvement, and advertising purposes.</small></span>
+        </label>
+      </div>
+      <div class="form-msg" id="signup-msg"></div>
+      <button class="btn-submit" id="signup-submit" onclick="doSignup()">회원가입 완료 / Sign Up</button>
+      <div class="modal-switch">
+        이미 계정이 있으신가요? <a onclick="switchModal('signup','login')">로그인 하기</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 회원탈퇴 모달 -->
+  <div class="modal-overlay" id="modal-withdraw">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('withdraw')">✕</button>
+      <div class="modal-title" style="color:#dc2626;">회원탈퇴</div>
+      <div class="modal-sub">Delete Account / 계정 영구 삭제</div>
+      <div class="modal-danger-zone">
+        <div class="modal-danger-icon">⚠️</div>
+        <div class="modal-danger-text">
+          <strong>탈퇴 시 모든 개인정보가 즉시 삭제되며 복구할 수 없습니다.</strong><br/>
+          All personal data will be permanently deleted and cannot be recovered.
+        </div>
+      </div>
+      <div class="form-group">
+        <label>아이디 (ID)<span class="req">*</span></label>
+        <input class="form-input" id="wd-username" type="text" placeholder="가입 시 사용한 아이디"/>
+      </div>
+      <div class="form-group">
+        <label>비밀번호 (Password)<span class="req">*</span></label>
+        <input class="form-input" id="wd-password" type="password" placeholder="비밀번호 확인"/>
+      </div>
+      <div class="form-msg" id="withdraw-msg"></div>
+      <button class="btn-submit-danger" id="withdraw-submit" onclick="doWithdraw()">
+        탈퇴하기 / Delete My Account
+      </button>
+      <div class="modal-switch">
+        <a onclick="closeModal('withdraw')" style="color:#9ca3af;">취소 / Cancel</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="topbar-dot"></span>
+      Dr.Shim's Korean Lab &nbsp;·&nbsp; 한국어 학습 도구 모음
+      <span class="topbar-dot"></span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <nav class="main-nav" id="mainNav">
+        <button class="nav-btn active" onclick="showPage('dict')"  id="nav-dict">친절한 한국어 검색 사전</button>
+        <button class="nav-btn"        onclick="showPage('cs1')"   id="nav-cs1">준비 중 1</button>
+        <button class="nav-btn"        onclick="showPage('cs2')"   id="nav-cs2">준비 중 2</button>
+        <button class="nav-btn"        onclick="showPage('cs3')"   id="nav-cs3">준비 중 3</button>
+        <button class="nav-btn"        onclick="showPage('cs4')"   id="nav-cs4">준비 중 4</button>
+      </nav>
+      <!-- 인증 영역 -->
+      <div class="header-auth">
+        <!-- 비로그인 상태 -->
+        <div id="auth-buttons">
+          <button class="btn-login"  onclick="openModal('login')">로그인</button>
+          <button class="btn-signup" onclick="openModal('signup')">회원가입</button>
+        </div>
+        <!-- 로그인 상태 -->
+        <div class="user-info" id="user-info">
+          <span class="user-greeting" id="user-greeting"></span>
+          <button class="btn-withdraw" onclick="openModal('withdraw')">회원탈퇴</button>
+          <button class="btn-logout" onclick="doLogout()">로그아웃</button>
+        </div>
+      </div>
+      <button class="hamburger" onclick="toggleMobile()" id="hamburger">
+        <i class="fas fa-bars" id="ham-icon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 모바일 메뉴 -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="nav-btn active" onclick="showPage('dict', true)" id="mnav-dict">친절한 한국어 검색 사전</button>
+    <button class="nav-btn"        onclick="showPage('cs1',  true)" id="mnav-cs1">준비 중 1</button>
+    <button class="nav-btn"        onclick="showPage('cs2',  true)" id="mnav-cs2">준비 중 2</button>
+    <button class="nav-btn"        onclick="showPage('cs3',  true)" id="mnav-cs3">준비 중 3</button>
+    <button class="nav-btn"        onclick="showPage('cs4',  true)" id="mnav-cs4">준비 중 4</button>
+  </div>
+
+  <main>
+
+    <!-- ════════════════════════════════
+         PAGE 1: 친절한 한국어 검색 사전
+    ════════════════════════════════ -->
+    <div class="page active" id="page-dict">
+
+      <!-- 히어로 -->
+      <section class="hero">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          Dr.Shim's Korean Lab · Tool 01
+        </div>
+        <h1 class="gradient-text">친절한 한국어 검색 사전</h1>
+        <p class="hero-sub">A Kindly Korean Search Dictionary</p>
+        <p class="hero-desc">
+          한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요!<br/>
           Find Korean words, compound vocabulary, and sentences easily and conveniently!
         </p>
-        <button type="button" class="px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 text-white font-bold text-base sm:text-lg md:text-xl rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300" onclick="location.href = 'https://shimgoon.pythonanywhere.com/'" >지금 시작하기! / Let's Get Started!
-        </button>
-      </div>
-    </section>
+      </section>
 
-    <!-- '주요 특징' 섹션 - 너비 및 디자인 유지 -->
-    <section id="features" class="bg-white p-5 sm:p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 py-10 sm:py-12 md:py-16 px-4 md:px-8 w-11/12 md:w-5/6 lg:w-[70vw] max-w-6xl mx-auto mb-10 sm:mb-12">
-      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 sm:mb-10">주요 특징 / Key Features</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-        <div class="bg-white p-5 sm:p-6 rounded-xl shadow-lg border border-gray-200 text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl text-blue-500 mb-3 sm:mb-4">
-            <i class="fas fa-search"></i>
-          </div>
-          <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-3">다양한 검색 단위
-            <br/>Various search units
-          </h3>
-          <p class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-3">단어, 복합 어휘, 문장 단위의 입력을 통한 한국어 어휘 검색이 가능합니다.
-            <br/>enable to search for Korean vocabulary by entering a word, compound word, or sentence.
-          </p>
+      <!-- 주요 특징 -->
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="section-tag">Key Features · 주요 특징</div>
+          <h2 class="section-heading">이런 기능을 제공합니다</h2>
+          <p class="section-sub">이 사전이 제공하는 핵심 기능들을 확인하세요</p>
         </div>
-        <div class="bg-white p-5 sm:p-6 rounded-xl shadow-lg border border-gray-200 text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl text-green-500 mb-3 sm:mb-4">
-            <i class="fas fa-language"></i>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="fc-icon-wrap blue"><i class="fas fa-search"></i></div>
+            <div class="fc-title">다양한 검색 단위<small>Various Search Units</small></div>
+            <p class="fc-desc">단어, 복합 어휘, 문장 단위의 입력을 통한 한국어 어휘 검색이 가능합니다.<br/>Search Korean vocabulary by entering a word, compound word, or sentence.</p>
           </div>
-          <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-3">다국어 번역<br/>Multilingual Translation</h3>
-          <p class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-3"> 구글 번역기를 통해 검색 결과를 원하는 언어로 즉시 번역합니다.
-            <br/>Instantly translates search results into your desired language via Google Translator.
-          </p>
-        </div>
-        <div class="bg-white p-5 sm:p-6 rounded-xl shadow-lg border border-gray-200 text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl text-purple-500 mb-3 sm:mb-4"> <i class="fas fa-lightbulb"></i></div>
-          <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-3">문맥 이해<br/>Contextual Understanding
-          </h3>
-          <p class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-2 sm:mb-3">문장 전체를 검색하여 문맥에 맞는 정확한 의미를 파악할 수 있도록 돕습니다.
-            <br/>Helps you grasp the precise meaning in context by searching entire sentences.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- '사전 사용법' 섹션 - 너비 및 디자인 유지 -->
-    <section id="how-to-use" class="bg-white py-10 sm:py-12 md:py-16 px-4 md:px-8 rounded-xl shadow-lg border border-gray-200 w-11/12 md:w-5/6 lg:w-[70vw] max-w-6xl mx-auto mb-10 sm:mb-12">
-      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 sm:mb-10">사전 사용법 / How to Use the Kindly Korean Search Dictionary</h2>
-      <div class="space-y-6 sm:space-y-8">
-        <div class="flex flex-col md:flex-row items-center md:space-x-6 lg:space-x-8">
-          <div class="text-4xl sm:text-5xl md:text-6xl text-blue-600 mb-3 sm:mb-4 md:mb-0 md:w-1/6 text-center"> <i class="fas fa-keyboard"></i>
+          <div class="feature-card">
+            <div class="fc-icon-wrap green"><i class="fas fa-language"></i></div>
+            <div class="fc-title">다국어 번역<small>Multilingual Translation</small></div>
+            <p class="fc-desc">구글 번역기를 통해 검색 결과를 원하는 언어로 즉시 번역합니다.<br/>Instantly translates search results into your desired language via Google Translator.</p>
           </div>
-          <div class="md:w-5/6">
-            <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700 mb-2">1. 한국어만 입력하세요
-              <br/>1. Enter Korean Only
-            </h3>
-            <p class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700 mb-2">이 사전은 한국어 어휘만을 제공합니다. 따라서 외국어는 입력하지 마십시오.
-              <br/>This Kindly Korean Search Dictionary only provides Korean vocabulary. Therefore, please do not enter foreign language words.
-            </p>
-          </div>
-        </div>
-        <div class="flex flex-col md:flex-row items-center md:space-x-6 lg:space-x-8">
-          <div class="text-4xl sm:text-5xl md:text-6xl text-green-600 mb-3 sm:mb-4 md:mb-0 md:w-1/6 text-center"><i class="fas fa-book-open"></i>
-          </div>
-          <div class="md:w-5/6">
-            <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700 mb-2">2. 문장 단위로 검색하세요
-              <br/>2. Search by Sentence Units
-            </h3>
-            <p class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700 mb-2">이 사전은 구와 절 이상의 단위로 검색창에 입력할 때 그 기능을 효과적으로 이용할 수 있습니다. 따라서 문장에서 특정한 한 단어나 표현의 의미를 알고 싶을지라도, 문장 전체를 검색하는 것이 알고 싶은 어휘만 검색하는 것보다 문맥상 알맞은 어휘를 찾는 데 도움이 됩니다.
-              <br/>This Kindly Korean Search Dictionary can be effectively utilized when entering phrases or clauses into the search bar. Therefore, even if you want to know the meaning of a specific word or expression in a sentence, searching the entire sentence helps you find the appropriate vocabulary in context better than searching only the word you want to know.
-            </p>
+          <div class="feature-card">
+            <div class="fc-icon-wrap purple"><i class="fas fa-lightbulb"></i></div>
+            <div class="fc-title">문맥 이해<small>Contextual Understanding</small></div>
+            <p class="fc-desc">문장 전체를 검색하여 문맥에 맞는 정확한 의미를 파악할 수 있도록 돕습니다.<br/>Helps you grasp the precise meaning in context by searching entire sentences.</p>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- '후원' 섹션 - 디자인 조정 -->
-    <section class="bg-blue-50 p-5 sm:p-6 md:p-8 rounded-xl shadow-lg border border-blue-100 w-11/12 md:w-5/6 lg:w-[70vw] max-w-6xl mx-auto mb-10 sm:mb-12 text-center">
-      <img src="static/images/drShim.png" alt="심군 박사 이미지" class="mx-auto shadow-md mb-4 sm:mb-6 w-28 h-28 sm:w-32 md:w-40 md:h-40 object-cover rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/160x160/E0E0E0/B0B0B0?text=Image+Not+Found';" />
-      <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700 mb-3 sm:mb-4"> ▼후원을 원하시면(If you would like to donate)▼
-      </h3>
-      <a href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=Dr.shim&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00"
-          alt="Buy Me a Coffee" class="mx-auto rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-48 sm:w-auto"/>
-      </a>
-    </section>
+      <!-- 사용법 -->
+      <div class="section-wrap" id="how-to-use">
+        <div class="section-header">
+          <div class="section-tag">How to Use · 사전 사용법</div>
+          <h2 class="section-heading">이렇게 사용하세요</h2>
+          <p class="section-sub">효과적으로 사용하는 방법을 안내합니다</p>
+        </div>
+        <div class="how-list">
+          <div class="how-item">
+            <div class="how-icon-wrap blue"><i class="fas fa-keyboard"></i></div>
+            <div class="how-text">
+              <h3>1. 한국어만 입력하세요 <small>Enter Korean Only</small></h3>
+              <p>이 사전은 한국어 어휘만을 제공합니다. 따라서 외국어는 입력하지 마십시오.<br/>This dictionary only provides Korean vocabulary. Therefore, please do not enter foreign language words.</p>
+            </div>
+          </div>
+          <div class="how-item">
+            <div class="how-icon-wrap green"><i class="fas fa-book-open"></i></div>
+            <div class="how-text">
+              <h3>2. 문장 단위로 검색하세요 <small>Search by Sentence Units</small></h3>
+              <p>이 사전은 구와 절 이상의 단위로 입력할 때 그 기능을 효과적으로 이용할 수 있습니다. 특정 단어의 의미를 알고 싶을지라도, 문장 전체를 검색하는 것이 문맥상 알맞은 어휘를 찾는 데 더 도움이 됩니다.<br/>Even if you want to know the meaning of a specific word, searching the entire sentence helps you find the most contextually appropriate vocabulary.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 시작하기 버튼 -->
+        <div class="cta-wrap">
+          <a href="https://shimgoon.pythonanywhere.com/" class="hero-cta" target="_blank" rel="noopener noreferrer">
+            지금 시작하기! / Let's Get Started!
+            <span class="hero-cta-arrow">→</span>
+          </a>
+        </div>
+      </div>
 
-    <!-- '공지' 섹션 - 글자 크기 조정 -->
-    <section class="bg-white p-5 sm:p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 w-11/12 md:w-5/6 lg:w-[70vw] max-w-6xl mx-auto mb-10 sm:mb-12">
-      <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4">= 공지 =</h4>
-      <p class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-3 sm:mb-4 leading-relaxed">이 프로그램은 구글 크롬 브라우저에서 정상적으로 작동합니다. 그외 브라우저에서는 '발음 듣기' 등 일부 기능이 작동하지 않을 수 있습니다.
-        <br/>이 프로그램은 '한국어기초사전', 'googletrans', 'kiwipiepy', 'pythonanywhere', 'git page' 등 무료 API와 호스팅 서비스를 이용하고 있습니다. 따라서 처리 속도가 느리거나 일일 접속자 및 트레픽 제한 등의 사유로 실행 오류가 발생할 수 있으니 이점 양해 부탁드립니다.
-      </p>
-      <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4">= Notice =</h4>
-      <p class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">This Kindly Korean Search Dictionary works normally in Google Chrome browser. Some functions, such as 'Listen to pronunciation', may not work in other browsers.
-        <br/>This Kindly Korean Search Dictionary uses free APIs and hosting services such as 'Korean Basic Dictionary', 'googletrans', 'kiwipiepy', 'pythonanywhere', and 'git page'. Therefore, please understand that execution errors may occur due to slow processing or restrictions on daily users and traffic.
-      </p>
-    </section>
+      <!-- 후원 + 공지 -->
+      <div class="section-wrap">
+        <div class="donate-wrap">
+          <img src="static/images/drShim.png" alt="심군 박사 이미지" class="donate-img"
+            onerror="this.onerror=null; this.src='https://placehold.co/96x96/dbeafe/3b82f6?text=Dr.Shim';" />
+          <p class="donate-title">▼ 후원을 원하시면 / If you would like to donate ▼</p>
+          <a href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=Dr.shim&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00"
+              alt="Buy Me a Coffee" style="border-radius:10px; max-width:220px;"/>
+          </a>
+        </div>
 
-    <!-- 푸터(Footer) - 글자 크기 조정 -->
-    <footer id="contact" class="w-full bg-gray-800 text-white text-center py-6 sm:py-8 mt-auto rounded-t-lg shadow-inner">
-      <p class="text-sm sm:text-base md:text-lg font-medium mb-1 sm:mb-2">&copy; Dr.Shim All rights reserved.</p>
-      <p class="text-sm sm:text-base md:text-lg font-medium">Contact: sfc27@naver.com</p>
-    </footer>
-    <script type="module">
-        // Capacitor 플러그인을 사용하기 위해 import 합니다.
-        // 아래 코드는 @capacitor/push-notifications 플러그인이 설치되어 있다고 가정합니다.
-        // 만약 해당 플러그인을 사용하지 않는다면 이 import 구문과 관련 로직을 제거하거나 주석 처리해야 합니다.
-        
-        // Capacitor 객체가 있는지 확인 (웹 환경이 아닌 Capacitor 환경인지 간접적으로 확인)
-        // 웹 브라우저에서 실행 시 오류를 방지하고, Capacitor 앱에서만 초기화되도록 합니다.
-        if (typeof Capacitor !== 'undefined' && Capacitor.isPluginAvailable && Capacitor.isPluginAvailable('PushNotifications')) {
-            // PushNotifications를 동적으로 가져오기 시도
-            const { PushNotifications } = Capacitor.Plugins;
+        <div class="notice-list">
+          <div class="notice-card ko">
+            <div class="notice-card-head">
+              <span class="notice-flag">🇰🇷</span>
+              <h4>= 공지 =</h4>
+            </div>
+            <p>이 프로그램은 구글 크롬 브라우저에서 정상적으로 작동합니다. 그 외 브라우저에서는 '발음 듣기' 등 일부 기능이 작동하지 않을 수 있습니다.<br/>이 프로그램은 '한국어기초사전', 'googletrans', 'kiwipiepy', 'pythonanywhere', 'git page' 등 무료 API와 호스팅 서비스를 이용하고 있습니다. 따라서 처리 속도가 느리거나 일일 접속자 및 트래픽 제한 등의 사유로 실행 오류가 발생할 수 있으니 이 점 양해 부탁드립니다.</p>
+          </div>
+          <div class="notice-card en">
+            <div class="notice-card-head">
+              <span class="notice-flag">🌐</span>
+              <h4>= Notice =</h4>
+            </div>
+            <p>This program works normally in Google Chrome browser. Some functions, such as 'Listen to pronunciation', may not work in other browsers.<br/>This program uses free APIs and hosting services such as 'Korean Basic Dictionary', 'googletrans', 'kiwipiepy', 'pythonanywhere', and 'git page'. Therefore, please understand that execution errors may occur due to slow processing speed or restrictions on daily users and traffic.</p>
+          </div>
+        </div>
+      </div>
 
-            if (PushNotifications) {
-                console.log('푸시 알림 초기화 시작...');
+    </div><!-- /page-dict -->
 
-                // 1. 푸시 알림 권한 확인 및 요청
-                PushNotifications.checkPermissions().then(permStatus => {
-                    console.log('현재 푸시 알림 권한 상태:', permStatus.receive);
 
-                    if (permStatus.receive === 'prompt') {
-                        return PushNotifications.requestPermissions();
-                    }
-                    return permStatus;
-                }).then(permStatus => {
-                    if (permStatus.receive !== 'granted') {
-                        console.error('푸시 알림 권한이 거부되었습니다. 앱 설정에서 알림 권한을 허용해주세요.');
-                        return; // 권한이 없으면 더 이상 진행하지 않음
-                    }
+    <!-- ════════════════════════════
+         PAGES: 준비 중 1 ~ 4
+    ════════════════════════════ -->
+    <div class="page" id="page-cs1">
+      <div class="coming-page">
+        <div class="coming-icon-wrap">🔬</div>
+        <div class="coming-badge">준비 중 / Coming Soon</div>
+        <h2>새로운 도구<br/>준비 중입니다</h2>
+        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+    </div>
 
-                    // 2. 앱을 푸시 알림에 등록
-                    return PushNotifications.register();
-                }).then(() => {
-                    console.log('앱이 푸시 알림에 성공적으로 등록되었습니다.');
+    <div class="page" id="page-cs2">
+      <div class="coming-page">
+        <div class="coming-icon-wrap">✏️</div>
+        <div class="coming-badge">준비 중 / Coming Soon</div>
+        <h2>새로운 도구<br/>준비 중입니다</h2>
+        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+    </div>
 
-                    // 3. 토큰 수신 리스너: 앱 등록 성공 시 호출되며 FCM 토큰을 받습니다.
-                    // 이 토큰을 서버에 저장하여 특정 기기로 알림을 보낼 때 사용합니다.
-                    PushNotifications.addListener('registration', (token) => {
-                        console.log('FCM 토큰 수신:', token.value);
-                        // TODO: 이 토큰을 백엔드 서버로 전송하는 로직을 여기에 구현하세요.
-                    });
+    <div class="page" id="page-cs3">
+      <div class="coming-page">
+        <div class="coming-icon-wrap">📖</div>
+        <div class="coming-badge">준비 중 / Coming Soon</div>
+        <h2>새로운 도구<br/>준비 중입니다</h2>
+        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+    </div>
 
-                    // 4. 등록 실패 리스너
-                    PushNotifications.addListener('registrationError', (error) => {
-                        console.error('푸시 알림 등록 중 오류 발생:', error);
-                    });
+    <div class="page" id="page-cs4">
+      <div class="coming-page">
+        <div class="coming-icon-wrap">🎓</div>
+        <div class="coming-badge">준비 중 / Coming Soon</div>
+        <h2>새로운 도구<br/>준비 중입니다</h2>
+        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+    </div>
 
-                    // 5. 알림 수신 리스너: 앱이 포그라운드/백그라운드에서 실행 중일 때 알림을 받으면 호출됩니다.
-                    PushNotifications.addListener('pushNotificationReceived', (notification) => {
-                        console.log('푸시 알림 수신됨:', notification);
-                        console.log('알림 제목: ' + notification.title + '\n내용: ' + notification.body);
-                        // notification.data 객체에 서버에서 보낸 추가 데이터가 포함될 수 있습니다.
-                        // 예: 특정 페이지로 이동하거나, 앱 내 UI를 업데이트하는 로직을 여기에 구현
-                    });
+  </main>
 
-                    // 6. 알림 클릭/탭 리스너: 앱이 종료된 상태에서 알림을 클릭했을 때 호출됩니다.
-                    PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-                        console.log('푸시 알림 클릭됨:', action);
-                        console.log('알림 클릭됨! 제목: ' + action.notification.title + '\n데이터: ' + JSON.stringify(action.notification.data));
-                        // 알림 클릭 시 특정 액션 수행
-                        // 예: window.location.href = '/dictionary?word=' + action.notification.data.searchWord;
-                    });
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-logo gradient-text">Dr.Shim's Korean Lab</div>
+    <p>&copy; Dr.Shim All rights reserved.</p>
+    <p>Contact: <a href="/cdn-cgi/l/email-protection#a4d7c2c79693e4cac5d2c1d68ac7cbc9"><span class="__cf_email__" data-cfemail="2b584d48191c6b454a5d4e5905484446">[email&#160;protected]</span></a></p>
+  </footer>
 
-                    console.log('푸시 알림 초기화 완료.');
-                }).catch(error => {
-                    console.error('푸시 알림 초기화 과정 중 오류 발생:', error);
-                });
-            } else {
-                console.log('PushNotifications 플러그인을 찾을 수 없습니다.');
-            }
+  <script>
+    // ═══════════════════════════════════════════════
+    //  설정: 본인의 PythonAnywhere 앱 URL로 교체하세요
+    // ═══════════════════════════════════════════════
+    const API_BASE = 'https://drshim.pythonanywhere.com/api';
+
+    // ── 페이지 전환 ─────────────────────────────────
+    const pages = ['dict','cs1','cs2','cs3','cs4'];
+
+    function showPage(id, closeMobile) {
+      pages.forEach(p => {
+        const pg  = document.getElementById('page-'  + p);
+        const nb  = document.getElementById('nav-'   + p);
+        const mnb = document.getElementById('mnav-'  + p);
+        if (pg)  pg.classList.remove('active');
+        if (nb)  nb.classList.remove('active');
+        if (mnb) mnb.classList.remove('active');
+      });
+      const pg  = document.getElementById('page-'  + id);
+      const nb  = document.getElementById('nav-'   + id);
+      const mnb = document.getElementById('mnav-'  + id);
+      if (pg)  pg.classList.add('active');
+      if (nb)  nb.classList.add('active');
+      if (mnb) mnb.classList.add('active');
+
+      if (closeMobile) {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('ham-icon').className = 'fas fa-bars';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobile() {
+      const menu = document.getElementById('mobileMenu');
+      const icon = document.getElementById('ham-icon');
+      const open = menu.classList.toggle('open');
+      icon.className = open ? 'fas fa-times' : 'fas fa-bars';
+    }
+
+    // ── 모달 열기/닫기 ──────────────────────────────
+    function openModal(type) {
+      document.getElementById('modal-' + type).classList.add('open');
+      clearMsg(type === 'login' ? 'login' : 'signup');
+    }
+    function closeModal(type) {
+      document.getElementById('modal-' + type).classList.remove('open');
+    }
+    function switchModal(from, to) {
+      closeModal(from);
+      setTimeout(() => openModal(to), 150);
+    }
+    // 오버레이 클릭 시 닫기
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === el) el.classList.remove('open');
+      });
+    });
+    // Enter 키 지원
+    document.getElementById('login-password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // ── 메시지 표시 헬퍼 ────────────────────────────
+    function showMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = 'form-msg ' + type;
+    }
+    function clearMsg(scope) {
+      document.getElementById(scope + '-msg').className = 'form-msg';
+    }
+
+    // ── 로그인 상태 UI 반영 ──────────────────────────
+    function setLoggedIn(name) {
+      document.getElementById('auth-gate').classList.remove('visible');
+      document.getElementById('auth-buttons').style.display = 'none';
+      const ui = document.getElementById('user-info');
+      ui.classList.add('visible');
+      document.getElementById('user-greeting').innerHTML =
+        `<span>${name}</span>님, 환영합니다!`;
+    }
+    function setLoggedOut() {
+      document.getElementById('auth-gate').classList.add('visible');
+      document.getElementById('auth-buttons').style.display = 'flex';
+      document.getElementById('user-info').classList.remove('visible');
+    }
+
+    // ── 토큰 저장/조회/삭제 ─────────────────────────
+    const TOKEN_KEY = 'drshim_token';
+    function saveToken(token) { sessionStorage.setItem(TOKEN_KEY, token); }
+    function getToken()       { return sessionStorage.getItem(TOKEN_KEY); }
+    function removeToken()    { sessionStorage.removeItem(TOKEN_KEY); }
+
+    // ── 페이지 로드 시 토큰 검증 ────────────────────
+    async function checkAuth() {
+      const token = getToken();
+      if (!token) { setLoggedOut(); return; }
+      try {
+        const res = await fetch(`${API_BASE}/verify`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setLoggedIn(data.name);
         } else {
-            console.log('Capacitor 네이티브 플랫폼이 아니므로 푸시 알림을 초기화하지 않습니다.');
+          removeToken(); setLoggedOut();
         }
-    </script>
-  </body>
+      } catch {
+        // 네트워크 오류 시 토큰 유지하되 게이트 해제
+        removeToken(); setLoggedOut();
+      }
+    }
+
+    // ── 로그인 ──────────────────────────────────────
+    async function doLogin() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      if (!username || !password) {
+        showMsg('login-msg', '아이디와 비밀번호를 입력해주세요.', 'error'); return;
+      }
+      const btn = document.getElementById('login-submit');
+      btn.disabled = true; btn.textContent = '로그인 중...';
+      try {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          saveToken(data.token);
+          closeModal('login');
+          setLoggedIn(data.name);
+          document.getElementById('login-username').value = '';
+          document.getElementById('login-password').value = '';
+        } else {
+          showMsg('login-msg', data.error || '로그인에 실패했습니다.', 'error');
+        }
+      } catch {
+        showMsg('login-msg', '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = '로그인 / Login';
+      }
+    }
+
+    // ── 회원가입 ─────────────────────────────────────
+    async function doSignup() {
+      const username    = document.getElementById('su-username').value.trim();
+      const password    = document.getElementById('su-password').value;
+      const name        = document.getElementById('su-name').value.trim();
+      const nationality = document.getElementById('su-nationality').value.trim();
+      const email       = document.getElementById('su-email').value.trim();
+      const phone       = document.getElementById('su-phone').value.trim();
+      const agree       = document.getElementById('su-agree').checked;
+
+      if (!username || !password || !name || !nationality || !email) {
+        showMsg('signup-msg', '필수 항목(*)을 모두 입력해주세요.', 'error'); return;
+      }
+      if (username.length < 4) {
+        showMsg('signup-msg', '아이디는 4자 이상이어야 합니다.', 'error'); return;
+      }
+      if (password.length < 6) {
+        showMsg('signup-msg', '비밀번호는 6자 이상이어야 합니다.', 'error'); return;
+      }
+      if (!agree) {
+        showMsg('signup-msg', '개인정보 제공 동의가 필요합니다.', 'error'); return;
+      }
+
+      const btn = document.getElementById('signup-submit');
+      btn.disabled = true; btn.textContent = '처리 중...';
+      try {
+        const res = await fetch(`${API_BASE}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, name, nationality, email, phone, agree_terms: agree })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showMsg('signup-msg', '회원가입이 완료되었습니다! 로그인해주세요.', 'success');
+          setTimeout(() => switchModal('signup', 'login'), 1800);
+        } else {
+          showMsg('signup-msg', data.error || '회원가입에 실패했습니다.', 'error');
+        }
+      } catch {
+        showMsg('signup-msg', '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = '회원가입 완료 / Sign Up';
+      }
+    }
+
+    // ── 로그아웃 ─────────────────────────────────────
+    function doLogout() {
+      removeToken();
+      setLoggedOut();
+    }
+
+    // ── 회원탈퇴 ─────────────────────────────────────
+    async function doWithdraw() {
+      const username = document.getElementById('wd-username').value.trim();
+      const password = document.getElementById('wd-password').value;
+
+      if (!username || !password) {
+        showMsg('withdraw-msg', '아이디와 비밀번호를 입력해주세요.', 'error'); return;
+      }
+
+      const btn = document.getElementById('withdraw-submit');
+      btn.disabled = true; btn.textContent = '처리 중...';
+
+      try {
+        // 1) 먼저 비밀번호 확인을 위해 로그인 시도
+        const loginRes = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const loginData = await loginRes.json();
+
+        if (!loginRes.ok) {
+          showMsg('withdraw-msg', '아이디 또는 비밀번호가 올바르지 않습니다.', 'error');
+          btn.disabled = false; btn.textContent = '탈퇴하기 / Delete My Account';
+          return;
+        }
+
+        // 2) 검증된 토큰으로 계정 삭제
+        const delRes = await fetch(`${API_BASE}/delete-account`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + loginData.token }
+        });
+        const delData = await delRes.json();
+
+        if (delRes.ok) {
+          showMsg('withdraw-msg', '탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.', 'success');
+          removeToken();
+          setTimeout(() => {
+            closeModal('withdraw');
+            setLoggedOut();
+            // 입력 필드 초기화
+            document.getElementById('wd-username').value = '';
+            document.getElementById('wd-password').value = '';
+          }, 2000);
+        } else {
+          showMsg('withdraw-msg', delData.error || '탈퇴 처리 중 오류가 발생했습니다.', 'error');
+        }
+      } catch {
+        showMsg('withdraw-msg', '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = '탈퇴하기 / Delete My Account';
+      }
+    }
+
+    // ── Capacitor 푸시 알림 초기화 ──────────────────
+    if (typeof Capacitor !== 'undefined'
+        && Capacitor.isPluginAvailable
+        && Capacitor.isPluginAvailable('PushNotifications')) {
+      const { PushNotifications } = Capacitor.Plugins;
+      if (PushNotifications) {
+        PushNotifications.checkPermissions().then(s => {
+          if (s.receive === 'prompt') return PushNotifications.requestPermissions();
+          return s;
+        }).then(s => {
+          if (s.receive !== 'granted') return;
+          return PushNotifications.register();
+        }).then(() => {
+          PushNotifications.addListener('registration',
+            t => console.log('FCM token:', t.value));
+          PushNotifications.addListener('registrationError',
+            e => console.error(e));
+          PushNotifications.addListener('pushNotificationReceived',
+            n => console.log(n));
+          PushNotifications.addListener('pushNotificationActionPerformed',
+            a => console.log(a));
+        }).catch(e => console.error(e));
+      }
+    }
+
+    // ── 초기 실행 ────────────────────────────────────
+    checkAuth();
+  </script>
+</body>
 </html>
