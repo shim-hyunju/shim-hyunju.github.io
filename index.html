@@ -1188,8 +1188,8 @@
         <!-- 로그인 상태 -->
         <div class="user-info" id="user-info">
           <span class="user-greeting" id="user-greeting"></span>
-          <button class="btn-logout" onclick="doLogout()">로그아웃</button>
           <button class="btn-withdraw" onclick="openModal('withdraw')">회원탈퇴</button>
+          <button class="btn-logout" onclick="doLogout()">로그아웃</button>
         </div>
       </div>
       <button class="hamburger" onclick="toggleMobile()" id="hamburger">
@@ -1279,10 +1279,10 @@
         </div>
         <!-- 시작하기 버튼 -->
         <div class="cta-wrap">
-          <a href="https://shimgoon.pythonanywhere.com/" class="hero-cta" target="_blank" rel="noopener noreferrer">
+          <button onclick="goToDict()" class="hero-cta">
             지금 시작하기! / Let's Get Started!
             <span class="hero-cta-arrow">→</span>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -1561,6 +1561,19 @@
       }
     }
 
+    // ── 사전으로 이동 (토큰 포함) ────────────────────────────
+    function goToDict() {
+      const token = getToken();
+      if (!token) {
+        openModal('login');
+        return;
+      }
+      window.open(
+        'https://shimgoon.pythonanywhere.com/?token=' + encodeURIComponent(token),
+        '_blank'
+      );
+    }
+
     // ── 로그아웃 ─────────────────────────────────────
     function doLogout() {
       removeToken();
@@ -1651,5 +1664,3 @@
   </script>
 </body>
 </html>
-
-
