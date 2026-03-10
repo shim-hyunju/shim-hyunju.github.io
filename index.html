@@ -11,6 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <link rel="icon" href="static/images/favicon.png" type="image/x-icon"/>
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ── 기본 리셋 & 폰트 ── */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1042,6 +1044,98 @@
     @media (min-width: 761px) {
       .hamburger { display: none; }
     }
+    /* ══════════════════════════════
+       비회원 체험 배너
+    ══════════════════════════════ */
+    #guest-banner {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #fff;
+      z-index: 400;
+      padding: 14px 20px;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
+    }
+    #guest-banner.visible { display: flex; }
+    .guest-banner-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+    }
+    .guest-banner-text strong { color: #fbbf24; }
+    .guest-banner-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .guest-btn-login {
+      padding: 9px 22px;
+      border: 2px solid #6366f1;
+      background: #6366f1;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .guest-btn-login:hover { background: #4f46e5; border-color: #4f46e5; }
+    .guest-btn-signup {
+      padding: 9px 22px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: transparent;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .guest-btn-signup:hover { background: rgba(255,255,255,0.1); }
+
+    /* ══════════════════════════════
+       Google 로그인 버튼
+    ══════════════════════════════ */
+    .btn-google {
+      width: 100%;
+      padding: 13px;
+      background: #fff;
+      color: #374151;
+      font-family: "Inter", sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+    .btn-google:hover { background: #f9fafb; border-color: #d1d5db; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .divider-or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+    .divider-or::before,
+    .divider-or::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
   </style>
 </head>
 <body>
@@ -1054,6 +1148,24 @@
     <div class="gate-btns">
       <button class="gate-btn-login" onclick="openModal('login')">로그인 / Login</button>
       <button class="gate-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
+    </div>
+    <p style="margin-top:20px; font-size:13px; color:#9ca3af;">
+      또는 &nbsp;
+      <a onclick="startGuestMode()" style="color:#6366f1; font-weight:700; cursor:pointer; text-decoration:underline;">
+        비회원으로 3회 체험하기 / Try 3 times as guest
+      </a>
+    </p>
+  </div>
+
+  <!-- 비회원 체험 하단 배너 -->
+  <div id="guest-banner">
+    <div class="guest-banner-text">
+      비회원 체험 중 · <strong id="guest-count-text">3회</strong> 남음 · 로그인하면 무제한 사용 가능합니다.
+      <br/><small style="color:rgba(255,255,255,0.5);">Guest mode · Unlimited access after login.</small>
+    </div>
+    <div class="guest-banner-btns">
+      <button class="guest-btn-login" onclick="openModal('login')">로그인 / Login</button>
+      <button class="guest-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
     </div>
   </div>
 
@@ -1073,6 +1185,16 @@
       </div>
       <div class="form-msg" id="login-msg"></div>
       <button class="btn-submit" id="login-submit" onclick="doLogin()">로그인 / Login</button>
+      <div class="divider-or">또는 / or</div>
+      <button class="btn-google" onclick="googleLogin()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Google로 로그인 / Sign in with Google
+      </button>
       <div class="modal-switch">
         계정이 없으신가요? <a onclick="switchModal('login','signup')">회원가입 하기</a>
       </div>
@@ -1139,6 +1261,16 @@
       </div>
       <div class="form-msg" id="signup-msg"></div>
       <button class="btn-submit" id="signup-submit" onclick="doSignup()">회원가입 완료 / Sign Up</button>
+      <div class="divider-or">또는 / or</div>
+      <button class="btn-google" onclick="googleLogin()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Google로 가입 / Sign up with Google
+      </button>
       <div class="modal-switch">
         이미 계정이 있으신가요? <a onclick="switchModal('signup','login')">로그인 하기</a>
       </div>
@@ -1394,6 +1526,60 @@
     // ═══════════════════════════════════════════════
     const API_BASE = 'https://drshim.pythonanywhere.com/api';
 
+    // ⚠️ Google OAuth Client ID — Google Cloud Console에서 발급 후 아래에 입력
+    const GOOGLE_CLIENT_ID = '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
+
+    // ── 비회원 체험 설정 ────────────────────────────
+    const GUEST_MAX    = 3;
+    const GUEST_KEY    = 'drshim_guest_count';
+    const GUEST_DATE   = 'drshim_guest_date';
+
+    function getGuestCount() {
+      const today = new Date().toDateString();
+      if (localStorage.getItem(GUEST_DATE) !== today) {
+        // 날짜가 바뀌면 횟수 초기화
+        localStorage.setItem(GUEST_DATE, today);
+        localStorage.setItem(GUEST_KEY, '0');
+      }
+      return parseInt(localStorage.getItem(GUEST_KEY) || '0');
+    }
+
+    function incrementGuestCount() {
+      const count = getGuestCount() + 1;
+      localStorage.setItem(GUEST_KEY, String(count));
+      return count;
+    }
+
+    function isGuestMode() {
+      return sessionStorage.getItem('drshim_guest') === '1';
+    }
+
+    function startGuestMode() {
+      const count = getGuestCount();
+      if (count >= GUEST_MAX) {
+        alert('오늘의 무료 체험 횟수(3회)를 모두 사용하셨습니다.\n로그인하시면 무제한으로 이용하실 수 있습니다.\n\nYou have used all 3 free tries today.\nPlease log in for unlimited access.');
+        return;
+      }
+      sessionStorage.setItem('drshim_guest', '1');
+      document.getElementById('auth-gate').classList.remove('visible');
+      updateGuestBanner();
+    }
+
+    function updateGuestBanner() {
+      if (!isGuestMode()) return;
+      const remaining = GUEST_MAX - getGuestCount();
+      const banner    = document.getElementById('guest-banner');
+      if (remaining <= 0) {
+        // 횟수 소진 → 게이트 다시 표시
+        sessionStorage.removeItem('drshim_guest');
+        banner.classList.remove('visible');
+        document.getElementById('auth-gate').classList.add('visible');
+        return;
+      }
+      banner.classList.add('visible');
+      document.getElementById('guest-count-text').textContent = remaining + '회';
+    }
+
     // ── 페이지 전환 ─────────────────────────────────
     const pages = ['dict','cs1','cs2','cs3','cs4'];
 
@@ -1473,6 +1659,8 @@
       document.getElementById('auth-gate').classList.add('visible');
       document.getElementById('auth-buttons').style.display = 'flex';
       document.getElementById('user-info').classList.remove('visible');
+      document.getElementById('guest-banner').classList.remove('visible');
+      sessionStorage.removeItem('drshim_guest');
     }
 
     // ── 토큰 저장/조회/삭제 ─────────────────────────
@@ -1484,7 +1672,15 @@
     // ── 페이지 로드 시 토큰 검증 ────────────────────
     async function checkAuth() {
       const token = getToken();
-      if (!token) { setLoggedOut(); return; }
+      if (!token) {
+        if (isGuestMode()) {
+          document.getElementById('auth-gate').classList.remove('visible');
+          updateGuestBanner();
+        } else {
+          setLoggedOut();
+        }
+        return;
+      }
       try {
         const res = await fetch(`${API_BASE}/verify`, {
           headers: { 'Authorization': 'Bearer ' + token }
@@ -1496,8 +1692,44 @@
           removeToken(); setLoggedOut();
         }
       } catch {
-        // 네트워크 오류 시 토큰 유지하되 게이트 해제
         removeToken(); setLoggedOut();
+      }
+    }
+
+    // ── Google 로그인 ────────────────────────────────
+    function googleLogin() {
+      if (!window.google) {
+        alert('Google 로그인을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+        return;
+      }
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+        auto_select: false
+      });
+      google.accounts.id.prompt();
+    }
+
+    async function handleGoogleCredential(response) {
+      try {
+        const res = await fetch(`${API_BASE}/google-login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          saveToken(data.token);
+          closeModal('login');
+          closeModal('signup');
+          setLoggedIn(data.name);
+          sessionStorage.removeItem('drshim_guest');
+          document.getElementById('guest-banner').classList.remove('visible');
+        } else {
+          alert(data.error || 'Google 로그인에 실패했습니다.');
+        }
+      } catch {
+        alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
       }
     }
 
@@ -1578,17 +1810,30 @@
       }
     }
 
-    // ── 사전으로 이동 (토큰 포함) ────────────────────────────
+    // ── 사전으로 이동 (토큰 포함 / 비회원 횟수 차감) ──
     function goToDict() {
       const token = getToken();
-      if (!token) {
-        openModal('login');
+      if (token) {
+        // 로그인 사용자 → 토큰 포함해서 이동
+        window.open(
+          'https://shimgoon.pythonanywhere.com/?token=' + encodeURIComponent(token),
+          '_blank'
+        );
         return;
       }
-      window.open(
-        'https://shimgoon.pythonanywhere.com/?token=' + encodeURIComponent(token),
-        '_blank'
-      );
+      if (isGuestMode()) {
+        const used = incrementGuestCount();
+        updateGuestBanner();
+        if (used > GUEST_MAX) {
+          // 횟수 초과 → 로그인 유도
+          return;
+        }
+        // 비회원은 토큰 없이 이동 (dict.html에서 별도 처리 필요)
+        window.open('https://shimgoon.pythonanywhere.com/?guest=1', '_blank');
+        return;
+      }
+      // 미로그인, 비회원 아님 → 로그인 모달
+      openModal('login');
     }
 
     // ── 로그아웃 ─────────────────────────────────────
