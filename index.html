@@ -1116,8 +1116,25 @@
       <div class="agree-box">
         <label class="agree-label">
           <input type="checkbox" id="su-agree"/>
-          <span>회원정보(이름, 국적, 이메일, 전화번호)는 공지사항 전달, 더 나은 서비스 제공 및 광고 목적으로 제3자에게 제공될 수 있음에 동의합니다.<br/>
-          <small style="color:#9ca3af;">I agree that my information may be shared with third parties for notices, service improvement, and advertising purposes.</small></span>
+          <span>
+            아래 사항에 동의합니다. (필수)<br/>
+            ① 수집 항목: 아이디, 이름, 국적, 이메일, 전화번호(선택)<br/>
+            ② 수집 목적: 회원 관리, 서비스 제공, 공지사항 전달, 광고·마케팅<br/>
+            ③ 보유 기간: 회원 탈퇴 시까지<br/>
+            ④ 제3자 제공: 광고·서비스 개선 목적에 한하여 제공될 수 있음<br/>
+            <a href="https://shim-hyunju.github.io/privacy.html" target="_blank"
+               style="color:#6366f1; font-weight:700; text-decoration:underline;">
+              📄 개인정보 처리방침 전문 보기
+            </a><br/>
+            <small style="color:#9ca3af;">
+              I agree to the collection and use of my personal information
+              (name, nationality, email, phone) for membership management,
+              service provision, and marketing purposes, including sharing
+              with third parties as described in the
+              <a href="https://shim-hyunju.github.io/privacy.html" target="_blank"
+                 style="color:#6366f1;">Privacy Policy</a>.
+            </small>
+          </span>
         </label>
       </div>
       <div class="form-msg" id="signup-msg"></div>
@@ -1188,8 +1205,8 @@
         <!-- 로그인 상태 -->
         <div class="user-info" id="user-info">
           <span class="user-greeting" id="user-greeting"></span>
-          <button class="btn-logout" onclick="doLogout()">로그아웃</button>
           <button class="btn-withdraw" onclick="openModal('withdraw')">회원탈퇴</button>
+          <button class="btn-logout" onclick="doLogout()">로그아웃</button>
         </div>
       </div>
       <button class="hamburger" onclick="toggleMobile()" id="hamburger">
@@ -1664,4 +1681,3 @@
   </script>
 </body>
 </html>
-
