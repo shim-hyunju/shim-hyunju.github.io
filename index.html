@@ -1786,73 +1786,70 @@
 
     // ── 로그인 ──────────────────────────────────────
     async function doLogin() {
-      const username = document.getElementById('login-username').value.trim();
-      const password = document.getElementById('login-password').value;
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value;
     
-      if (!username || !password) {
-        showMsg('login-msg', '아이디와 비밀번호를 입력해주세요.', 'error');
-        return;
-      }
-    
-      const btn = document.getElementById('login-submit');
-      btn.disabled = true;
-      btn.textContent = '로그인 중...';
-    
-      try {
-        const res = await fetch(`${API_BASE}/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username,
-            password,
-            captcha_token: captchaToken || null   // ✅ 추가
-          })
-        });
-    
-        const data = await res.json();
-    
-        // ✅ 성공
-        if (res.ok) {
-          saveToken(data.token);
-          closeModal('login');
-          setLoggedIn(data.name);
-    
-          resetCaptcha();
-          document.getElementById('captcha-box').style.display = 'none';
-    
-          return;
+        if (!username || !password) {
+            showMsg('login-msg', '아이디와 비밀번호를 입력해주세요.', 'error');
+            return;
         }
     
-        // ❗ CAPTCHA 필요
-        if (data.require_captcha) {
-          const box = document.getElementById('captcha-box');
-          box.style.display = 'block';
-        
-          renderCaptcha();   // 🔥 이 한 줄이 핵심
-        }
-            
-        // ❗ 401
-        if (res.status === 401) {
-          showMsg('login-msg', data.error || '로그인 실패', 'error');
-          return;
-        }
+        const btn = document.getElementById('login-submit');
+        btn.disabled = true;
+        btn.textContent = '로그인 중...';
     
-        // ❗ 403 (CAPTCHA 실패 포함)
-        if (res.status === 403) {
-          resetCaptcha();   // 🔥 추가
-        
-          showMsg('login-msg', data.error || 'CAPTCHA 검증 필요', 'error');
-          return;
+        try {
+            const res = await fetch(`${API_BASE}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    captcha_token: captchaToken || null
+                })
+            });
+    
+            const data = await res.json();
+    
+            // ✅ 로그인 성공
+            if (res.ok) {
+                saveToken(data.token);
+                closeModal('login');
+                setLoggedIn(data.name);
+                resetCaptcha();
+                document.getElementById('captcha-box').style.display = 'none';
+                return;
+            }
+    
+            // ✅ 401: 비밀번호 틀림 — require_captcha 여부 확인 후 CAPTCHA 표시
+            if (res.status === 401) {
+                showMsg('login-msg', data.error || '로그인 실패', 'error');
+                if (data.require_captcha) {
+                    document.getElementById('captcha-box').style.display = 'block';
+                    renderCaptcha();   // CAPTCHA 위젯 표시
+                }
+                return;   // ✅ 반드시 return
+            }
+    
+            // ✅ 403: CAPTCHA 미완료 또는 검증 실패
+            if (res.status === 403) {
+                showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
+                // ✅ resetCaptcha() 호출 제거 — 위젯을 유지해야 사용자가 풀 수 있음
+                if (data.require_captcha) {
+                    document.getElementById('captcha-box').style.display = 'block';
+                    renderCaptcha();
+                }
+                return;
+            }
+    
+            showMsg('login-msg', data.error || '로그인 실패', 'error');
+    
+        } catch {
+            showMsg('login-msg', '서버 연결 실패', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '로그인 / Login';
         }
-    
-        showMsg('login-msg', data.error || '로그인 실패', 'error');
-    
-      } catch {
-        showMsg('login-msg', '서버 연결 실패', 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '로그인 / Login';
-      }
     }
 
     // ── 회원가입 ─────────────────────────────────────
