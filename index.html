@@ -1187,10 +1187,7 @@
       <div class="form-msg" id="login-msg"></div>
       <!-- ✅ CAPTCHA 영역 (기본 숨김) -->
       <div id="captcha-box" style="display:none; margin-bottom:12px;">
-        <div class="cf-turnstile"
-             data-sitekey="0x4AAAAAACsRndMrjUbzBlq-"
-             data-callback="onCaptchaSuccess">
-        </div>
+        <div id="turnstile-container"></div>
       </div>
       
       <button class="btn-submit" id="login-submit" onclick="doLogin()">로그인 / Login</button>
@@ -1533,6 +1530,17 @@
     // ═══════════════════════════════════════════════
     //  설정: 본인의 PythonAnywhere 앱 URL로 교체하세요
     // ═══════════════════════════════════════════════
+    let turnstileWidgetId = null;
+    
+    function renderCaptcha() {
+      if (turnstileWidgetId !== null) return;
+    
+      turnstileWidgetId = turnstile.render('#turnstile-container', {
+        sitekey: '0x4AAAAAACsRndMrjUbzBlq-',  // 현재 사용 중 key
+        callback: onCaptchaSuccess
+      });
+    }
+    
     let captchaToken = null;
 
     function onCaptchaSuccess(token) {
@@ -1541,8 +1549,8 @@
     function resetCaptcha() {
       captchaToken = null;
     
-      if (window.turnstile) {
-        turnstile.reset();
+      if (window.turnstile && turnstileWidgetId !== null) {
+        turnstile.reset(turnstileWidgetId);
       }
     }
     
@@ -1802,9 +1810,12 @@
     
         // ❗ CAPTCHA 필요
         if (data.require_captcha) {
-          document.getElementById('captcha-box').style.display = 'block';
+          const box = document.getElementById('captcha-box');
+          box.style.display = 'block';
+        
+          renderCaptcha();   // 🔥 이 한 줄이 핵심
         }
-    
+            
         // ❗ 401
         if (res.status === 401) {
           showMsg('login-msg', data.error || '로그인 실패', 'error');
