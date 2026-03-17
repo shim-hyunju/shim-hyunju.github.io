@@ -1530,7 +1530,12 @@
     // ═══════════════════════════════════════════════
     //  설정: 본인의 PythonAnywhere 앱 URL로 교체하세요
     // ═══════════════════════════════════════════════
+    let captchaToken = null;
     let turnstileWidgetId = null;
+
+    function onCaptchaSuccess(token) {
+      captchaToken = token;
+    }
     
     function renderCaptcha() {
       if (turnstileWidgetId !== null) return;
@@ -1539,13 +1544,8 @@
         sitekey: '0x4AAAAAACsRndMrjUbzBlq-',  // 현재 사용 중 key
         callback: onCaptchaSuccess
       });
-    }
+    } 
     
-    let captchaToken = null;
-
-    function onCaptchaSuccess(token) {
-      captchaToken = token;
-    }
     function resetCaptcha() {
       captchaToken = null;
     
