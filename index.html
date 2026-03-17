@@ -1540,19 +1540,22 @@
     function renderCaptcha() {
       if (turnstileWidgetId !== null) return;
     
-      turnstileWidgetId = turnstile.render('#captcha-box', {
+      turnstileWidgetId = turnstile.render('#turnstile-container', {
         sitekey: '0x4AAAAAACsRndMrjUbzBlq-',  // 현재 사용 중 key
         callback: onCaptchaSuccess
       });
     } 
     
+    // ✅ 수정: remove 후 컨테이너 innerHTML도 초기화
     function resetCaptcha() {
       captchaToken = null;
-    
       if (window.turnstile && turnstileWidgetId !== null) {
         turnstile.remove(turnstileWidgetId);
         turnstileWidgetId = null;
       }
+      // 잔여 DOM 정리
+      const container = document.getElementById('turnstile-container');
+      if (container) container.innerHTML = '';
     }
     
     const API_BASE = 'https://drshim.pythonanywhere.com/api';
@@ -1707,6 +1710,7 @@
     function removeToken()    { sessionStorage.removeItem(TOKEN_KEY); }
 
     // ── 페이지 로드 시 토큰 검증 ────────────────────
+    // ✅ 수정 코드
     async function checkAuth() {
       const token = getToken();
       if (!token) {
@@ -1719,38 +1723,27 @@
         return;
       }
       try {
-        const data = await res.json();  // 🔥 항상 먼저 읽는다
-
+        const res = await fetch(`${API_BASE}/verify-token`, {   // ✅ fetch 추가
+          method: 'GET',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+    
         if (res.ok) {
-        
-          // ✅ 로그인 성공
           setLoggedIn(data.name);
-        
-          // 🔥 CAPTCHA 초기화 (중요)
           resetCaptcha();
-        
         } else {
-        
-          // 🔥 로그인 실패 시 무조건 CAPTCHA 초기화
           resetCaptcha();
-        
-          // ✅ 상태 초기화
           removeToken();
           setLoggedOut();
-        
-          // ✅ 에러 메시지 출력
-          alert(data.error || '로그인 실패');
-        
-          // 🔥 CAPTCHA 필요하면 다시 띄움
           if (data.require_captcha) {
-            const box = document.getElementById('captcha-box');
-            box.style.display = 'block';
-        
-            renderCaptcha();  // 🔥 핵심
+            document.getElementById('captcha-box').style.display = 'block';
+            renderCaptcha();
           }
         }
       } catch {
-        removeToken(); setLoggedOut();
+        removeToken();
+        setLoggedOut();
       }
     }
 
