@@ -1656,13 +1656,8 @@
     }
     function closeModal(type) {
       document.getElementById('modal-' + type).classList.remove('open');
-    
-      /* ✅ 로그인 모달일 때만 CAPTCHA 초기화 */
-      if (type === 'login') {
-        resetCaptcha();
-        document.getElementById('captcha-box').style.display = 'none';
-      }
     }
+
     function switchModal(from, to) {
       closeModal(from);
       setTimeout(() => openModal(to), 150);
@@ -1787,6 +1782,7 @@
     }
 
     // ── 로그인 ──────────────────────────────────────
+    // ── 로그인 ──────────────────────────────────────
     async function doLogin() {
         const username = document.getElementById('login-username').value.trim();
         const password = document.getElementById('login-password').value;
@@ -1813,32 +1809,35 @@
     
             const data = await res.json();
     
+            // ✅ 성공
             if (res.ok) {
-                // ✅ 성공: CAPTCHA 초기화 먼저, 그 다음 모달 닫기
-                resetCaptcha();
+                captchaToken = null;
                 document.getElementById('captcha-box').style.display = 'none';
+                resetCaptcha();
                 saveToken(data.token);
-                closeModal('login');
+                document.getElementById('modal-login').classList.remove('open');
                 setLoggedIn(data.name);
                 return;
             }
     
+            // ✅ 401: 비밀번호 틀림
             if (res.status === 401) {
+                // ✅ 핵심: 사용된 captchaToken은 1회용이므로 즉시 초기화
+                captchaToken = null;
                 showMsg('login-msg', data.error || '로그인 실패', 'error');
-                // ✅ 5회 실패 도달 시점에만 CAPTCHA 박스 표시
                 if (data.require_captcha) {
                     document.getElementById('captcha-box').style.display = 'block';
-                    renderCaptcha();
+                    renderCaptcha();  // 새 토큰 발급을 위해 재렌더
                 }
                 return;
             }
     
+            // ✅ 403: CAPTCHA 없거나 검증 실패
             if (res.status === 403) {
-                // ✅ CAPTCHA 검증 실패: 메시지만 바꾸고 위젯은 그대로 유지
-                //    단, 토큰이 소진됐으므로 위젯 재렌더 필요
-                captchaToken = null;  // 토큰만 초기화 (위젯 DOM은 유지)
+                captchaToken = null;
                 showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
-                renderCaptcha();      // 새 토큰 발급을 위해 재렌더
+                document.getElementById('captcha-box').style.display = 'block';
+                renderCaptcha();  // 새 토큰 발급을 위해 재렌더
                 return;
             }
     
