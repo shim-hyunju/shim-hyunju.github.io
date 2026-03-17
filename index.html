@@ -1535,7 +1535,7 @@
     function renderCaptcha() {
       if (turnstileWidgetId !== null) return;
     
-      turnstileWidgetId = turnstile.render('#turnstile-container', {
+      turnstileWidgetId = turnstile.render('#captcha-box', {
         sitekey: '0x4AAAAAACsRndMrjUbzBlq-',  // 현재 사용 중 key
         callback: onCaptchaSuccess
       });
@@ -1550,7 +1550,8 @@
       captchaToken = null;
     
       if (window.turnstile && turnstileWidgetId !== null) {
-        turnstile.reset(turnstileWidgetId);
+        turnstile.remove(turnstileWidgetId);
+        turnstileWidgetId = null;
       }
     }
     
@@ -1718,14 +1719,35 @@
         return;
       }
       try {
-        const res = await fetch(`${API_BASE}/verify`, {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
+        const data = await res.json();  // 🔥 항상 먼저 읽는다
+
         if (res.ok) {
-          const data = await res.json();
+        
+          // ✅ 로그인 성공
           setLoggedIn(data.name);
+        
+          // 🔥 CAPTCHA 초기화 (중요)
+          resetCaptcha();
+        
         } else {
-          removeToken(); setLoggedOut();
+        
+          // 🔥 로그인 실패 시 무조건 CAPTCHA 초기화
+          resetCaptcha();
+        
+          // ✅ 상태 초기화
+          removeToken();
+          setLoggedOut();
+        
+          // ✅ 에러 메시지 출력
+          alert(data.error || '로그인 실패');
+        
+          // 🔥 CAPTCHA 필요하면 다시 띄움
+          if (data.require_captcha) {
+            const box = document.getElementById('captcha-box');
+            box.style.display = 'block';
+        
+            renderCaptcha();  // 🔥 핵심
+          }
         }
       } catch {
         removeToken(); setLoggedOut();
@@ -1790,7 +1812,7 @@
           body: JSON.stringify({
             username,
             password,
-            captcha_token: captchaToken   // ✅ 추가
+            captcha_token: captchaToken || null   // ✅ 추가
           })
         });
     
@@ -1802,7 +1824,7 @@
           closeModal('login');
           setLoggedIn(data.name);
     
-          captchaToken = null;
+          resetCaptcha();
           document.getElementById('captcha-box').style.display = 'none';
     
           return;
@@ -1824,6 +1846,8 @@
     
         // ❗ 403 (CAPTCHA 실패 포함)
         if (res.status === 403) {
+          resetCaptcha();   // 🔥 추가
+        
           showMsg('login-msg', data.error || 'CAPTCHA 검증 필요', 'error');
           return;
         }
