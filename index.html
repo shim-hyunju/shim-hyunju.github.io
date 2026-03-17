@@ -1532,30 +1532,32 @@
     // ═══════════════════════════════════════════════
     let captchaToken = null;
     let turnstileWidgetId = null;
-
+    
     function onCaptchaSuccess(token) {
-      captchaToken = token;
+        captchaToken = token;
     }
     
     function renderCaptcha() {
-      if (turnstileWidgetId !== null) return;
-    
-      turnstileWidgetId = turnstile.render('#turnstile-container', {
-        sitekey: '0x4AAAAAACsRndMrjUbzBlq-',  // 현재 사용 중 key
-        callback: onCaptchaSuccess
-      });
-    } 
-    
-    // ✅ 수정: remove 후 컨테이너 innerHTML도 초기화
-    function resetCaptcha() {
-      captchaToken = null;
-      if (window.turnstile && turnstileWidgetId !== null) {
-        turnstile.remove(turnstileWidgetId);
+        // ✅ 컨테이너를 완전히 비운 뒤 새로 렌더 (중복/잔여 DOM 방지)
+        const container = document.getElementById('turnstile-container');
+        container.innerHTML = '';
         turnstileWidgetId = null;
-      }
-      // 잔여 DOM 정리
-      const container = document.getElementById('turnstile-container');
-      if (container) container.innerHTML = '';
+    
+        turnstileWidgetId = turnstile.render(container, {
+            sitekey: '0x4AAAAAACsRndMrjUbzBlq-',
+            callback: onCaptchaSuccess
+        });
+    }
+    
+    function resetCaptcha() {
+        captchaToken = null;
+        if (window.turnstile && turnstileWidgetId !== null) {
+            try { turnstile.remove(turnstileWidgetId); } catch(e) {}
+            turnstileWidgetId = null;
+        }
+        // ✅ DOM도 함께 초기화
+        const container = document.getElementById('turnstile-container');
+        if (container) container.innerHTML = '';
     }
     
     const API_BASE = 'https://drshim.pythonanywhere.com/api';
@@ -1811,34 +1813,32 @@
     
             const data = await res.json();
     
-            // ✅ 로그인 성공
             if (res.ok) {
+                // ✅ 성공: CAPTCHA 초기화 먼저, 그 다음 모달 닫기
+                resetCaptcha();
+                document.getElementById('captcha-box').style.display = 'none';
                 saveToken(data.token);
                 closeModal('login');
                 setLoggedIn(data.name);
-                resetCaptcha();
-                document.getElementById('captcha-box').style.display = 'none';
                 return;
             }
     
-            // ✅ 401: 비밀번호 틀림 — require_captcha 여부 확인 후 CAPTCHA 표시
             if (res.status === 401) {
                 showMsg('login-msg', data.error || '로그인 실패', 'error');
-                if (data.require_captcha) {
-                    document.getElementById('captcha-box').style.display = 'block';
-                    renderCaptcha();   // CAPTCHA 위젯 표시
-                }
-                return;   // ✅ 반드시 return
-            }
-    
-            // ✅ 403: CAPTCHA 미완료 또는 검증 실패
-            if (res.status === 403) {
-                showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
-                // ✅ resetCaptcha() 호출 제거 — 위젯을 유지해야 사용자가 풀 수 있음
+                // ✅ 5회 실패 도달 시점에만 CAPTCHA 박스 표시
                 if (data.require_captcha) {
                     document.getElementById('captcha-box').style.display = 'block';
                     renderCaptcha();
                 }
+                return;
+            }
+    
+            if (res.status === 403) {
+                // ✅ CAPTCHA 검증 실패: 메시지만 바꾸고 위젯은 그대로 유지
+                //    단, 토큰이 소진됐으므로 위젯 재렌더 필요
+                captchaToken = null;  // 토큰만 초기화 (위젯 DOM은 유지)
+                showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
+                renderCaptcha();      // 새 토큰 발급을 위해 재렌더
                 return;
             }
     
