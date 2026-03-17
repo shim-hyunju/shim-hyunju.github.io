@@ -1137,6 +1137,7 @@
     }
 
   </style>
+   src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -1184,6 +1185,14 @@
         <input class="form-input" id="login-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password"/>
       </div>
       <div class="form-msg" id="login-msg"></div>
+      <!-- ✅ CAPTCHA 영역 (기본 숨김) -->
+      <div id="captcha-box" style="display:none; margin-bottom:12px;">
+        <div class="cf-turnstile"
+             data-sitekey="0x4AAAAAACsRndMrjUbzBlq-"
+             data-callback="onCaptchaSuccess">
+        </div>
+      </div>
+      
       <button class="btn-submit" id="login-submit" onclick="doLogin()">로그인 / Login</button>
       <div class="divider-or">또는 / or</div>
       <button class="btn-google" onclick="googleLogin()">
@@ -1524,6 +1533,19 @@
     // ═══════════════════════════════════════════════
     //  설정: 본인의 PythonAnywhere 앱 URL로 교체하세요
     // ═══════════════════════════════════════════════
+    let captchaToken = null;
+
+    function onCaptchaSuccess(token) {
+      captchaToken = token;
+    }
+    function resetCaptcha() {
+      captchaToken = null;
+    
+      if (window.turnstile) {
+        turnstile.reset();
+      }
+    }
+    
     const API_BASE = 'https://drshim.pythonanywhere.com/api';
 
     // ⚠️ Google OAuth Client ID — Google Cloud Console에서 발급 후 아래에 입력
@@ -1620,6 +1642,12 @@
     }
     function closeModal(type) {
       document.getElementById('modal-' + type).classList.remove('open');
+    
+      /* ✅ 로그인 모달일 때만 CAPTCHA 초기화 */
+      if (type === 'login') {
+        resetCaptcha();
+        document.getElementById('captcha-box').style.display = 'none';
+      }
     }
     function switchModal(from, to) {
       closeModal(from);
@@ -1751,7 +1779,11 @@
         const res = await fetch(`${API_BASE}/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({
+            username,
+            password,
+            captcha_token: captchaToken   // ✅ 추가
+          })
         });
     
         const data = await res.json();
@@ -1762,35 +1794,33 @@
           closeModal('login');
           setLoggedIn(data.name);
     
-          document.getElementById('login-username').value = '';
-          document.getElementById('login-password').value = '';
+          captchaToken = null;
+          document.getElementById('captcha-box').style.display = 'none';
+    
           return;
         }
     
-        // ❗ 401: 일반 로그인 실패
+        // ❗ CAPTCHA 필요
+        if (data.require_captcha) {
+          document.getElementById('captcha-box').style.display = 'block';
+        }
+    
+        // ❗ 401
         if (res.status === 401) {
-          showMsg('login-msg', data.error || '아이디 또는 비밀번호가 올바르지 않습니다.', 'error');
+          showMsg('login-msg', data.error || '로그인 실패', 'error');
           return;
         }
     
-        // ❗ 403: 계정 잠금
+        // ❗ 403 (CAPTCHA 실패 포함)
         if (res.status === 403) {
-          showMsg('login-msg', data.error || '로그인 제한 상태입니다. 잠시 후 다시 시도하세요.', 'error');
+          showMsg('login-msg', data.error || 'CAPTCHA 검증 필요', 'error');
           return;
         }
     
-        // ❗ 429: 요청 과다 (Rate limit)
-        if (res.status === 429) {
-          showMsg('login-msg', '로그인 시도가 너무 많습니다. 1분 후 다시 시도하세요.', 'error');
-          return;
-        }
+        showMsg('login-msg', data.error || '로그인 실패', 'error');
     
-        // ❗ 기타 에러
-        showMsg('login-msg', data.error || '로그인에 실패했습니다.', 'error');
-    
-      } catch (e) {
-        // ❗ 네트워크 오류만 여기로 옴
-        showMsg('login-msg', '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'error');
+      } catch {
+        showMsg('login-msg', '서버 연결 실패', 'error');
       } finally {
         btn.disabled = false;
         btn.textContent = '로그인 / Login';
