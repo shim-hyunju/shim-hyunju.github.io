@@ -1107,7 +1107,17 @@
 
     async function loadMemberCount() {
       try {
-        const res  = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
+        const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
-          "회원 수:
+          "회원 수: " + data.count + "명";
+      } catch (e) {
+        document.getElementById("member-count").textContent =
+          "회원 수를 불러올 수 없습니다.";
+      }
+    }
+    loadMemberCount();
+
+  </script>
+</body>
+</html>
