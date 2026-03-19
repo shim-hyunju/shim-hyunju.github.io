@@ -8,1173 +8,631 @@
   <meta name="description" content="Dr.Shim's Korean Lab - 한국어 학습 도구 모음">
   <meta name="keywords" content="친절한 한국어, 친절한 한국어 검색 사전, 한국어 검색 사전, Korean Dictionary, Korean vocabulary, Korean vocabulary search, Dr.Shim">
   <title>Dr.Shim's Korean Lab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <link rel="icon" href="static/images/favicon.png" type="image/x-icon"/>
-  <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
-    /* ── 기본 리셋 & 폰트 ── */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: "Inter", sans-serif;
-      background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-      min-height: 100vh;
-      color: #1f2937;
-      overflow-x: hidden;
+    :root {
+      --ink:      #0f172a;
+      --ink2:     #334155;
+      --muted:    #94a3b8;
+      --border:   #e2e8f0;
+      --surface:  #f8fafc;
+      --white:    #ffffff;
+      --accent1:  #3b82f6;
+      --accent2:  #6366f1;
+      --accent3:  #8b5cf6;
+      --danger:   #ef4444;
+      --success:  #22c55e;
+      --r:        14px;
+      --r-lg:     20px;
     }
 
-    /* ── 그라디언트 텍스트 (원본 그대로) ── */
-    .gradient-text {
-      background: linear-gradient(to right,
-        #ef4444, #f97316, #fbbf24, #10b981, #3b82f6, #6366f1, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    /* ─── 레이아웃: 전체를 뷰포트 높이에 고정 ─── */
+    html, body {
+      height: 100%;
+      overflow: hidden;          /* 바깥 스크롤 없음 */
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
     }
 
-    /* ══════════════════════════════
-       TOP BAR
-    ══════════════════════════════ */
-    .topbar {
-      position: relative;
-      overflow: hidden;
-      padding: 22px 16px;
-      text-align: center;
-    }
-    .topbar::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg,
-        rgba(239,68,68,0.7)   0%,
-        rgba(249,115,22,0.7)  18%,
-        rgba(251,191,36,0.7)  36%,
-        rgba(16,185,129,0.7)  54%,
-        rgba(59,130,246,0.7)  72%,
-        rgba(99,102,241,0.7)  100%);
-      background-size: 200% 100%;
-      animation: topbarFlow 5s linear infinite;
-      z-index: 0;
-    }
-    .topbar::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg,
-        transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
-      animation: topbarShine 3.5s ease-in-out infinite;
-      z-index: 1;
-    }
-    .topbar-inner {
-      position: relative;
-      z-index: 2;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: #fff;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.3);
-    }
-    .topbar-dot {
-      display: inline-block;
-      width: 10px; height: 10px;
-      background: #fff;
-      border-radius: 50%;
-      margin: 0 12px 2px;
-      vertical-align: middle;
-      opacity: 0.9;
-      animation: blink 1.6s ease-in-out infinite;
-    }
-    .topbar-dot:last-child { animation-delay: 0.8s; }
-    @keyframes topbarFlow {
-      0%   { background-position: 0% 0%; }
-      100% { background-position: 200% 0%; }
-    }
-    @keyframes topbarShine {
-      0%   { transform: translateX(-100%); }
-      100% { transform: translateX(200%); }
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 0.9; transform: scale(1); }
-      50%       { opacity: 0.3; transform: scale(0.5); }
+    /* ──────────────────────────────
+       SHELL: 3행 레이아웃
+       행1: 헤더(고정)
+       행2: 콘텐츠(나머지 전부)
+    ────────────────────────────── */
+    .shell {
+      display: grid;
+      grid-template-rows: 56px 1fr;
+      height: 100vh;
     }
 
-    /* ══════════════════════════════
-       HEADER / NAV
-    ══════════════════════════════ */
+    /* ─── 헤더 ─── */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
-    .header-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      height: 68px;
+      padding: 0 20px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 200;
+      gap: 8px;
     }
 
-    /* 데스크탑 탭 */
-    .main-nav {
+    .header-logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent1), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .header-nav {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       overflow-x: auto;
       flex: 1;
       justify-content: center;
-      -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    .main-nav::-webkit-scrollbar { display: none; }
+    .header-nav::-webkit-scrollbar { display: none; }
 
     .nav-btn {
       background: none;
-      border: 2px solid #e5e7eb;
+      border: 1.5px solid var(--border);
       cursor: pointer;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: #6b7280;
-      padding: 10px 20px;
-      border-radius: 999px;
-      white-space: nowrap;
-      transition: all 0.22s ease;
-      letter-spacing: 0.01em;
-    }
-    .nav-btn:hover {
-      color: #3b82f6;
-      background: #eff6ff;
-      border-color: #93c5fd;
-      transform: translateY(-1px);
-      box-shadow: 0 3px 10px rgba(59,130,246,0.15);
-    }
-    .nav-btn.active {
-      background: linear-gradient(white, white) padding-box,
-                  linear-gradient(135deg, #ef4444, #f97316, #fbbf24, #10b981, #3b82f6, #6366f1) border-box;
-      border: 2.5px solid transparent;
-      color: #3b82f6;
-      font-weight: 700;
-      box-shadow: 0 4px 16px rgba(99,102,241,0.2);
-    }
-
-    /* 헤더 오른쪽 인증 영역 */
-    .header-auth {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .btn-login {
-      background: none;
-      border: 2px solid #6366f1;
-      color: #6366f1;
-      font-family: "Inter", sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 8px 18px;
-      border-radius: 999px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
-    }
-    .btn-login:hover { background: #f5f3ff; }
-    .btn-signup {
-      background: linear-gradient(135deg, #6366f1, #3b82f6);
-      border: none;
-      color: #fff;
-      font-family: "Inter", sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 9px 18px;
-      border-radius: 999px;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 3px 10px rgba(99,102,241,0.3);
-      transition: all 0.2s ease;
-    }
-    .btn-signup:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(99,102,241,0.4); }
-    /* 로그인 후 표시되는 유저 정보 + 로그아웃 */
-    .user-info {
-      display: none;
-      align-items: center;
-      gap: 10px;
-    }
-    .user-info.visible { display: flex; }
-    .user-greeting {
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      white-space: nowrap;
-    }
-    .user-greeting span { color: #6366f1; }
-    .btn-logout {
-      background: none;
-      border: 1.5px solid #d1d5db;
-      color: #9ca3af;
-      font-family: "Inter", sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
       font-weight: 600;
+      color: var(--ink2);
       padding: 6px 14px;
       border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-logout:hover { border-color: #ef4444; color: #ef4444; background: #fef2f2; }
-
-    /* 햄버거 */
-    .hamburger {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 22px;
-      color: #374151;
-      padding: 8px;
-      flex-shrink: 0;
-    }
-
-    /* 모바일 드롭다운 메뉴 */
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 68px;
-      left: 0; right: 0;
-      background: rgba(255,255,255,0.98);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      z-index: 199;
-      padding: 12px 16px 20px;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu .nav-btn {
-      width: 100%;
-      text-align: left;
-      border-radius: 12px;
-      font-size: 15px;
-      padding: 12px 18px;
-    }
-
-    /* ══════════════════════════════
-       AUTH MODAL (로그인 / 회원가입)
-    ══════════════════════════════ */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,0.55);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: #fff;
-      border-radius: 24px;
-      padding: 40px 36px;
-      width: 100%;
-      max-width: 460px;
-      max-height: 92vh;
-      overflow-y: auto;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-      animation: modalIn 0.28s cubic-bezier(.34,1.3,.64,1);
-      position: relative;
-    }
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(0.9) translateY(20px); }
-      to   { opacity: 1; transform: scale(1)   translateY(0); }
-    }
-    .modal-close {
-      position: absolute;
-      top: 18px; right: 20px;
-      background: #f3f4f6;
-      border: none;
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      font-size: 16px;
-      cursor: pointer;
-      color: #6b7280;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .modal-close:hover { background: #e5e7eb; color: #374151; }
-    .modal-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 6px;
-      letter-spacing: -0.02em;
-    }
-    .modal-sub {
-      font-size: 14px;
-      color: #9ca3af;
-      margin-bottom: 28px;
-    }
-    .modal-switch {
-      font-size: 13px;
-      color: #9ca3af;
-      text-align: center;
-      margin-top: 20px;
-    }
-    .modal-switch a {
-      color: #6366f1;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .modal-switch a:hover { text-decoration: underline; }
-
-    /* 폼 공통 */
-    .form-group { margin-bottom: 16px; }
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 6px;
-    }
-    .form-group label .req { color: #ef4444; margin-left: 2px; }
-    .form-input {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 10px;
-      font-family: "Inter", sans-serif;
-      font-size: 14px;
-      color: #111827;
-      background: #fafafa;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-    }
-    .form-input:focus {
-      border-color: #6366f1;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
-    }
-    .form-input.error { border-color: #ef4444; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    /* 체크박스 동의 */
-    .agree-box {
-      background: #f8faff;
-      border: 1.5px solid #e0e7ff;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
-    }
-    .agree-label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      cursor: pointer;
-      font-size: 13px;
-      color: #4b5563;
-      line-height: 1.6;
-    }
-    .agree-label input[type=checkbox] {
-      width: 18px; height: 18px;
-      accent-color: #6366f1;
-      flex-shrink: 0;
-      margin-top: 2px;
-      cursor: pointer;
-    }
-
-    /* 제출 버튼 */
-    .btn-submit {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #6366f1, #3b82f6);
-      color: #fff;
-      font-family: "Inter", sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(99,102,241,0.35);
-      transition: transform 0.2s, box-shadow 0.2s;
-      letter-spacing: 0.01em;
-    }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.45); }
-    .btn-submit:active { transform: scale(0.98); }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    /* 알림 메시지 */
-    .form-msg {
-      font-size: 13px;
-      text-align: center;
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      display: none;
-    }
-    .form-msg.error   { display: block; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-    .form-msg.success { display: block; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-
-    /* 회원탈퇴 버튼 (헤더) */
-    .btn-withdraw {
-      background: none;
-      border: 1.5px solid #fca5a5;
-      color: #ef4444;
-      font-family: "Inter", sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 13px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s ease;
       white-space: nowrap;
+      transition: all .2s;
     }
-    .btn-withdraw:hover { background: #fef2f2; border-color: #ef4444; }
-
-    /* 탈퇴 확인 모달 — 위험 액션 스타일 */
-    .modal-danger-zone {
-      background: #fef2f2;
-      border: 1.5px solid #fecaca;
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 20px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-    .modal-danger-icon {
-      font-size: 22px;
-      flex-shrink: 0;
-      line-height: 1;
-      margin-top: 1px;
-    }
-    .modal-danger-text {
-      font-size: 13px;
-      color: #b91c1c;
-      line-height: 1.7;
-    }
-    .modal-danger-text strong { font-weight: 700; }
-    .btn-submit-danger {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color: #fff;
-      font-family: "Inter", sans-serif;
-      font-size: 15px;
+    .nav-btn:hover { color: var(--accent1); background: #eff6ff; border-color: #93c5fd; }
+    .nav-btn.active {
+      background: linear-gradient(white,white) padding-box,
+                  linear-gradient(135deg,var(--accent1),var(--accent3)) border-box;
+      border: 2px solid transparent;
+      color: var(--accent2);
       font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(239,68,68,0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-      letter-spacing: 0.01em;
-    }
-    .btn-submit-danger:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(239,68,68,0.4); }
-    .btn-submit-danger:active { transform: scale(0.98); }
-    .btn-submit-danger:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    /* 로그인 보호 오버레이 */
-    #auth-gate {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-      z-index: 500;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-    }
-    #auth-gate.visible { display: flex; }
-    .gate-icon {
-      width: 80px; height: 80px;
-      background: linear-gradient(135deg, #eff6ff, #e0e7ff);
-      border: 2px solid #c7d2fe;
-      border-radius: 22px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 36px;
-      margin-bottom: 24px;
-      box-shadow: 0 8px 24px rgba(99,102,241,0.15);
-    }
-    .gate-title {
-      font-size: clamp(22px, 4vw, 32px);
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 10px;
-      letter-spacing: -0.02em;
-    }
-    .gate-desc {
-      font-size: 15px;
-      color: #6b7280;
-      margin-bottom: 32px;
-      max-width: 360px;
-      line-height: 1.7;
-    }
-    .gate-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .gate-btn-login {
-      padding: 13px 32px;
-      border: 2px solid #6366f1;
-      background: #fff;
-      color: #6366f1;
-      font-weight: 700;
-      font-size: 15px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: "Inter", sans-serif;
-    }
-    .gate-btn-login:hover { background: #f5f3ff; }
-    .gate-btn-signup {
-      padding: 13px 32px;
-      background: linear-gradient(135deg, #6366f1, #3b82f6);
-      border: none;
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      border-radius: 999px;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(99,102,241,0.35);
-      transition: all 0.2s;
-      font-family: "Inter", sans-serif;
-    }
-    .gate-btn-signup:hover { transform: translateY(-2px); }
-
-    /* ══════════════════════════════
-       페이지 전환
-    ══════════════════════════════ */
-    .page { display: none; animation: pageIn 0.3s ease; }
-    .page.active { display: block; }
-    @keyframes pageIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ══════════════════════════════
-       HERO SECTION
-    ══════════════════════════════ */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 96px 24px 80px;
+    .header-auth { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+
+    .btn-login {
+      background: none; border: 1.5px solid var(--accent2);
+      color: var(--accent2); font-family: 'DM Sans',sans-serif;
+      font-size: 12px; font-weight: 700; padding: 6px 14px;
+      border-radius: 999px; cursor: pointer; transition: all .2s; white-space:nowrap;
+    }
+    .btn-login:hover { background:#f5f3ff; }
+
+    .btn-signup {
+      background: linear-gradient(135deg,var(--accent2),var(--accent1));
+      border: none; color:#fff; font-family:'DM Sans',sans-serif;
+      font-size: 12px; font-weight: 700; padding: 7px 14px;
+      border-radius: 999px; cursor: pointer; transition: all .2s; white-space:nowrap;
+      box-shadow: 0 2px 8px rgba(99,102,241,.3);
+    }
+    .btn-signup:hover { transform:translateY(-1px); }
+
+    .user-info { display:none; align-items:center; gap:8px; }
+    .user-info.visible { display:flex; }
+    .user-greeting { font-size:12px; font-weight:600; color:var(--ink2); white-space:nowrap; }
+    .user-greeting span { color:var(--accent2); }
+
+    .btn-logout, .btn-withdraw {
+      background:none; border:1.5px solid var(--border);
+      color:var(--muted); font-family:'DM Sans',sans-serif;
+      font-size:11px; font-weight:600; padding:5px 11px;
+      border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap;
+    }
+    .btn-logout:hover { border-color:var(--danger); color:var(--danger); background:#fef2f2; }
+    .btn-withdraw { border-color:#fca5a5; color:var(--danger); }
+    .btn-withdraw:hover { background:#fef2f2; }
+
+    .hamburger {
+      display:none; background:none; border:none; cursor:pointer;
+      font-size:20px; color:var(--ink2); padding:6px; flex-shrink:0;
+    }
+
+    /* ─── 모바일 메뉴 ─── */
+    .mobile-menu {
+      display:none; position:fixed; top:56px; left:0; right:0;
+      background:rgba(255,255,255,.98); backdrop-filter:blur(12px);
+      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:199;
+      padding:10px 14px 16px; flex-direction:column; gap:4px;
+    }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu .nav-btn { width:100%; text-align:left; border-radius:10px; font-size:14px; padding:10px 14px; }
+
+    /* ──────────────────────────────
+       콘텐츠 영역: 페이지 컨테이너
+    ────────────────────────────── */
+    .content-area {
+      overflow: hidden;          /* 내부에서만 처리 */
       position: relative;
     }
-    /* 배경 장식 원 */
-    .hero::before {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+
+    /* ─── 페이지 전환 ─── */
+    .page { display:none; height:100%; }
+    .page.active { display:flex; flex-direction:column; }
+
+    /* ──────────────────────────────
+       메인 페이지 (dict) — 2열 그리드
+    ────────────────────────────── */
+    #page-dict {
+      display: none;
+      height: 100%;
     }
-    .hero-eyebrow {
+    #page-dict.active {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+    }
+
+    /* 왼쪽 패널 */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 36px;
+      background: linear-gradient(145deg, #f0f4ff 0%, #e8e0ff 100%);
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .left-panel::before {
+      content: '韓';
+      position: absolute;
+      bottom: -20px; right: -10px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 180px;
+      font-weight: 700;
+      color: rgba(99,102,241,.06);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.8);
-      border: 1px solid #e0e7ff;
+      gap: 6px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid #ddd6fe;
       border-radius: 999px;
-      padding: 6px 16px 6px 10px;
-      font-size: 13px;
+      padding: 4px 12px;
+      font-size: 11px;
       font-weight: 600;
-      color: #6366f1;
-      margin-bottom: 28px;
+      color: var(--accent2);
+      margin-bottom: 14px;
+      width: fit-content;
       backdrop-filter: blur(6px);
-      box-shadow: 0 2px 8px rgba(99,102,241,0.1);
     }
-    .hero-eyebrow-dot {
-      width: 8px; height: 8px;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      background: linear-gradient(135deg,var(--accent1),var(--accent3));
       border-radius: 50%;
       animation: pulse-dot 2s ease-in-out infinite;
     }
     @keyframes pulse-dot {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50%       { transform: scale(1.4); opacity: 0.7; }
+      0%,100%{ transform:scale(1); opacity:1; }
+      50%     { transform:scale(1.5); opacity:.6; }
     }
-    .hero h1 {
-      font-size: clamp(38px, 7vw, 76px);
-      font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      position: relative;
+
+    .main-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(22px, 2.8vw, 34px);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .hero-sub {
-      font-size: clamp(17px, 2.5vw, 26px);
+    .main-subtitle {
+      font-size: 13px;
       font-weight: 500;
-      color: #4b5563;
-      margin-bottom: 18px;
-      letter-spacing: -0.01em;
+      color: var(--ink2);
+      margin-bottom: 10px;
+      opacity: .8;
     }
-    .hero-desc {
-      font-size: clamp(14px, 1.8vw, 17px);
-      color: #9ca3af;
-      line-height: 1.85;
-      max-width: 600px;
+    .main-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 22px;
     }
-    /* CTA 버튼 */
-    .hero-cta {
+
+    /* 특징 태그 3개 */
+    .feature-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 22px;
+    }
+    .chip {
       display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,.8);
+      border: 1px solid #ddd6fe;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink2);
+      backdrop-filter: blur(4px);
+    }
+    .chip i { color: var(--accent2); font-size: 10px; }
+
+    /* 시작 버튼 */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 13px 28px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(99,102,241,.35);
+      transition: transform .2s, box-shadow .2s;
+      width: fit-content;
+      letter-spacing: .01em;
+    }
+    .cta-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(99,102,241,.45); }
+    .cta-btn:active { transform:scale(.98); }
+    .cta-arrow { transition: transform .2s; }
+    .cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+    /* 후원 */
+    .donate-row {
+      margin-top: 18px;
+      display: flex;
       align-items: center;
       gap: 10px;
-      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      padding: 16px 36px;
-      border-radius: 999px;
-      text-decoration: none;
-      box-shadow: 0 8px 28px rgba(99,102,241,0.38);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      letter-spacing: 0.01em;
-      position: relative;
-      overflow: hidden;
     }
-    .hero-cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-      border-radius: inherit;
-    }
-    .hero-cta:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 14px 36px rgba(99,102,241,0.48);
-    }
-    .hero-cta:active { transform: scale(0.98); }
-    .hero-cta-arrow {
-      font-size: 18px;
-      transition: transform 0.2s ease;
-    }
-    .hero-cta:hover .hero-cta-arrow { transform: translateX(4px); }
-
-    /* ══════════════════════════════
-       섹션 공통
-    ══════════════════════════════ */
-    .section-wrap {
-      padding: 56px 24px;
-      max-width: 1020px;
-      margin: 0 auto;
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-    .section-tag {
-      display: inline-block;
-      background: linear-gradient(135deg, #eff6ff, #e0e7ff);
-      color: #6366f1;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 999px;
-      border: 1px solid #c7d2fe;
-      margin-bottom: 14px;
-    }
-    .section-heading {
-      font-size: clamp(24px, 3.5vw, 36px);
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 10px;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
-    .section-sub {
-      font-size: 15px;
-      color: #9ca3af;
-      font-weight: 400;
-    }
-
-    /* ══════════════════════════════
-       FEATURES
-    ══════════════════════════════ */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-    .feature-card {
-      background: #fff;
-      border: 1px solid #f3f4f6;
-      border-radius: 20px;
-      padding: 36px 30px 32px;
-      text-align: center;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 3px;
-      opacity: 0;
-      transition: opacity 0.25s ease;
-    }
-    .feature-card:nth-child(1)::after { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
-    .feature-card:nth-child(2)::after { background: linear-gradient(90deg,#22c55e,#4ade80); }
-    .feature-card:nth-child(3)::after { background: linear-gradient(90deg,#8b5cf6,#a78bfa); }
-    .feature-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.09);
-      border-color: #e0e7ff;
-    }
-    .feature-card:hover::after { opacity: 1; }
-    .fc-icon-wrap {
-      width: 64px; height: 64px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 28px;
-    }
-    .fc-icon-wrap.blue   { background: #eff6ff; color: #3b82f6; }
-    .fc-icon-wrap.green  { background: #f0fdf4; color: #22c55e; }
-    .fc-icon-wrap.purple { background: #f5f3ff; color: #8b5cf6; }
-    .fc-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
-    }
-    .fc-title small {
-      display: block;
-      font-size: 12px;
-      font-weight: 500;
-      color: #c4b5fd;
-      margin-top: 4px;
-      letter-spacing: 0.02em;
-    }
-    .fc-desc {
-      font-size: 14px;
-      color: #6b7280;
-      line-height: 1.78;
-      margin-top: 10px;
-    }
-
-    /* ══════════════════════════════
-       HOW TO USE
-    ══════════════════════════════ */
-    .how-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .how-item {
-      background: #fff;
-      border: 1px solid #f3f4f6;
-      border-radius: 20px;
-      padding: 28px 32px;
-      display: grid;
-      grid-template-columns: 56px 1fr;
-      gap: 20px;
-      align-items: center;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-    }
-    .how-item:hover {
-      transform: translateX(6px);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.07);
-      border-color: #dbeafe;
-    }
-    .how-icon-wrap {
-      width: 56px; height: 56px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-    .how-icon-wrap.blue  { background: #eff6ff; color: #3b82f6; }
-    .how-icon-wrap.green { background: #f0fdf4; color: #22c55e; }
-    .how-text h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .how-text h3 small {
-      font-size: 12px;
-      font-weight: 500;
-      color: #9ca3af;
-      letter-spacing: 0;
-    }
-    .how-text p {
-      font-size: 14px;
-      color: #6b7280;
-      line-height: 1.82;
-    }
-    /* 사용법 아래 CTA 래퍼 */
-    .cta-wrap {
-      text-align: center;
-      margin-top: 44px;
-    }
-
-    /* ══════════════════════════════
-       DONATE
-    ══════════════════════════════ */
-    .donate-wrap {
-      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-      border: 1px solid #dbeafe;
-      border-radius: 24px;
-      padding: 48px 32px;
-      text-align: center;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .donate-wrap::before {
-      content: '❤';
-      position: absolute;
-      font-size: 160px;
-      opacity: 0.03;
-      top: -20px; right: -20px;
-      pointer-events: none;
-    }
-    .donate-img {
-      width: 96px; height: 96px;
+    .donate-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
       object-fit: cover;
-      border-radius: 50%;
-      border: 4px solid #fff;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(59,130,246,0.18);
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(59,130,246,.2);
     }
-    .donate-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 20px;
+    .donate-link img {
+      height: 28px;
+      border-radius: 6px;
     }
 
-    /* ══════════════════════════════
-       NOTICE
-    ══════════════════════════════ */
-    .notice-list { display: flex; flex-direction: column; gap: 14px; }
-    .notice-card {
-      background: #fff;
-      border: 1px solid #f3f4f6;
-      border-radius: 16px;
-      padding: 24px 28px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-      position: relative;
-      overflow: hidden;
-    }
-    .notice-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 4px; height: 100%;
-      border-radius: 4px 0 0 4px;
-    }
-    .notice-card.ko::before { background: linear-gradient(180deg,#3b82f6,#60a5fa); }
-    .notice-card.en::before { background: linear-gradient(180deg,#6366f1,#a78bfa); }
-    .notice-card-head {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .notice-flag {
-      font-size: 18px;
-      line-height: 1;
-    }
-    .notice-card h4 {
-      font-size: 14px;
-      font-weight: 700;
-      color: #111827;
-      letter-spacing: 0.04em;
-    }
-    .notice-card p {
-      font-size: 13.5px;
-      color: #6b7280;
-      line-height: 1.85;
-    }
-
-    /* ══════════════════════════════
-       COMING SOON
-    ══════════════════════════════ */
-    .coming-page {
-      min-height: calc(100vh - 68px - 70px);
+    /* 오른쪽 패널 */
+    .right-panel {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 24px;
-      position: relative;
-      overflow: hidden;
+      padding: 24px 28px;
+      overflow-y: auto;
+      gap: 14px;
     }
-    .coming-page::before {
-      content: '';
-      position: absolute;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-    .coming-icon-wrap {
-      width: 104px; height: 104px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, #f0f4ff, #e8e0ff);
-      border: 1.5px solid #ddd6fe;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 46px;
-      margin-bottom: 28px;
-      box-shadow: 0 8px 32px rgba(99,102,241,0.12);
-      animation: float 3.5s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-8px); }
-    }
-    .coming-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #fff;
-      color: #6366f1;
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 6px 16px;
-      border-radius: 999px;
-      margin-bottom: 22px;
-      border: 1.5px solid #e0e7ff;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.1);
-    }
-    .coming-badge::before {
-      content: '';
-      width: 7px; height: 7px;
-      background: linear-gradient(135deg,#6366f1,#a78bfa);
-      border-radius: 50%;
-    }
-    .coming-page h2 {
-      font-size: clamp(28px, 5vw, 50px);
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 16px;
-      line-height: 1.18;
-      letter-spacing: -0.025em;
-    }
-    .coming-page > p {
-      font-size: clamp(14px, 1.8vw, 16px);
-      color: #9ca3af;
-      max-width: 400px;
-      line-height: 1.85;
-      margin-bottom: 40px;
-    }
-    .progress-track {
-      width: 220px; height: 5px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      border-radius: 999px;
-      animation: progressAnim 2.4s ease-in-out infinite alternate;
-    }
-    @keyframes progressAnim { from { width: 6%; } to { width: 75%; } }
+    .right-panel::-webkit-scrollbar { width:4px; }
+    .right-panel::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
 
-    /* ══════════════════════════════
-       FOOTER
-    ══════════════════════════════ */
-    footer {
-      background: #1e293b;
-      color: #fff;
-      text-align: center;
-      padding: 36px 16px;
-      margin-top: 8px;
-    }
-    .footer-logo {
-      font-size: 20px;
+    .panel-section-title {
+      font-size: 10px;
       font-weight: 700;
-      margin-bottom: 10px;
-    }
-    footer p {
-      font-size: 13px;
-      color: rgba(255,255,255,0.45);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
       margin-bottom: 4px;
     }
-    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
-    footer a:hover { color: #fff; }
 
-    /* ══════════════════════════════
-       반응형
-    ══════════════════════════════ */
-    @media (max-width: 760px) {
-      .main-nav  { display: none; }
-      .hamburger { display: block; }
-      .how-item  { grid-template-columns: 1fr; gap: 14px; }
-      .how-icon-wrap { width: 48px; height: 48px; font-size: 20px; }
-      .features-grid { grid-template-columns: 1fr; }
-      .section-wrap { padding: 40px 16px; }
-      .donate-wrap { padding: 36px 20px; }
-    }
-    @media (min-width: 761px) {
-      .hamburger { display: none; }
-    }
-    /* ══════════════════════════════
-       비회원 체험 배너
-    ══════════════════════════════ */
-    #guest-banner {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      color: #fff;
-      z-index: 400;
-      padding: 14px 20px;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
-    }
-    #guest-banner.visible { display: flex; }
-    .guest-banner-text {
-      font-size: 14px;
-      color: rgba(255,255,255,0.85);
-      text-align: center;
-    }
-    .guest-banner-text strong { color: #fbbf24; }
-    .guest-banner-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-    .guest-btn-login {
-      padding: 9px 22px;
-      border: 2px solid #6366f1;
-      background: #6366f1;
-      color: #fff;
-      font-weight: 700;
-      font-size: 13px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .guest-btn-login:hover { background: #4f46e5; border-color: #4f46e5; }
-    .guest-btn-signup {
-      padding: 9px 22px;
-      border: 2px solid rgba(255,255,255,0.3);
-      background: transparent;
-      color: #fff;
-      font-weight: 700;
-      font-size: 13px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .guest-btn-signup:hover { background: rgba(255,255,255,0.1); }
-
-    /* ══════════════════════════════
-       Google 로그인 버튼
-    ══════════════════════════════ */
-    .btn-google {
-      width: 100%;
-      padding: 13px;
-      background: #fff;
-      color: #374151;
-      font-family: "Inter", sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 12px;
-      cursor: pointer;
+    /* 사용법 카드 */
+    .how-cards { display:flex; flex-direction:column; gap:8px; }
+    .how-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 12px 14px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      margin-bottom: 16px;
-    }
-    .btn-google:hover { background: #f9fafb; border-color: #d1d5db; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .divider-or {
-      display: flex;
-      align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
-      color: #9ca3af;
-      font-size: 13px;
+      align-items: flex-start;
+      transition: border-color .2s, box-shadow .2s;
     }
-    .divider-or::before,
-    .divider-or::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e5e7eb;
+    .how-card:hover { border-color: #c7d2fe; box-shadow: 0 4px 16px rgba(99,102,241,.08); }
+    .how-num {
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      background: linear-gradient(135deg,#eff6ff,#e0e7ff);
+      display: flex; align-items:center; justify-content:center;
+      font-size: 12px; font-weight: 800; color: var(--accent2);
+      flex-shrink: 0;
     }
+    .how-text-wrap h4 { font-size:12px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+    .how-text-wrap p  { font-size:11px; color:var(--muted); line-height:1.6; }
 
+    /* 공지 카드 */
+    .notice-cards { display:flex; flex-direction:column; gap:8px; }
+    .notice-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 11px 14px 11px 18px;
+      font-size: 11px;
+      color: var(--ink2);
+      line-height: 1.65;
+      position: relative;
+    }
+    .notice-card::before {
+      content:'';
+      position:absolute; top:0; left:0;
+      width:4px; height:100%;
+      border-radius:4px 0 0 4px;
+    }
+    .notice-card.ko::before { background:linear-gradient(180deg,var(--accent1),#60a5fa); }
+    .notice-card.en::before { background:linear-gradient(180deg,var(--accent2),#a78bfa); }
+    .notice-head { display:flex; align-items:center; gap:5px; margin-bottom:4px; }
+    .notice-head span { font-weight:700; font-size:11px; color:var(--ink); }
+
+    /* ─── Coming Soon ─── */
+    .coming-page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      gap: 14px;
+    }
+    .coming-icon {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg,#f0f4ff,#e8e0ff);
+      border: 1.5px solid #ddd6fe;
+      border-radius: 22px;
+      display: flex; align-items:center; justify-content:center;
+      font-size: 38px;
+      box-shadow: 0 6px 24px rgba(99,102,241,.1);
+      animation: float 3.5s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .coming-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      background:#fff; color:var(--accent2);
+      font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      padding:5px 14px; border-radius:999px; border:1.5px solid #e0e7ff;
+    }
+    .coming-badge::before { content:''; width:6px; height:6px; background:linear-gradient(135deg,var(--accent2),var(--accent3)); border-radius:50%; }
+    .coming-page h2 { font-size:clamp(22px,3.5vw,36px); font-weight:800; color:var(--ink); line-height:1.2; }
+    .coming-page p  { font-size:13px; color:var(--muted); max-width:320px; line-height:1.7; }
+    .progress-track { width:180px; height:4px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .progress-fill  { height:100%; background:linear-gradient(90deg,var(--accent1),var(--accent3)); border-radius:999px; animation:progressAnim 2.4s ease-in-out infinite alternate; }
+    @keyframes progressAnim { from{width:6%} to{width:75%} }
+
+    /* ──────────────────────────────
+       AUTH GATE
+    ────────────────────────────── */
+    #auth-gate {
+      display:none; position:fixed; inset:0;
+      background:linear-gradient(135deg,#eff6ff 0%,#e0e7ff 100%);
+      z-index:500;
+      flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:24px;
+    }
+    #auth-gate.visible { display:flex; }
+    .gate-icon {
+      width:70px; height:70px;
+      background:rgba(255,255,255,.8); border:2px solid #c7d2fe;
+      border-radius:20px; display:flex; align-items:center; justify-content:center;
+      font-size:32px; margin-bottom:18px;
+      box-shadow: 0 6px 20px rgba(99,102,241,.12);
+    }
+    .gate-title {
+      font-family:'Noto Serif KR',serif;
+      font-size:clamp(20px,4vw,28px); font-weight:700; color:var(--ink);
+      margin-bottom:8px;
+      background:linear-gradient(135deg,var(--accent1),var(--accent3));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .gate-desc { font-size:13px; color:var(--muted); margin-bottom:24px; max-width:320px; line-height:1.7; }
+    .gate-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+    .gate-btn-login {
+      padding:11px 28px; border:2px solid var(--accent2); background:#fff;
+      color:var(--accent2); font-weight:700; font-size:13px; border-radius:999px;
+      cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif;
+    }
+    .gate-btn-login:hover { background:#f5f3ff; }
+    .gate-btn-signup {
+      padding:11px 28px; background:linear-gradient(135deg,var(--accent2),var(--accent1));
+      border:none; color:#fff; font-weight:700; font-size:13px; border-radius:999px;
+      cursor:pointer; box-shadow:0 4px 16px rgba(99,102,241,.35); transition:all .2s;
+      font-family:'DM Sans',sans-serif;
+    }
+    .gate-btn-signup:hover { transform:translateY(-2px); }
+    .gate-guest {
+      margin-top:14px; font-size:12px; color:var(--muted);
+    }
+    .gate-guest a { color:var(--accent2); font-weight:700; cursor:pointer; text-decoration:underline; }
+
+    /* ─── 비회원 배너 ─── */
+    #guest-banner {
+      display:none; position:fixed; bottom:0; left:0; right:0;
+      background:linear-gradient(135deg,#1e293b,#0f172a); color:#fff;
+      z-index:400; padding:10px 16px;
+      align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
+      box-shadow:0 -4px 20px rgba(0,0,0,.18);
+    }
+    #guest-banner.visible { display:flex; }
+    .guest-banner-text { font-size:12px; color:rgba(255,255,255,.8); text-align:center; }
+    .guest-banner-text strong { color:#fbbf24; }
+    .guest-banner-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .guest-btn {
+      padding:7px 18px; font-size:12px; font-weight:700; border-radius:999px;
+      cursor:pointer; transition:all .2s; white-space:nowrap; font-family:'DM Sans',sans-serif;
+    }
+    .guest-btn.primary { border:2px solid var(--accent2); background:var(--accent2); color:#fff; }
+    .guest-btn.primary:hover { background:#4f46e5; }
+    .guest-btn.secondary { border:2px solid rgba(255,255,255,.3); background:transparent; color:#fff; }
+    .guest-btn.secondary:hover { background:rgba(255,255,255,.1); }
+
+    /* ──────────────────────────────
+       MODALS
+    ────────────────────────────── */
+    .modal-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(15,23,42,.5); backdrop-filter:blur(4px);
+      z-index:1000; align-items:center; justify-content:center; padding:16px;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal-box {
+      background:#fff; border-radius:22px; padding:36px 32px;
+      width:100%; max-width:440px; max-height:92vh; overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,.16);
+      animation:modalIn .25s cubic-bezier(.34,1.3,.64,1);
+      position:relative;
+    }
+    @keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
+    .modal-close {
+      position:absolute; top:16px; right:18px;
+      background:#f3f4f6; border:none; width:30px; height:30px;
+      border-radius:50%; font-size:14px; cursor:pointer; color:#6b7280;
+      display:flex; align-items:center; justify-content:center; transition:background .2s;
+    }
+    .modal-close:hover { background:#e5e7eb; }
+    .modal-title {
+      font-size:22px; font-weight:800; margin-bottom:4px; letter-spacing:-.02em;
+      background:linear-gradient(135deg,var(--accent1),var(--accent3));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .modal-title.danger { background:none; -webkit-text-fill-color:var(--danger); color:var(--danger); }
+    .modal-sub { font-size:13px; color:var(--muted); margin-bottom:22px; }
+    .modal-switch { font-size:12px; color:var(--muted); text-align:center; margin-top:16px; }
+    .modal-switch a { color:var(--accent2); font-weight:700; cursor:pointer; text-decoration:none; }
+    .modal-switch a:hover { text-decoration:underline; }
+
+    .form-group { margin-bottom:13px; }
+    .form-group label { display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:5px; }
+    .form-group label .req { color:var(--danger); margin-left:2px; }
+    .form-input {
+      width:100%; padding:10px 12px; border:1.5px solid var(--border);
+      border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px;
+      color:var(--ink); background:#fafafa; transition:border-color .2s, box-shadow .2s; outline:none;
+    }
+    .form-input:focus { border-color:var(--accent2); background:#fff; box-shadow:0 0 0 3px rgba(99,102,241,.1); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+    .agree-box { background:#f8faff; border:1.5px solid #e0e7ff; border-radius:10px; padding:12px 14px; margin-bottom:16px; }
+    .agree-label { display:flex; align-items:flex-start; gap:8px; cursor:pointer; font-size:11.5px; color:#4b5563; line-height:1.6; }
+    .agree-label input[type=checkbox] { width:16px; height:16px; accent-color:var(--accent2); flex-shrink:0; margin-top:2px; }
+
+    .btn-submit {
+      width:100%; padding:12px; background:linear-gradient(135deg,var(--accent2),var(--accent1));
+      color:#fff; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+      border:none; border-radius:10px; cursor:pointer;
+      box-shadow:0 4px 16px rgba(99,102,241,.3); transition:transform .2s, box-shadow .2s;
+    }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,.4); }
+    .btn-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .btn-submit-danger {
+      width:100%; padding:12px;
+      background:linear-gradient(135deg,var(--danger),#dc2626);
+      color:#fff; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+      border:none; border-radius:10px; cursor:pointer;
+      box-shadow:0 4px 16px rgba(239,68,68,.25); transition:transform .2s;
+    }
+    .btn-submit-danger:hover { transform:translateY(-2px); }
+    .btn-submit-danger:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+    .form-msg { font-size:12px; text-align:center; margin-top:10px; padding:9px 12px; border-radius:8px; display:none; }
+    .form-msg.error   { display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
+    .form-msg.success { display:block; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; }
+
+    .modal-danger-zone {
+      background:#fef2f2; border:1.5px solid #fecaca; border-radius:12px;
+      padding:14px 16px; margin-bottom:16px; display:flex; gap:10px; align-items:flex-start;
+    }
+    .modal-danger-text { font-size:12px; color:#b91c1c; line-height:1.65; }
+    .modal-danger-text strong { font-weight:700; }
+
+    #captcha-box { display:none; margin-bottom:10px; }
+
+    .btn-google {
+      width:100%; padding:11px; background:#fff; color:#374151;
+      font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+      border:1.5px solid var(--border); border-radius:10px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      transition:all .2s; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:14px;
+    }
+    .btn-google:hover { background:#f9fafb; border-color:#d1d5db; }
+    .btn-google svg { width:18px; height:18px; flex-shrink:0; }
+    .divider-or {
+      display:flex; align-items:center; gap:10px; margin-bottom:13px;
+      color:var(--muted); font-size:12px;
+    }
+    .divider-or::before, .divider-or::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ─── 반응형 ─── */
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }         /* 모바일에선 스크롤 허용 */
+      .shell { grid-template-rows: 56px 1fr; height: auto; min-height: 100vh; }
+      .content-area { overflow: auto; }
+      #page-dict.active { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+      .left-panel  { padding: 28px 20px; border-right:none; border-bottom:1px solid var(--border); }
+      .right-panel { padding: 20px 16px; }
+      .header-nav  { display:none; }
+      .hamburger   { display:block; }
+      .main-title  { font-size: 26px; }
+    }
+    @media (min-width: 769px) { .hamburger { display:none; } }
   </style>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
-  <!-- 로그인 보호 게이트 (로그인 전 표시) -->
+  <!-- ══ AUTH GATE ══ -->
   <div id="auth-gate" class="visible">
     <div class="gate-icon">🔐</div>
-    <h2 class="gate-title gradient-text">Dr.Shim's Korean Lab</h2>
+    <div class="gate-title">Dr.Shim's Korean Lab</div>
     <p class="gate-desc">서비스를 이용하려면 로그인이 필요합니다.<br/>Please log in to use the service.</p>
     <div class="gate-btns">
-      <button class="gate-btn-login" onclick="openModal('login')">로그인 / Login</button>
+      <button class="gate-btn-login"  onclick="openModal('login')">로그인 / Login</button>
       <button class="gate-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
     </div>
-    <p style="margin-top:20px; font-size:13px; color:#9ca3af;">
-      또는 &nbsp;
-      <a onclick="startGuestMode()" style="color:#6366f1; font-weight:700; cursor:pointer; text-decoration:underline;">
-        비회원으로 3회 체험하기 / Try 3 times as guest
-      </a>
-    </p>
+    <p class="gate-guest">또는 &nbsp;<a onclick="startGuestMode()">비회원으로 3회 체험 / Try 3 times as guest</a></p>
   </div>
 
-  <!-- 비회원 체험 하단 배너 -->
+  <!-- ══ GUEST BANNER ══ -->
   <div id="guest-banner">
     <div class="guest-banner-text">
-      비회원 체험 중 · <strong id="guest-count-text">3회</strong> 남음 · 로그인하면 무제한 사용 가능합니다.
-      <br/><small style="color:rgba(255,255,255,0.5);">Guest mode · Unlimited access after login.</small>
+      비회원 체험 중 · <strong id="guest-count-text">3회</strong> 남음 · 로그인하면 무제한 이용 가능
+      <br/><small style="color:rgba(255,255,255,.45);">Guest mode · Unlimited access after login.</small>
     </div>
     <div class="guest-banner-btns">
-      <button class="guest-btn-login" onclick="openModal('login')">로그인 / Login</button>
-      <button class="guest-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
+      <button class="guest-btn primary"   onclick="openModal('login')">로그인</button>
+      <button class="guest-btn secondary" onclick="openModal('signup')">회원가입</button>
     </div>
   </div>
 
-  <!-- 로그인 모달 -->
+  <!-- ══ LOGIN MODAL ══ -->
   <div class="modal-overlay" id="modal-login">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('login')">✕</button>
-      <div class="modal-title gradient-text">로그인</div>
+      <div class="modal-title">로그인</div>
       <div class="modal-sub">Welcome back! / 돌아오신 것을 환영합니다</div>
       <div class="form-group">
         <label>아이디 (ID)<span class="req">*</span></label>
@@ -1185,61 +643,50 @@
         <input class="form-input" id="login-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password"/>
       </div>
       <div class="form-msg" id="login-msg"></div>
-      <!-- ✅ CAPTCHA 영역 (기본 숨김) -->
-      <div id="captcha-box" style="display:none; margin-bottom:12px;">
-        <div id="turnstile-container"></div>
-      </div>
-      
+      <div id="captcha-box"><div id="turnstile-container"></div></div>
       <button class="btn-submit" id="login-submit" onclick="doLogin()">로그인 / Login</button>
-      <div class="divider-or">또는 / or</div>
+      <div class="divider-or" style="margin-top:13px;">또는 / or</div>
       <button class="btn-google" onclick="googleLogin()">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         Google로 로그인 / Sign in with Google
       </button>
-      <div class="modal-switch">
-        계정이 없으신가요? <a onclick="switchModal('login','signup')">회원가입 하기</a>
-      </div>
+      <div class="modal-switch">계정이 없으신가요? <a onclick="switchModal('login','signup')">회원가입 하기</a></div>
     </div>
   </div>
 
-  <!-- 회원가입 모달 -->
+  <!-- ══ SIGNUP MODAL ══ -->
   <div class="modal-overlay" id="modal-signup">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('signup')">✕</button>
-      <div class="modal-title gradient-text">회원가입</div>
+      <div class="modal-title">회원가입</div>
       <div class="modal-sub">Create your account / 계정을 만들어 보세요</div>
       <div class="form-row">
         <div class="form-group">
-          <label>아이디 (ID)<span class="req">*</span></label>
-          <input class="form-input" id="su-username" type="text" placeholder="영문+숫자, 4자 이상" autocomplete="username"/>
+          <label>아이디<span class="req">*</span></label>
+          <input class="form-input" id="su-username" type="text" placeholder="영문+숫자, 4자↑" autocomplete="username"/>
         </div>
         <div class="form-group">
-          <label>비밀번호 (Password)<span class="req">*</span></label>
+          <label>비밀번호<span class="req">*</span></label>
           <input class="form-input" id="su-password" type="password" placeholder="6자 이상" autocomplete="new-password"/>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>이름 (Name)<span class="req">*</span></label>
+          <label>이름<span class="req">*</span></label>
           <input class="form-input" id="su-name" type="text" placeholder="홍길동"/>
         </div>
         <div class="form-group">
-          <label>국적 (Nationality)<span class="req">*</span></label>
+          <label>국적<span class="req">*</span></label>
           <input class="form-input" id="su-nationality" type="text" placeholder="한국 / Korea"/>
         </div>
       </div>
       <div class="form-group">
-        <label>이메일 (Email)<span class="req">*</span></label>
+        <label>이메일<span class="req">*</span></label>
         <input class="form-input" id="su-email" type="email" placeholder="example@email.com" autocomplete="email"/>
       </div>
       <div class="form-group">
-        <label>전화번호 (Phone)</label>
-        <input class="form-input" id="su-phone" type="tel" placeholder="010-0000-0000 (선택사항)"/>
+        <label>전화번호 <small style="color:var(--muted)">(선택)</small></label>
+        <input class="form-input" id="su-phone" type="tel" placeholder="010-0000-0000"/>
       </div>
       <div class="agree-box">
         <label class="agree-label">
@@ -1247,355 +694,269 @@
           <span>
             아래 사항에 동의합니다. (필수)<br/>
             ① 수집 항목: 아이디, 이름, 국적, 이메일, 전화번호(선택)<br/>
-            ② 수집 목적: 회원 관리, 서비스 제공, 공지사항 전달, 광고·마케팅<br/>
+            ② 수집 목적: 회원 관리, 서비스 제공, 광고·마케팅<br/>
             ③ 보유 기간: 회원 탈퇴 시까지<br/>
-            ④ 제3자 제공: 광고·서비스 개선 목적에 한하여 제공될 수 있음<br/>
-            <a href="https://shim-hyunju.github.io/privacy.html" target="_blank"
-               style="color:#6366f1; font-weight:700; text-decoration:underline;">
-              📄 개인정보 처리방침 전문 보기
-            </a><br/>
-            <small style="color:#9ca3af;">
-              I agree to the collection and use of my personal information
-              (name, nationality, email, phone) for membership management,
-              service provision, and marketing purposes, including sharing
-              with third parties as described in the
-              <a href="https://shim-hyunju.github.io/privacy.html" target="_blank"
-                 style="color:#6366f1;">Privacy Policy</a>.
-            </small>
+            ④ 제3자 제공: 광고·서비스 개선 목적에 한해 제공될 수 있음<br/>
+            <a href="https://shim-hyunju.github.io/privacy.html" target="_blank" style="color:var(--accent2);font-weight:700;">📄 개인정보 처리방침 전문 보기</a>
           </span>
         </label>
       </div>
       <div class="form-msg" id="signup-msg"></div>
       <button class="btn-submit" id="signup-submit" onclick="doSignup()">회원가입 완료 / Sign Up</button>
-      <div class="divider-or">또는 / or</div>
+      <div class="divider-or" style="margin-top:13px;">또는 / or</div>
       <button class="btn-google" onclick="googleLogin()">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         Google로 가입 / Sign up with Google
       </button>
-      <div class="modal-switch">
-        이미 계정이 있으신가요? <a onclick="switchModal('signup','login')">로그인 하기</a>
-      </div>
+      <div class="modal-switch">이미 계정이 있으신가요? <a onclick="switchModal('signup','login')">로그인 하기</a></div>
     </div>
   </div>
 
-  <!-- 회원탈퇴 모달 -->
+  <!-- ══ WITHDRAW MODAL ══ -->
   <div class="modal-overlay" id="modal-withdraw">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('withdraw')">✕</button>
-      <div class="modal-title" style="color:#dc2626;">회원탈퇴</div>
+      <div class="modal-title danger">회원탈퇴</div>
       <div class="modal-sub">Delete Account / 계정 영구 삭제</div>
       <div class="modal-danger-zone">
-        <div class="modal-danger-icon">⚠️</div>
-        <div class="modal-danger-text">
-          <strong>탈퇴 시 모든 개인정보가 즉시 삭제되며 복구할 수 없습니다.</strong><br/>
-          All personal data will be permanently deleted and cannot be recovered.
-        </div>
+        <div style="font-size:20px;flex-shrink:0">⚠️</div>
+        <div class="modal-danger-text"><strong>탈퇴 시 모든 개인정보가 즉시 삭제되며 복구할 수 없습니다.</strong><br/>All personal data will be permanently deleted.</div>
       </div>
-      <div class="form-group">
-        <label>아이디 (ID)<span class="req">*</span></label>
-        <input class="form-input" id="wd-username" type="text" placeholder="가입 시 사용한 아이디"/>
-      </div>
-      <div class="form-group">
-        <label>비밀번호 (Password)<span class="req">*</span></label>
-        <input class="form-input" id="wd-password" type="password" placeholder="비밀번호 확인"/>
-      </div>
+      <div class="form-group"><label>아이디 (ID)<span class="req">*</span></label><input class="form-input" id="wd-username" type="text" placeholder="가입 시 사용한 아이디"/></div>
+      <div class="form-group"><label>비밀번호 (Password)<span class="req">*</span></label><input class="form-input" id="wd-password" type="password" placeholder="비밀번호 확인"/></div>
       <div class="form-msg" id="withdraw-msg"></div>
-      <button class="btn-submit-danger" id="withdraw-submit" onclick="doWithdraw()">
-        탈퇴하기 / Delete My Account
-      </button>
-      <div class="modal-switch">
-        <a onclick="closeModal('withdraw')" style="color:#9ca3af;">취소 / Cancel</a>
-      </div>
+      <button class="btn-submit-danger" id="withdraw-submit" onclick="doWithdraw()">탈퇴하기 / Delete My Account</button>
+      <div class="modal-switch"><a onclick="closeModal('withdraw')" style="color:var(--muted)">취소 / Cancel</a></div>
     </div>
   </div>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="topbar-inner">
-      <span class="topbar-dot"></span>
-      Dr.Shim's Korean Lab &nbsp;·&nbsp; 한국어 학습 도구 모음
-      <span class="topbar-dot"></span>
-    </div>
-  </div>
+  <!-- ══ SHELL ══ -->
+  <div class="shell">
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-inner">
-      <nav class="main-nav" id="mainNav">
+    <!-- 헤더 -->
+    <header>
+      <div class="header-logo">Dr.Shim's Korean Lab</div>
+
+      <nav class="header-nav" id="mainNav">
         <button class="nav-btn active" onclick="showPage('dict')"  id="nav-dict">친절한 한국어 검색 사전</button>
         <button class="nav-btn"        onclick="showPage('cs1')"   id="nav-cs1">준비 중 1</button>
         <button class="nav-btn"        onclick="showPage('cs2')"   id="nav-cs2">준비 중 2</button>
         <button class="nav-btn"        onclick="showPage('cs3')"   id="nav-cs3">준비 중 3</button>
         <button class="nav-btn"        onclick="showPage('cs4')"   id="nav-cs4">준비 중 4</button>
       </nav>
-      <!-- 인증 영역 -->
+
       <div class="header-auth">
-        <!-- 비로그인 상태 -->
         <div id="auth-buttons">
           <button class="btn-login"  onclick="openModal('login')">로그인</button>
           <button class="btn-signup" onclick="openModal('signup')">회원가입</button>
         </div>
-        <!-- 로그인 상태 -->
         <div class="user-info" id="user-info">
           <span class="user-greeting" id="user-greeting"></span>
-          <button class="btn-logout" onclick="doLogout()">로그아웃</button>
+          <button class="btn-logout"   onclick="doLogout()">로그아웃</button>
           <button class="btn-withdraw" onclick="openModal('withdraw')">회원탈퇴</button>
         </div>
       </div>
+
       <button class="hamburger" onclick="toggleMobile()" id="hamburger">
         <i class="fas fa-bars" id="ham-icon"></i>
       </button>
+    </header>
+
+    <!-- 모바일 메뉴 -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="nav-btn active" onclick="showPage('dict',true)" id="mnav-dict">친절한 한국어 검색 사전</button>
+      <button class="nav-btn"        onclick="showPage('cs1', true)" id="mnav-cs1">준비 중 1</button>
+      <button class="nav-btn"        onclick="showPage('cs2', true)" id="mnav-cs2">준비 중 2</button>
+      <button class="nav-btn"        onclick="showPage('cs3', true)" id="mnav-cs3">준비 중 3</button>
+      <button class="nav-btn"        onclick="showPage('cs4', true)" id="mnav-cs4">준비 중 4</button>
     </div>
-  </header>
 
-  <!-- 모바일 메뉴 -->
-  <div class="mobile-menu" id="mobileMenu">
-    <button class="nav-btn active" onclick="showPage('dict', true)" id="mnav-dict">친절한 한국어 검색 사전</button>
-    <button class="nav-btn"        onclick="showPage('cs1',  true)" id="mnav-cs1">준비 중 1</button>
-    <button class="nav-btn"        onclick="showPage('cs2',  true)" id="mnav-cs2">준비 중 2</button>
-    <button class="nav-btn"        onclick="showPage('cs3',  true)" id="mnav-cs3">준비 중 3</button>
-    <button class="nav-btn"        onclick="showPage('cs4',  true)" id="mnav-cs4">준비 중 4</button>
-  </div>
+    <!-- 콘텐츠 -->
+    <div class="content-area">
 
-  <main>
+      <!-- ── PAGE: 사전 ── -->
+      <div class="page active" id="page-dict">
 
-    <!-- ════════════════════════════════
-         PAGE 1: 친절한 한국어 검색 사전
-    ════════════════════════════════ -->
-    <div class="page active" id="page-dict">
+        <!-- 왼쪽 -->
+        <div class="left-panel">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Tool 01 · Dr.Shim's Korean Lab</div>
+          <h1 class="main-title">친절한<br/>한국어 검색 사전</h1>
+          <p class="main-subtitle">A Kindly Korean Search Dictionary</p>
+          <p class="main-desc">
+            한국어 단어, 복합 어휘, 문장까지<br/>
+            쉽고 편리하게 찾아보세요!<br/>
+            <span style="color:#a5b4fc">Find words, compounds &amp; sentences easily.</span>
+          </p>
 
-      <!-- 히어로 -->
-      <section class="hero">
-        <div class="hero-eyebrow">
-          <span class="hero-eyebrow-dot"></span>
-          Dr.Shim's Korean Lab · Tool 01
-        </div>
-        <h1 class="gradient-text">친절한 한국어 검색 사전</h1>
-        <p class="hero-sub">A Kindly Korean Search Dictionary</p>
-        <p class="hero-desc">
-          한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요!<br/>
-          Find Korean words, compound vocabulary, and sentences easily and conveniently!
-        </p>
-      </section>
-
-      <!-- 주요 특징 -->
-      <div class="section-wrap">
-        <div class="section-header">
-          <div class="section-tag">Key Features · 주요 특징</div>
-          <h2 class="section-heading">이런 기능을 제공합니다</h2>
-          <p class="section-sub">이 사전이 제공하는 핵심 기능들을 확인하세요</p>
-        </div>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="fc-icon-wrap blue"><i class="fas fa-search"></i></div>
-            <div class="fc-title">다양한 검색 단위<small>Various Search Units</small></div>
-            <p class="fc-desc">단어, 복합 어휘, 문장 단위의 입력을 통한 한국어 어휘 검색이 가능합니다.<br/>Search Korean vocabulary by entering a word, compound word, or sentence.</p>
+          <div class="feature-chips">
+            <span class="chip"><i class="fas fa-search"></i> 다양한 검색 단위</span>
+            <span class="chip"><i class="fas fa-language"></i> 다국어 번역</span>
+            <span class="chip"><i class="fas fa-lightbulb"></i> 문맥 이해</span>
           </div>
-          <div class="feature-card">
-            <div class="fc-icon-wrap green"><i class="fas fa-language"></i></div>
-            <div class="fc-title">다국어 번역<small>Multilingual Translation</small></div>
-            <p class="fc-desc">구글 번역기를 통해 검색 결과를 원하는 언어로 즉시 번역합니다.<br/>Instantly translates search results into your desired language via Google Translator.</p>
-          </div>
-          <div class="feature-card">
-            <div class="fc-icon-wrap purple"><i class="fas fa-lightbulb"></i></div>
-            <div class="fc-title">문맥 이해<small>Contextual Understanding</small></div>
-            <p class="fc-desc">문장 전체를 검색하여 문맥에 맞는 정확한 의미를 파악할 수 있도록 돕습니다.<br/>Helps you grasp the precise meaning in context by searching entire sentences.</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- 사용법 -->
-      <div class="section-wrap" id="how-to-use">
-        <div class="section-header">
-          <div class="section-tag">How to Use · 사전 사용법</div>
-          <h2 class="section-heading">이렇게 사용하세요</h2>
-          <p class="section-sub">효과적으로 사용하는 방법을 안내합니다</p>
-        </div>
-        <div class="how-list">
-          <div class="how-item">
-            <div class="how-icon-wrap blue"><i class="fas fa-keyboard"></i></div>
-            <div class="how-text">
-              <h3>1. 한국어만 입력하세요 <small>Enter Korean Only</small></h3>
-              <p>이 사전은 한국어 어휘만을 제공합니다. 따라서 외국어는 입력하지 마십시오.<br/>This dictionary only provides Korean vocabulary. Therefore, please do not enter foreign language words.</p>
-            </div>
-          </div>
-          <div class="how-item">
-            <div class="how-icon-wrap green"><i class="fas fa-book-open"></i></div>
-            <div class="how-text">
-              <h3>2. 문장 단위로 검색하세요 <small>Search by Sentence Units</small></h3>
-              <p>이 사전은 구와 절 이상의 단위로 입력할 때 그 기능을 효과적으로 이용할 수 있습니다. 특정 단어의 의미를 알고 싶을지라도, 문장 전체를 검색하는 것이 문맥상 알맞은 어휘를 찾는 데 더 도움이 됩니다.<br/>Even if you want to know the meaning of a specific word, searching the entire sentence helps you find the most contextually appropriate vocabulary.</p>
-            </div>
-          </div>
-        </div>
-        <!-- 시작하기 버튼 -->
-        <div class="cta-wrap">
-          <button onclick="goToDict()" class="hero-cta">
+          <button class="cta-btn" onclick="goToDict()">
             지금 시작하기! / Let's Get Started!
-            <span class="hero-cta-arrow">→</span>
+            <span class="cta-arrow">→</span>
           </button>
-        </div>
-      </div>
 
-      <!-- 후원 + 공지 -->
-      <div class="section-wrap">
-        <div class="donate-wrap">
-          <img src="static/images/drShim.png" alt="심군 박사 이미지" class="donate-img"
-            onerror="this.onerror=null; this.src='https://placehold.co/96x96/dbeafe/3b82f6?text=Dr.Shim';" />
-          <p class="donate-title">▼ 후원을 원하시면 / If you would like to donate ▼</p>
-          <a href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener noreferrer">
-            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=Dr.shim&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00"
-              alt="Buy Me a Coffee" style="border-radius:10px; max-width:220px;"/>
-          </a>
-        </div>
-
-        <div class="notice-list">
-          <div class="notice-card ko">
-            <div class="notice-card-head">
-              <span class="notice-flag">🇰🇷</span>
-              <h4>= 공지 =</h4>
-            </div>
-            <p>이 프로그램은 구글 크롬 브라우저에서 정상적으로 작동합니다. 그 외 브라우저에서는 '발음 듣기' 등 일부 기능이 작동하지 않을 수 있습니다.<br/>이 프로그램은 '한국어기초사전', 'googletrans', 'kiwipiepy', 'pythonanywhere', 'git page' 등 무료 API와 호스팅 서비스를 이용하고 있습니다. 따라서 처리 속도가 느리거나 일일 접속자 및 트래픽 제한 등의 사유로 실행 오류가 발생할 수 있으니 이 점 양해 부탁드립니다.</p>
-          </div>
-          <div class="notice-card en">
-            <div class="notice-card-head">
-              <span class="notice-flag">🌐</span>
-              <h4>= Notice =</h4>
-            </div>
-            <p>This program works normally in Google Chrome browser. Some functions, such as 'Listen to pronunciation', may not work in other browsers.<br/>This program uses free APIs and hosting services such as 'Korean Basic Dictionary', 'googletrans', 'kiwipiepy', 'pythonanywhere', and 'git page'. Therefore, please understand that execution errors may occur due to slow processing speed or restrictions on daily users and traffic.</p>
+          <div class="donate-row">
+            <img src="static/images/drShim.png" alt="Dr.Shim" class="donate-avatar"
+              onerror="this.src='https://placehold.co/36x36/dbeafe/3b82f6?text=S'"/>
+            <span style="font-size:11px;color:var(--muted)">후원 / Donate ▶</span>
+            <a class="donate-link" href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener">
+              <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=Dr.shim&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00" alt="Donate"/>
+            </a>
           </div>
         </div>
+
+        <!-- 오른쪽 -->
+        <div class="right-panel">
+
+          <!-- 사용법 -->
+          <div>
+            <div class="panel-section-title">사용법 / How to Use</div>
+            <div class="how-cards">
+              <div class="how-card">
+                <div class="how-num">1</div>
+                <div class="how-text-wrap">
+                  <h4>한국어만 입력하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Enter Korean Only</span></h4>
+                  <p>이 사전은 한국어 어휘만 제공합니다. 외국어는 입력하지 마세요.<br/>This dictionary provides Korean vocabulary only.</p>
+                </div>
+              </div>
+              <div class="how-card">
+                <div class="how-num">2</div>
+                <div class="how-text-wrap">
+                  <h4>문장 단위로 검색하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Search by Sentence</span></h4>
+                  <p>문장 전체를 입력하면 문맥에 맞는 어휘를 더 정확히 찾을 수 있습니다.<br/>Entering full sentences helps find contextually accurate vocabulary.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 공지 -->
+          <div>
+            <div class="panel-section-title">공지 / Notice</div>
+            <div class="notice-cards">
+              <div class="notice-card ko">
+                <div class="notice-head"><span>🇰🇷</span><span>공지</span></div>
+                이 프로그램은 구글 크롬에서 정상 작동합니다. 그 외 브라우저에서는 '발음 듣기' 등 일부 기능이 작동하지 않을 수 있습니다. 무료 API 및 호스팅 서비스를 이용하므로 처리 속도가 느리거나 트래픽 제한으로 오류가 발생할 수 있습니다.
+              </div>
+              <div class="notice-card en">
+                <div class="notice-head"><span>🌐</span><span>Notice</span></div>
+                This program works normally in Chrome. Some features may not work in other browsers. Free APIs and hosting services are used, so execution errors may occur due to traffic limits or slow processing.
+              </div>
+            </div>
+          </div>
+
+          <!-- 저작권 -->
+          <div style="text-align:center; padding: 4px 0 2px;">
+            <p style="font-size:10px;color:var(--muted)">© Dr.Shim All rights reserved &nbsp;·&nbsp; <a href="mailto:love3462@nate.com" style="color:var(--muted)">love3462@nate.com</a></p>
+            <p id="member-count" style="text-align:center; font-size:11px; color:#888; margin-top:10px;">회원 수: 불러오는 중...</p>
+          </div>
+
+        </div><!-- /right-panel -->
+
+      </div><!-- /page-dict -->
+
+      <!-- ── COMING SOON 페이지들 ── -->
+      <div class="page" id="page-cs1">
+        <div class="coming-page">
+          <div class="coming-icon">🔬</div>
+          <div class="coming-badge">준비 중 / Coming Soon</div>
+          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+      <div class="page" id="page-cs2">
+        <div class="coming-page">
+          <div class="coming-icon">✏️</div>
+          <div class="coming-badge">준비 중 / Coming Soon</div>
+          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+      <div class="page" id="page-cs3">
+        <div class="coming-page">
+          <div class="coming-icon">📖</div>
+          <div class="coming-badge">준비 중 / Coming Soon</div>
+          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+      <div class="page" id="page-cs4">
+        <div class="coming-page">
+          <div class="coming-icon">🎓</div>
+          <div class="coming-badge">준비 중 / Coming Soon</div>
+          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+        </div>
       </div>
 
-    </div><!-- /page-dict -->
-
-
-    <!-- ════════════════════════════
-         PAGES: 준비 중 1 ~ 4
-    ════════════════════════════ -->
-    <div class="page" id="page-cs1">
-      <div class="coming-page">
-        <div class="coming-icon-wrap">🔬</div>
-        <div class="coming-badge">준비 중 / Coming Soon</div>
-        <h2>새로운 도구<br/>준비 중입니다</h2>
-        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
-        <div class="progress-track"><div class="progress-fill"></div></div>
-      </div>
-    </div>
-
-    <div class="page" id="page-cs2">
-      <div class="coming-page">
-        <div class="coming-icon-wrap">✏️</div>
-        <div class="coming-badge">준비 중 / Coming Soon</div>
-        <h2>새로운 도구<br/>준비 중입니다</h2>
-        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
-        <div class="progress-track"><div class="progress-fill"></div></div>
-      </div>
-    </div>
-
-    <div class="page" id="page-cs3">
-      <div class="coming-page">
-        <div class="coming-icon-wrap">📖</div>
-        <div class="coming-badge">준비 중 / Coming Soon</div>
-        <h2>새로운 도구<br/>준비 중입니다</h2>
-        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
-        <div class="progress-track"><div class="progress-fill"></div></div>
-      </div>
-    </div>
-
-    <div class="page" id="page-cs4">
-      <div class="coming-page">
-        <div class="coming-icon-wrap">🎓</div>
-        <div class="coming-badge">준비 중 / Coming Soon</div>
-        <h2>새로운 도구<br/>준비 중입니다</h2>
-        <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared. Please stay tuned!</p>
-        <div class="progress-track"><div class="progress-fill"></div></div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer id="contact">
-    <div class="footer-logo gradient-text">Dr.Shim's Korean Lab</div>
-    <p>&copy; Dr.Shim All rights reserved.</p>
-    <p>Contact: love3462@nate.com</p>
-    <div id="member-count" style="text-align:center; font-size:11px; color:#888; margin-top:10px;">
-      회원 수: 불러오는 중...
-    </div>
-  </footer>
+    </div><!-- /content-area -->
+  </div><!-- /shell -->
 
   <script>
-    // ═══════════════════════════════════════════════
-    //  설정: 본인의 PythonAnywhere 앱 URL로 교체하세요
-    // ═══════════════════════════════════════════════
+    // ─── CAPTCHA ───────────────────────────────────
     let captchaToken = null;
     let turnstileWidgetId = null;
-    
-    function onCaptchaSuccess(token) {
-        captchaToken = token;
-    }
-    
+
+    function onCaptchaSuccess(token) { captchaToken = token; }
+
     function renderCaptcha() {
-        // ✅ 컨테이너를 완전히 비운 뒤 새로 렌더 (중복/잔여 DOM 방지)
-        const container = document.getElementById('turnstile-container');
-        container.innerHTML = '';
-        turnstileWidgetId = null;
-    
-        turnstileWidgetId = turnstile.render(container, {
-            sitekey: '0x4AAAAAACsRndMrjUbzBlq-',
-            callback: onCaptchaSuccess
-        });
+      const container = document.getElementById('turnstile-container');
+      container.innerHTML = '';
+      turnstileWidgetId = null;
+      turnstileWidgetId = turnstile.render(container, {
+        sitekey: '0x4AAAAAACsRndMrjUbzBlq-',
+        callback: onCaptchaSuccess
+      });
     }
-    
+
     function resetCaptcha() {
-        captchaToken = null;
-        if (window.turnstile && turnstileWidgetId !== null) {
-            try { turnstile.remove(turnstileWidgetId); } catch(e) {}
-            turnstileWidgetId = null;
-        }
-        // ✅ DOM도 함께 초기화
-        const container = document.getElementById('turnstile-container');
-        if (container) container.innerHTML = '';
+      captchaToken = null;
+      if (window.turnstile && turnstileWidgetId !== null) {
+        try { turnstile.remove(turnstileWidgetId); } catch(e) {}
+        turnstileWidgetId = null;
+      }
+      const c = document.getElementById('turnstile-container');
+      if (c) c.innerHTML = '';
     }
-    
-    const API_BASE = 'https://drshim.pythonanywhere.com/api';
 
-    // ⚠️ Google OAuth Client ID — Google Cloud Console에서 발급 후 아래에 입력
-    const GOOGLE_CLIENT_ID = '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
+    // ─── 설정 ──────────────────────────────────────
+    const API_BASE        = 'https://drshim.pythonanywhere.com/api';
+    const GOOGLE_CLIENT_ID= '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
+    const TOKEN_KEY       = 'drshim_token';
+    const GUEST_MAX       = 3;
+    const GUEST_KEY       = 'drshim_guest_count';
+    const GUEST_DATE      = 'drshim_guest_date';
 
-    // ── 비회원 체험 설정 ────────────────────────────
-    const GUEST_MAX    = 3;
-    const GUEST_KEY    = 'drshim_guest_count';
-    const GUEST_DATE   = 'drshim_guest_date';
+    // ─── 토큰 ──────────────────────────────────────
+    function saveToken(t)  { sessionStorage.setItem(TOKEN_KEY, t); }
+    function getToken()    { return sessionStorage.getItem(TOKEN_KEY); }
+    function removeToken() { sessionStorage.removeItem(TOKEN_KEY); }
 
+    // ─── 비회원 ────────────────────────────────────
     function getGuestCount() {
       const today = new Date().toDateString();
       if (localStorage.getItem(GUEST_DATE) !== today) {
-        // 날짜가 바뀌면 횟수 초기화
         localStorage.setItem(GUEST_DATE, today);
         localStorage.setItem(GUEST_KEY, '0');
       }
       return parseInt(localStorage.getItem(GUEST_KEY) || '0');
     }
-
     function incrementGuestCount() {
-      const count = getGuestCount() + 1;
-      localStorage.setItem(GUEST_KEY, String(count));
-      return count;
+      const c = getGuestCount() + 1;
+      localStorage.setItem(GUEST_KEY, String(c));
+      return c;
     }
-
-    function isGuestMode() {
-      return sessionStorage.getItem('drshim_guest') === '1';
-    }
+    function isGuestMode() { return sessionStorage.getItem('drshim_guest') === '1'; }
 
     function startGuestMode() {
-      const count = getGuestCount();
-      if (count >= GUEST_MAX) {
+      if (getGuestCount() >= GUEST_MAX) {
         alert('오늘의 무료 체험 횟수(3회)를 모두 사용하셨습니다.\n로그인하시면 무제한으로 이용하실 수 있습니다.\n\nYou have used all 3 free tries today.\nPlease log in for unlimited access.');
         return;
       }
@@ -1607,9 +968,8 @@
     function updateGuestBanner() {
       if (!isGuestMode()) return;
       const remaining = GUEST_MAX - getGuestCount();
-      const banner    = document.getElementById('guest-banner');
+      const banner = document.getElementById('guest-banner');
       if (remaining <= 0) {
-        // 횟수 소진 → 게이트 다시 표시
         sessionStorage.removeItem('drshim_guest');
         banner.classList.remove('visible');
         document.getElementById('auth-gate').classList.add('visible');
@@ -1619,30 +979,24 @@
       document.getElementById('guest-count-text').textContent = remaining + '회';
     }
 
-    // ── 페이지 전환 ─────────────────────────────────
+    // ─── 페이지 전환 ───────────────────────────────
     const pages = ['dict','cs1','cs2','cs3','cs4'];
 
     function showPage(id, closeMobile) {
       pages.forEach(p => {
-        const pg  = document.getElementById('page-'  + p);
-        const nb  = document.getElementById('nav-'   + p);
-        const mnb = document.getElementById('mnav-'  + p);
-        if (pg)  pg.classList.remove('active');
-        if (nb)  nb.classList.remove('active');
-        if (mnb) mnb.classList.remove('active');
+        ['page-','nav-','mnav-'].forEach(prefix => {
+          const el = document.getElementById(prefix + p);
+          if (el) el.classList.remove('active');
+        });
       });
-      const pg  = document.getElementById('page-'  + id);
-      const nb  = document.getElementById('nav-'   + id);
-      const mnb = document.getElementById('mnav-'  + id);
-      if (pg)  pg.classList.add('active');
-      if (nb)  nb.classList.add('active');
-      if (mnb) mnb.classList.add('active');
-
+      ['page-','nav-','mnav-'].forEach(prefix => {
+        const el = document.getElementById(prefix + id);
+        if (el) el.classList.add('active');
+      });
       if (closeMobile) {
         document.getElementById('mobileMenu').classList.remove('open');
         document.getElementById('ham-icon').className = 'fas fa-bars';
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function toggleMobile() {
@@ -1652,48 +1006,43 @@
       icon.className = open ? 'fas fa-times' : 'fas fa-bars';
     }
 
-    // ── 모달 열기/닫기 ──────────────────────────────
+    // ─── 모달 ──────────────────────────────────────
     function openModal(type) {
       document.getElementById('modal-' + type).classList.add('open');
-      clearMsg(type === 'login' ? 'login' : 'signup');
+      if (type === 'login' || type === 'signup') clearMsg(type);
     }
     function closeModal(type) {
       document.getElementById('modal-' + type).classList.remove('open');
     }
-
     function switchModal(from, to) {
       closeModal(from);
       setTimeout(() => openModal(to), 150);
     }
-    // 오버레이 클릭 시 닫기
+
     document.querySelectorAll('.modal-overlay').forEach(el => {
-      el.addEventListener('click', e => {
-        if (e.target === el) el.classList.remove('open');
-      });
+      el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
     });
-    // Enter 키 지원
     document.getElementById('login-password').addEventListener('keydown', e => {
       if (e.key === 'Enter') doLogin();
     });
 
-    // ── 메시지 표시 헬퍼 ────────────────────────────
+    // ─── 메시지 ────────────────────────────────────
     function showMsg(id, text, type) {
       const el = document.getElementById(id);
       el.textContent = text;
       el.className = 'form-msg ' + type;
     }
     function clearMsg(scope) {
-      document.getElementById(scope + '-msg').className = 'form-msg';
+      const el = document.getElementById(scope + '-msg');
+      if (el) el.className = 'form-msg';
     }
 
-    // ── 로그인 상태 UI 반영 ──────────────────────────
+    // ─── UI 상태 ───────────────────────────────────
     function setLoggedIn(name) {
       document.getElementById('auth-gate').classList.remove('visible');
       document.getElementById('auth-buttons').style.display = 'none';
-      const ui = document.getElementById('user-info');
-      ui.classList.add('visible');
-      document.getElementById('user-greeting').innerHTML =
-        `<span>${name}</span>님, 환영합니다!`;
+      document.getElementById('user-info').classList.add('visible');
+      document.getElementById('user-greeting').innerHTML = `<span>${name}</span>님, 환영합니다!`;
     }
     function setLoggedOut() {
       document.getElementById('auth-gate').classList.add('visible');
@@ -1703,158 +1052,97 @@
       sessionStorage.removeItem('drshim_guest');
     }
 
-    // ── 토큰 저장/조회/삭제 ─────────────────────────
-    const TOKEN_KEY = 'drshim_token';
-    function saveToken(token) { sessionStorage.setItem(TOKEN_KEY, token); }
-    function getToken()       { return sessionStorage.getItem(TOKEN_KEY); }
-    function removeToken()    { sessionStorage.removeItem(TOKEN_KEY); }
-
-    // ── 페이지 로드 시 토큰 검증 ────────────────────
-    // ✅ 수정 코드
+    // ─── 토큰 검증 (페이지 로드) ───────────────────
     async function checkAuth() {
       const token = getToken();
       if (!token) {
         if (isGuestMode()) {
           document.getElementById('auth-gate').classList.remove('visible');
           updateGuestBanner();
-        } else {
-          setLoggedOut();
-        }
+        } else { setLoggedOut(); }
         return;
       }
       try {
-        const res = await fetch(`${API_BASE}/verify-token`, {   // ✅ fetch 추가
+        const res  = await fetch(`${API_BASE}/verify-token`, {
           method: 'GET',
           headers: { 'Authorization': 'Bearer ' + token }
         });
         const data = await res.json();
-    
-        if (res.ok) {
-          setLoggedIn(data.name);
-          resetCaptcha();
-        } else {
-          resetCaptcha();
-          removeToken();
-          setLoggedOut();
-          if (data.require_captcha) {
-            document.getElementById('captcha-box').style.display = 'block';
-            renderCaptcha();
-          }
-        }
-      } catch {
-        removeToken();
-        setLoggedOut();
-      }
+        if (res.ok) { setLoggedIn(data.name); }
+        else         { removeToken(); setLoggedOut(); }
+      } catch { removeToken(); setLoggedOut(); }
     }
 
-    // ── Google 로그인 ────────────────────────────────
+    // ─── Google 로그인 ─────────────────────────────
     function googleLogin() {
-      if (!window.google) {
-        alert('Google 로그인을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
-        return;
-      }
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredential,
-        auto_select: false
-      });
+      if (!window.google) { alert('Google 로그인을 불러오는 중입니다. 잠시 후 다시 시도해주세요.'); return; }
+      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, auto_select: false });
       google.accounts.id.prompt();
     }
-
     async function handleGoogleCredential(response) {
       try {
-        const res = await fetch(`${API_BASE}/google-login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res  = await fetch(`${API_BASE}/google-login`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ credential: response.credential })
         });
         const data = await res.json();
         if (res.ok) {
           saveToken(data.token);
-          closeModal('login');
-          closeModal('signup');
+          closeModal('login'); closeModal('signup');
           setLoggedIn(data.name);
           sessionStorage.removeItem('drshim_guest');
           document.getElementById('guest-banner').classList.remove('visible');
-        } else {
-          alert(data.error || 'Google 로그인에 실패했습니다.');
-        }
-      } catch {
-        alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
-      }
+        } else { alert(data.error || 'Google 로그인에 실패했습니다.'); }
+      } catch { alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.'); }
     }
 
-    // ── 로그인 ──────────────────────────────────────
-    // ── 로그인 ──────────────────────────────────────
+    // ─── 로그인 ────────────────────────────────────
     async function doLogin() {
-        const username = document.getElementById('login-username').value.trim();
-        const password = document.getElementById('login-password').value;
-    
-        if (!username || !password) {
-            showMsg('login-msg', '아이디와 비밀번호를 입력해주세요.', 'error');
-            return;
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      if (!username || !password) { showMsg('login-msg','아이디와 비밀번호를 입력해주세요.','error'); return; }
+
+      const btn = document.getElementById('login-submit');
+      btn.disabled = true; btn.textContent = '로그인 중...';
+
+      try {
+        const res  = await fetch(`${API_BASE}/login`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ username, password, captcha_token: captchaToken || null })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          captchaToken = null;
+          document.getElementById('captcha-box').style.display = 'none';
+          resetCaptcha();
+          saveToken(data.token);
+          document.getElementById('modal-login').classList.remove('open');
+          setLoggedIn(data.name);
+          return;
         }
-    
-        const btn = document.getElementById('login-submit');
-        btn.disabled = true;
-        btn.textContent = '로그인 중...';
-    
-        try {
-            const res = await fetch(`${API_BASE}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username,
-                    password,
-                    captcha_token: captchaToken || null
-                })
-            });
-    
-            const data = await res.json();
-    
-            // ✅ 성공
-            if (res.ok) {
-                captchaToken = null;
-                document.getElementById('captcha-box').style.display = 'none';
-                resetCaptcha();
-                saveToken(data.token);
-                document.getElementById('modal-login').classList.remove('open');
-                setLoggedIn(data.name);
-                return;
-            }
-    
-            // ✅ 401: 비밀번호 틀림
-            if (res.status === 401) {
-                // ✅ 핵심: 사용된 captchaToken은 1회용이므로 즉시 초기화
-                captchaToken = null;
-                showMsg('login-msg', data.error || '로그인 실패', 'error');
-                if (data.require_captcha) {
-                    document.getElementById('captcha-box').style.display = 'block';
-                    renderCaptcha();  // 새 토큰 발급을 위해 재렌더
-                }
-                return;
-            }
-    
-            // ✅ 403: CAPTCHA 없거나 검증 실패
-            if (res.status === 403) {
-                captchaToken = null;
-                showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
-                document.getElementById('captcha-box').style.display = 'block';
-                renderCaptcha();  // 새 토큰 발급을 위해 재렌더
-                return;
-            }
-    
-            showMsg('login-msg', data.error || '로그인 실패', 'error');
-    
-        } catch {
-            showMsg('login-msg', '서버 연결 실패', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = '로그인 / Login';
+        if (res.status === 401) {
+          captchaToken = null;
+          showMsg('login-msg', data.error || '로그인 실패', 'error');
+          if (data.require_captcha) {
+            document.getElementById('captcha-box').style.display = 'block';
+            renderCaptcha();
+          }
+          return;
         }
+        if (res.status === 403) {
+          captchaToken = null;
+          showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
+          document.getElementById('captcha-box').style.display = 'block';
+          renderCaptcha();
+          return;
+        }
+        showMsg('login-msg', data.error || '로그인 실패', 'error');
+      } catch { showMsg('login-msg','서버 연결 실패','error'); }
+      finally  { btn.disabled = false; btn.textContent = '로그인 / Login'; }
     }
 
-    // ── 회원가입 ─────────────────────────────────────
+    // ─── 회원가입 ──────────────────────────────────
     async function doSignup() {
       const username    = document.getElementById('su-username').value.trim();
       const password    = document.getElementById('su-password').value;
@@ -1864,159 +1152,78 @@
       const phone       = document.getElementById('su-phone').value.trim();
       const agree       = document.getElementById('su-agree').checked;
 
-      if (!username || !password || !name || !nationality || !email) {
-        showMsg('signup-msg', '필수 항목(*)을 모두 입력해주세요.', 'error'); return;
-      }
-      if (username.length < 4) {
-        showMsg('signup-msg', '아이디는 4자 이상이어야 합니다.', 'error'); return;
-      }
-      if (password.length < 6) {
-        showMsg('signup-msg', '비밀번호는 6자 이상이어야 합니다.', 'error'); return;
-      }
-      if (!agree) {
-        showMsg('signup-msg', '개인정보 제공 동의가 필요합니다.', 'error'); return;
-      }
+      if (!username||!password||!name||!nationality||!email) { showMsg('signup-msg','필수 항목(*)을 모두 입력해주세요.','error'); return; }
+      if (username.length < 4) { showMsg('signup-msg','아이디는 4자 이상이어야 합니다.','error'); return; }
+      if (password.length < 6) { showMsg('signup-msg','비밀번호는 6자 이상이어야 합니다.','error'); return; }
+      if (!agree) { showMsg('signup-msg','개인정보 제공 동의가 필요합니다.','error'); return; }
 
       const btn = document.getElementById('signup-submit');
       btn.disabled = true; btn.textContent = '처리 중...';
       try {
-        const res = await fetch(`${API_BASE}/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res  = await fetch(`${API_BASE}/register`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ username, password, name, nationality, email, phone, agree_terms: agree })
         });
         const data = await res.json();
-        if (res.ok) {
-          showMsg('signup-msg', '회원가입이 완료되었습니다! 로그인해주세요.', 'success');
-          setTimeout(() => switchModal('signup', 'login'), 1800);
-        } else {
-          showMsg('signup-msg', data.error || '회원가입에 실패했습니다.', 'error');
-        }
-      } catch {
-        showMsg('signup-msg', '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'error');
-      } finally {
-        btn.disabled = false; btn.textContent = '회원가입 완료 / Sign Up';
-      }
+        if (res.ok) { showMsg('signup-msg','회원가입이 완료되었습니다! 로그인해주세요.','success'); setTimeout(()=>switchModal('signup','login'),1800); }
+        else         { showMsg('signup-msg', data.error||'회원가입에 실패했습니다.','error'); }
+      } catch { showMsg('signup-msg','서버에 연결할 수 없습니다.','error'); }
+      finally  { btn.disabled = false; btn.textContent = '회원가입 완료 / Sign Up'; }
     }
 
-    // ── 사전으로 이동 (토큰 포함 / 비회원 횟수 차감) ──
+    // ─── 사전 이동 ─────────────────────────────────
     function goToDict() {
       const token = getToken();
-      if (token) {
-        // 로그인 사용자 → 토큰 포함해서 이동
-        window.open(
-          'https://shimgoon.pythonanywhere.com/?token=' + encodeURIComponent(token),
-          '_blank'
-        );
-        return;
-      }
+      if (token) { window.open('https://shimgoon.pythonanywhere.com/?token=' + encodeURIComponent(token), '_blank'); return; }
       if (isGuestMode()) {
         const used = incrementGuestCount();
         updateGuestBanner();
-        if (used > GUEST_MAX) {
-          // 횟수 초과 → 로그인 유도
-          return;
-        }
-        // 비회원은 토큰 없이 이동 (dict.html에서 별도 처리 필요)
+        if (used > GUEST_MAX) return;
         window.open('https://shimgoon.pythonanywhere.com/?guest=1', '_blank');
         return;
       }
-      // 미로그인, 비회원 아님 → 로그인 모달
       openModal('login');
     }
 
-    // ── 로그아웃 ─────────────────────────────────────
-    function doLogout() {
-      removeToken();
-      setLoggedOut();
-    }
+    // ─── 로그아웃 ──────────────────────────────────
+    function doLogout() { removeToken(); setLoggedOut(); }
 
-    // ── 회원탈퇴 ─────────────────────────────────────
+    // ─── 회원탈퇴 ──────────────────────────────────
     async function doWithdraw() {
       const username = document.getElementById('wd-username').value.trim();
       const password = document.getElementById('wd-password').value;
-
-      if (!username || !password) {
-        showMsg('withdraw-msg', '아이디와 비밀번호를 입력해주세요.', 'error'); return;
-      }
+      if (!username||!password) { showMsg('withdraw-msg','아이디와 비밀번호를 입력해주세요.','error'); return; }
 
       const btn = document.getElementById('withdraw-submit');
       btn.disabled = true; btn.textContent = '처리 중...';
-
       try {
-        // 1) 먼저 비밀번호 확인을 위해 로그인 시도
-        const loginRes = await fetch(`${API_BASE}/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const loginRes  = await fetch(`${API_BASE}/login`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ username, password })
         });
         const loginData = await loginRes.json();
+        if (!loginRes.ok) { showMsg('withdraw-msg','아이디 또는 비밀번호가 올바르지 않습니다.','error'); return; }
 
-        if (!loginRes.ok) {
-          showMsg('withdraw-msg', '아이디 또는 비밀번호가 올바르지 않습니다.', 'error');
-          btn.disabled = false; btn.textContent = '탈퇴하기 / Delete My Account';
-          return;
-        }
-
-        // 2) 검증된 토큰으로 계정 삭제
-        const delRes = await fetch(`${API_BASE}/delete-account`, {
-          method: 'DELETE',
-          headers: { 'Authorization': 'Bearer ' + loginData.token }
+        const delRes  = await fetch(`${API_BASE}/delete-account`, {
+          method:'DELETE', headers:{ 'Authorization':'Bearer '+loginData.token }
         });
         const delData = await delRes.json();
-
         if (delRes.ok) {
-          showMsg('withdraw-msg', '탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.', 'success');
+          showMsg('withdraw-msg','탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.','success');
           removeToken();
-          setTimeout(() => {
-            closeModal('withdraw');
-            setLoggedOut();
-            // 입력 필드 초기화
-            document.getElementById('wd-username').value = '';
-            document.getElementById('wd-password').value = '';
-          }, 2000);
-        } else {
-          showMsg('withdraw-msg', delData.error || '탈퇴 처리 중 오류가 발생했습니다.', 'error');
-        }
-      } catch {
-        showMsg('withdraw-msg', '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'error');
-      } finally {
-        btn.disabled = false; btn.textContent = '탈퇴하기 / Delete My Account';
-      }
+          setTimeout(()=>{ closeModal('withdraw'); setLoggedOut(); document.getElementById('wd-username').value=''; document.getElementById('wd-password').value=''; }, 2000);
+        } else { showMsg('withdraw-msg', delData.error||'탈퇴 처리 중 오류가 발생했습니다.','error'); }
+      } catch { showMsg('withdraw-msg','서버에 연결할 수 없습니다.','error'); }
+      finally  { btn.disabled = false; btn.textContent = '탈퇴하기 / Delete My Account'; }
     }
 
-    // ── Capacitor 푸시 알림 초기화 ──────────────────
-    if (typeof Capacitor !== 'undefined'
-        && Capacitor.isPluginAvailable
-        && Capacitor.isPluginAvailable('PushNotifications')) {
-      const { PushNotifications } = Capacitor.Plugins;
-      if (PushNotifications) {
-        PushNotifications.checkPermissions().then(s => {
-          if (s.receive === 'prompt') return PushNotifications.requestPermissions();
-          return s;
-        }).then(s => {
-          if (s.receive !== 'granted') return;
-          return PushNotifications.register();
-        }).then(() => {
-          PushNotifications.addListener('registration',
-            t => console.log('FCM token:', t.value));
-          PushNotifications.addListener('registrationError',
-            e => console.error(e));
-          PushNotifications.addListener('pushNotificationReceived',
-            n => console.log(n));
-          PushNotifications.addListener('pushNotificationActionPerformed',
-            a => console.log(a));
-        }).catch(e => console.error(e));
-      }
-    }
-
-    // ── 초기 실행 ────────────────────────────────────
+    // ─── 초기화 ────────────────────────────────────
     checkAuth();
 
-    // ── 회원 수 ─────────────────────────────────────
+    // ─── 회원 수 ────────────────────────────────────
     async function loadMemberCount() {
       try {
-        const res = await fetch("/api/user-count");
+        const res = await fetch("https://shimgoon.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
           "회원 수: " + data.count + "명";
@@ -2026,8 +1233,7 @@
       }
     }
     loadMemberCount();
+
   </script>
 </body>
 </html>
-
-
