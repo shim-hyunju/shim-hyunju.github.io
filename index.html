@@ -189,6 +189,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
+      text-align: center;
       padding: 28px 36px;
       background: linear-gradient(145deg, #f0f4ff 0%, #e8e0ff 100%);
       border-right: 1px solid var(--border);
@@ -235,27 +237,39 @@
 
     .main-title {
       font-family: 'Noto Serif KR', serif;
-      font-size: clamp(22px, 2.8vw, 34px);
+      font-size: clamp(16px, 2.2vw, 30px);
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.2;
       margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
       background: linear-gradient(135deg, var(--accent1), var(--accent3));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .main-subtitle {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--ink2);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       opacity: .8;
     }
     .main-desc {
-      font-size: 12.5px;
+      font-size: 12px;
       color: var(--muted);
-      line-height: 1.75;
-      margin-bottom: 22px;
+      line-height: 1.6;
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
+    .main-desc-en {
+      font-size: 11px;
+      color: #a5b4fc;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      white-space: nowrap;
     }
 
     /* 특징 태그 3개 */
@@ -264,6 +278,7 @@
       flex-wrap: wrap;
       gap: 6px;
       margin-bottom: 22px;
+      justify-content: center;
     }
     .chip {
       display: inline-flex;
@@ -279,6 +294,20 @@
       backdrop-filter: blur(4px);
     }
     .chip i { color: var(--accent2); font-size: 10px; }
+
+    /* 왼쪽 패널 사용법 카드 */
+    .left-how-cards { display:flex; flex-direction:column; gap:7px; margin-bottom:18px; width:100%; }
+    .left-how-card {
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(199,210,254,.6);
+      border-radius: var(--r);
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      text-align: left;
+      backdrop-filter: blur(4px);
+    }
 
     /* 시작 버튼 */
     .cta-btn {
@@ -597,7 +626,9 @@
       .right-panel { padding: 20px 16px; }
       .header-nav  { display:none; }
       .hamburger   { display:block; }
-      .main-title  { font-size: 26px; }
+      .main-title  { font-size: clamp(16px, 5vw, 26px); white-space: normal; }
+      .main-desc   { white-space: normal; }
+      .main-desc-en { white-space: normal; }
     }
     @media (min-width: 769px) { .hamburger { display:none; } }
   </style>
@@ -780,18 +811,33 @@
         <!-- 왼쪽 -->
         <div class="left-panel">
           <div class="eyebrow"><span class="eyebrow-dot"></span> Tool 01 · Dr.Shim's Korean Lab</div>
-          <h1 class="main-title">친절한<br/>한국어 검색 사전</h1>
+          <h1 class="main-title">친절한 한국어 검색 사전</h1>
           <p class="main-subtitle">A Kindly Korean Search Dictionary</p>
-          <p class="main-desc">
-            한국어 단어, 복합 어휘, 문장까지<br/>
-            쉽고 편리하게 찾아보세요!<br/>
-            <span style="color:#a5b4fc">Find words, compounds &amp; sentences easily.</span>
-          </p>
+          <p class="main-desc">한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요!</p>
+          <p class="main-desc-en">Find words, compounds &amp; sentences easily.</p>
 
           <div class="feature-chips">
             <span class="chip"><i class="fas fa-search"></i> 다양한 검색 단위</span>
             <span class="chip"><i class="fas fa-language"></i> 다국어 번역</span>
             <span class="chip"><i class="fas fa-lightbulb"></i> 문맥 이해</span>
+          </div>
+
+          <!-- 사용법 (시작 버튼 위) -->
+          <div class="left-how-cards">
+            <div class="left-how-card">
+              <div class="how-num">1</div>
+              <div class="how-text-wrap">
+                <h4>한국어만 입력하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Enter Korean Only</span></h4>
+                <p>이 사전은 한국어 어휘만 제공합니다. 외국어는 입력하지 마세요.</p>
+              </div>
+            </div>
+            <div class="left-how-card">
+              <div class="how-num">2</div>
+              <div class="how-text-wrap">
+                <h4>문장 단위로 검색하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Search by Sentence</span></h4>
+                <p>문장 전체를 입력하면 문맥에 맞는 어휘를 더 정확히 찾을 수 있습니다.</p>
+              </div>
+            </div>
           </div>
 
           <button class="cta-btn" onclick="goToDict()">
@@ -812,27 +858,6 @@
         <!-- 오른쪽 -->
         <div class="right-panel">
 
-          <!-- 사용법 -->
-          <div>
-            <div class="panel-section-title">사용법 / How to Use</div>
-            <div class="how-cards">
-              <div class="how-card">
-                <div class="how-num">1</div>
-                <div class="how-text-wrap">
-                  <h4>한국어만 입력하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Enter Korean Only</span></h4>
-                  <p>이 사전은 한국어 어휘만 제공합니다. 외국어는 입력하지 마세요.<br/>This dictionary provides Korean vocabulary only.</p>
-                </div>
-              </div>
-              <div class="how-card">
-                <div class="how-num">2</div>
-                <div class="how-text-wrap">
-                  <h4>문장 단위로 검색하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Search by Sentence</span></h4>
-                  <p>문장 전체를 입력하면 문맥에 맞는 어휘를 더 정확히 찾을 수 있습니다.<br/>Entering full sentences helps find contextually accurate vocabulary.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- 공지 -->
           <div>
             <div class="panel-section-title">공지 / Notice</div>
@@ -850,7 +875,7 @@
 
           <!-- 저작권 -->
           <div style="text-align:center; padding: 4px 0 2px;">
-            <p style="font-size:10px;color:var(--muted)">© Dr.Shim All rights reserved &nbsp;·&nbsp; <a href="mailto:love3462@nate.com" style="color:var(--muted)">love3462@nate.com</a></p>
+            <p style="font-size:11px;color:var(--muted)">© Dr.Shim All rights reserved &nbsp;·&nbsp; <a href="mailto:love3462@nate.com" style="color:var(--muted)">love3462@nate.com</a></p>
             <p id="member-count" style="text-align:center; font-size:11px; color:#888; margin-top:10px;">회원 수: 불러오는 중...</p>
           </div>
 
@@ -899,7 +924,7 @@
     </div><!-- /content-area -->
   </div><!-- /shell -->
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ─── CAPTCHA ───────────────────────────────────
     let captchaToken = null;
     let turnstileWidgetId = null;
@@ -1226,14 +1251,4 @@
         const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
-          "회원 수: " + data.count + "명";
-      } catch (e) {
-        document.getElementById("member-count").textContent =
-          "회원 수를 불러올 수 없습니다.";
-      }
-    }
-    loadMemberCount();
-
-  </script>
-</body>
-</html>
+          "회원 �
