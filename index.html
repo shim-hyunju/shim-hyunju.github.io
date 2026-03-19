@@ -1223,7 +1223,7 @@
     // ─── 회원 수 ────────────────────────────────────
     async function loadMemberCount() {
       try {
-        const res = await fetch("https://shimgoon.pythonanywhere.com/api/user-count");
+        const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
           "회원 수: " + data.count + "명";
