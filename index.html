@@ -8,47 +8,45 @@
   <meta name="description" content="Dr.Shim's Korean Lab - 한국어 학습 도구 모음">
   <meta name="keywords" content="친절한 한국어, 친절한 한국어 검색 사전, 한국어 검색 사전, Korean Dictionary, Korean vocabulary, Korean vocabulary search, Dr.Shim">
   <title>Dr.Shim's Korean Lab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700;900&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <link rel="icon" href="static/images/favicon.png" type="image/x-icon"/>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
+    /* ═══════════════════════════════════════
+       DESIGN TOKEN — 먹(墨) × 모던 미니멀
+    ═══════════════════════════════════════ */
     :root {
-      --ink:      #0f172a;
-      --ink2:     #334155;
-      --muted:    #94a3b8;
-      --border:   #e2e8f0;
-      --surface:  #f8fafc;
-      --white:    #ffffff;
-      --accent1:  #3b82f6;
-      --accent2:  #6366f1;
-      --accent3:  #8b5cf6;
-      --danger:   #ef4444;
-      --success:  #22c55e;
-      --r:        14px;
-      --r-lg:     20px;
+      --paper:   #f5f0e8;
+      --paper2:  #ede7d9;
+      --ink:     #1a1410;
+      --ink2:    #3d3530;
+      --ink3:    #6b5f58;
+      --muted:   #a09288;
+      --accent:  #c0392b;
+      --accent2: #8B6914;
+      --border:  #d9d0c4;
+      --white:   #ffffff;
+      --danger:  #c0392b;
+      --success: #2d7a4f;
+      --serif:   'Noto Serif KR', serif;
+      --sans:    'Noto Sans KR', sans-serif;
     }
 
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-    /* ─── 레이아웃: 전체를 뷰포트 높이에 고정 ─── */
     html, body {
       height: 100%;
-      overflow: hidden;          /* 바깥 스크롤 없음 */
-      font-family: 'DM Sans', sans-serif;
-      background: var(--surface);
+      overflow: hidden;
+      font-family: var(--sans);
+      background: var(--paper);
       color: var(--ink);
     }
 
-    /* ──────────────────────────────
-       SHELL: 3행 레이아웃
-       행1: 헤더(고정)
-       행2: 콘텐츠(나머지 전부)
-    ────────────────────────────── */
     .shell {
       display: grid;
-      grid-template-rows: 56px 1fr;
+      grid-template-rows: 52px 1fr;
       height: 100vh;
     }
 
@@ -57,30 +55,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
+      padding: 0 28px;
+      background: var(--paper);
       border-bottom: 1px solid var(--border);
       z-index: 200;
-      gap: 8px;
+      gap: 10px;
     }
 
     .header-logo {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 15px;
+      font-family: var(--serif);
+      font-size: 14px;
       font-weight: 700;
-      background: linear-gradient(90deg, var(--accent1), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--ink);
       white-space: nowrap;
       flex-shrink: 0;
+      letter-spacing: .02em;
     }
 
     .header-nav {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
       overflow-x: auto;
       flex: 1;
       justify-content: center;
@@ -89,569 +84,470 @@
     .header-nav::-webkit-scrollbar { display: none; }
 
     .nav-btn {
-      background: none;
-      border: 1.5px solid var(--border);
+      background: none; border: none;
       cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink2);
-      padding: 6px 14px;
-      border-radius: 999px;
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 400;
+      color: var(--ink3);
+      padding: 6px 13px;
+      border-radius: 4px;
       white-space: nowrap;
-      transition: all .2s;
+      transition: all .18s;
     }
-    .nav-btn:hover { color: var(--accent1); background: #eff6ff; border-color: #93c5fd; }
+    .nav-btn:hover { color: var(--ink); background: var(--paper2); }
     .nav-btn.active {
-      background: linear-gradient(white,white) padding-box,
-                  linear-gradient(135deg,var(--accent1),var(--accent3)) border-box;
-      border: 2px solid transparent;
-      color: var(--accent2);
-      font-weight: 700;
+      color: var(--accent); font-weight: 700;
+      background: none; position: relative;
+    }
+    .nav-btn.active::after {
+      content: ''; position: absolute;
+      bottom: 2px; left: 13px; right: 13px;
+      height: 2px; background: var(--accent); border-radius: 1px;
     }
 
     .header-auth { display:flex; align-items:center; gap:6px; flex-shrink:0; }
 
     .btn-login {
-      background: none; border: 1.5px solid var(--accent2);
-      color: var(--accent2); font-family: 'DM Sans',sans-serif;
-      font-size: 12px; font-weight: 700; padding: 6px 14px;
-      border-radius: 999px; cursor: pointer; transition: all .2s; white-space:nowrap;
+      background: none; border: 1px solid var(--border);
+      color: var(--ink2); font-family: var(--sans);
+      font-size: 11px; font-weight: 500; padding: 5px 14px;
+      border-radius: 3px; cursor: pointer; transition: all .18s; white-space:nowrap;
     }
-    .btn-login:hover { background:#f5f3ff; }
+    .btn-login:hover { border-color: var(--ink2); background: var(--paper2); }
 
     .btn-signup {
-      background: linear-gradient(135deg,var(--accent2),var(--accent1));
-      border: none; color:#fff; font-family:'DM Sans',sans-serif;
-      font-size: 12px; font-weight: 700; padding: 7px 14px;
-      border-radius: 999px; cursor: pointer; transition: all .2s; white-space:nowrap;
-      box-shadow: 0 2px 8px rgba(99,102,241,.3);
+      background: var(--ink); border: none; color: var(--paper);
+      font-family: var(--sans);
+      font-size: 11px; font-weight: 500; padding: 6px 14px;
+      border-radius: 3px; cursor: pointer; transition: all .18s; white-space:nowrap;
     }
-    .btn-signup:hover { transform:translateY(-1px); }
+    .btn-signup:hover { background: var(--ink2); }
 
     .user-info { display:none; align-items:center; gap:8px; }
     .user-info.visible { display:flex; }
-    .user-greeting { font-size:12px; font-weight:600; color:var(--ink2); white-space:nowrap; }
-    .user-greeting span { color:var(--accent2); }
+    .user-greeting { font-size:11px; font-weight:500; color:var(--ink2); white-space:nowrap; }
+    .user-greeting span { color:var(--accent); font-weight:700; }
 
     .btn-logout, .btn-withdraw {
-      background:none; border:1.5px solid var(--border);
-      color:var(--muted); font-family:'DM Sans',sans-serif;
-      font-size:11px; font-weight:600; padding:5px 11px;
-      border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap;
+      background:none; border:1px solid var(--border);
+      color:var(--muted); font-family:var(--sans);
+      font-size:11px; font-weight:400; padding:5px 11px;
+      border-radius:3px; cursor:pointer; transition:all .18s; white-space:nowrap;
     }
-    .btn-logout:hover { border-color:var(--danger); color:var(--danger); background:#fef2f2; }
-    .btn-withdraw { border-color:#fca5a5; color:var(--danger); }
-    .btn-withdraw:hover { background:#fef2f2; }
+    .btn-logout:hover  { border-color:var(--ink3); color:var(--ink2); }
+    .btn-withdraw      { border-color:#e8c4be; color:var(--accent); }
+    .btn-withdraw:hover{ background:#fdf3f2; }
 
     .hamburger {
       display:none; background:none; border:none; cursor:pointer;
-      font-size:20px; color:var(--ink2); padding:6px; flex-shrink:0;
+      font-size:18px; color:var(--ink2); padding:6px; flex-shrink:0;
     }
 
-    /* ─── 모바일 메뉴 ─── */
     .mobile-menu {
-      display:none; position:fixed; top:56px; left:0; right:0;
-      background:rgba(255,255,255,.98); backdrop-filter:blur(12px);
-      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:199;
-      padding:10px 14px 16px; flex-direction:column; gap:4px;
+      display:none; position:fixed; top:52px; left:0; right:0;
+      background:var(--paper); border-bottom:1px solid var(--border);
+      z-index:199; padding:10px 16px 14px; flex-direction:column; gap:2px;
     }
     .mobile-menu.open { display:flex; }
-    .mobile-menu .nav-btn { width:100%; text-align:left; border-radius:10px; font-size:14px; padding:10px 14px; }
+    .mobile-menu .nav-btn { width:100%; text-align:left; border-radius:4px; font-size:13px; padding:10px 12px; }
 
-    /* ──────────────────────────────
-       콘텐츠 영역: 페이지 컨테이너
-    ────────────────────────────── */
-    .content-area {
-      overflow: hidden;          /* 내부에서만 처리 */
-      position: relative;
-    }
+    /* ═══════════════════════════════════════
+       콘텐츠
+    ═══════════════════════════════════════ */
+    .content-area { overflow:hidden; position:relative; }
 
-    /* ─── 페이지 전환 ─── */
     .page { display:none; height:100%; }
     .page.active { display:flex; flex-direction:column; }
 
-    /* ──────────────────────────────
-       메인 페이지 (dict) — 2열 그리드
-    ────────────────────────────── */
-    #page-dict {
-      display: none;
-      height: 100%;
-    }
+    /* ─── DICT 페이지 ─── */
+    #page-dict { display:none; height:100%; }
     #page-dict.active {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr;
-    }
-
-    /* 왼쪽 패널 */
-    .left-panel {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      text-align: center;
-      padding: 28px 36px;
-      background: linear-gradient(145deg, #f0f4ff 0%, #e8e0ff 100%);
-      border-right: 1px solid var(--border);
+      justify-content: center;
       position: relative;
       overflow: hidden;
     }
-    .left-panel::before {
+
+    /* 배경 한자 워터마크 */
+    #page-dict.active::before {
       content: '韓';
       position: absolute;
-      bottom: -20px; right: -10px;
-      font-family: 'Noto Serif KR', serif;
-      font-size: 180px;
-      font-weight: 700;
-      color: rgba(99,102,241,.06);
-      pointer-events: none;
+      font-family: var(--serif);
+      font-size: clamp(280px, 35vw, 520px);
+      font-weight: 900;
+      color: rgba(26,20,16,.04);
+      right: -2vw; top: 50%;
+      transform: translateY(-50%);
       line-height: 1;
+      pointer-events: none;
+      user-select: none;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,.75);
-      border: 1px solid #ddd6fe;
-      border-radius: 999px;
-      padding: 4px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--accent2);
-      margin-bottom: 14px;
-      width: fit-content;
-      backdrop-filter: blur(6px);
+    /* 왼쪽 세로선 장식 */
+    .deco-line {
+      position: absolute;
+      left: 52px; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent);
+      pointer-events: none;
     }
-    .eyebrow-dot {
-      width: 6px; height: 6px;
-      background: linear-gradient(135deg,var(--accent1),var(--accent3));
-      border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
+
+    /* 중앙 카드 */
+    .main-card {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      max-width: 620px; width: 100%;
+      padding: 0 24px;
+      animation: fadeUp .6s ease both;
     }
-    @keyframes pulse-dot {
-      0%,100%{ transform:scale(1); opacity:1; }
-      50%     { transform:scale(1.5); opacity:.6; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .tool-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--sans);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 20px;
+    }
+    .tool-tag::before, .tool-tag::after {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--border);
     }
 
     .main-title {
-      font-family: 'Noto Serif KR', serif;
-      font-size: clamp(16px, 2.2vw, 30px);
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      background: linear-gradient(135deg, var(--accent1), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-family: var(--serif);
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 700; color: var(--ink);
+      line-height: 1.15; letter-spacing: -.02em;
+      margin-bottom: 8px; white-space: nowrap;
     }
+
+    .title-underline {
+      width: 56px; height: 3px;
+      background: var(--accent); border-radius: 2px;
+      margin: 0 auto 16px;
+      animation: expandLine .8s .4s ease both;
+    }
+    @keyframes expandLine {
+      from { width:0; opacity:0; }
+      to   { width:56px; opacity:1; }
+    }
+
     .main-subtitle {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--ink2);
-      margin-bottom: 8px;
-      opacity: .8;
+      font-family: var(--sans);
+      font-size: clamp(12px, 1.4vw, 15px);
+      font-weight: 300; color: var(--ink3);
+      letter-spacing: .05em; margin-bottom: 6px;
     }
     .main-desc {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 4px;
-      white-space: nowrap;
-    }
-    .main-desc-en {
-      font-size: 11px;
-      color: #a5b4fc;
-      line-height: 1.6;
-      margin-bottom: 18px;
-      white-space: nowrap;
+      font-size: clamp(11px, 1.2vw, 13px);
+      color: var(--muted); letter-spacing: .02em; margin-bottom: 32px;
     }
 
-    /* 특징 태그 3개 */
-    .feature-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 22px;
-      justify-content: center;
+    .feature-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 32px; flex-wrap: wrap;
     }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(255,255,255,.8);
-      border: 1px solid #ddd6fe;
-      border-radius: 999px;
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--ink2);
-      backdrop-filter: blur(4px);
+    .feature-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--ink3);
+      padding: 0 14px; white-space: nowrap;
     }
-    .chip i { color: var(--accent2); font-size: 10px; }
+    .feature-item i { color: var(--accent2); font-size: 10px; }
+    .feature-sep { width:1px; height:12px; background:var(--border); flex-shrink:0; }
 
-    /* 왼쪽 패널 사용법 카드 */
-    .left-how-cards { display:flex; flex-direction:column; gap:7px; margin-bottom:18px; width:100%; }
-    .left-how-card {
-      background: rgba(255,255,255,.7);
-      border: 1px solid rgba(199,210,254,.6);
-      border-radius: var(--r);
-      padding: 10px 12px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      text-align: left;
-      backdrop-filter: blur(4px);
+    .how-row {
+      display: flex; gap: 10px;
+      margin-bottom: 32px; width: 100%; justify-content: center;
     }
-
-    /* 시작 버튼 */
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 13px 28px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(99,102,241,.35);
-      transition: transform .2s, box-shadow .2s;
-      width: fit-content;
-      letter-spacing: .01em;
-    }
-    .cta-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(99,102,241,.45); }
-    .cta-btn:active { transform:scale(.98); }
-    .cta-arrow { transition: transform .2s; }
-    .cta-btn:hover .cta-arrow { transform: translateX(4px); }
-
-    /* 후원 */
-    .donate-row {
-      margin-top: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .donate-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #fff;
-      box-shadow: 0 2px 8px rgba(59,130,246,.2);
-    }
-    .donate-link img {
-      height: 28px;
-      border-radius: 6px;
-    }
-
-    /* 오른쪽 패널 */
-    .right-panel {
-      display: flex;
-      flex-direction: column;
-      padding: 24px 28px;
-      overflow-y: auto;
-      gap: 14px;
-    }
-    .right-panel::-webkit-scrollbar { width:4px; }
-    .right-panel::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
-
-    .panel-section-title {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    /* 사용법 카드 */
-    .how-cards { display:flex; flex-direction:column; gap:8px; }
-    .how-card {
-      background: var(--white);
+    .how-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      background: rgba(255,255,255,.55);
       border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 12px 14px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      transition: border-color .2s, box-shadow .2s;
+      border-radius: 6px; padding: 10px 14px;
+      flex: 1; max-width: 260px; text-align: left;
+      transition: border-color .2s;
     }
-    .how-card:hover { border-color: #c7d2fe; box-shadow: 0 4px 16px rgba(99,102,241,.08); }
+    .how-item:hover { border-color: var(--accent); }
     .how-num {
-      width: 26px; height: 26px;
-      border-radius: 8px;
-      background: linear-gradient(135deg,#eff6ff,#e0e7ff);
-      display: flex; align-items:center; justify-content:center;
-      font-size: 12px; font-weight: 800; color: var(--accent2);
-      flex-shrink: 0;
+      width:20px; height:20px; border-radius:3px;
+      background:var(--ink); color:var(--paper);
+      font-family:var(--serif); font-size:11px; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; margin-top:1px;
     }
-    .how-text-wrap h4 { font-size:12px; font-weight:700; color:var(--ink); margin-bottom:2px; }
-    .how-text-wrap p  { font-size:11px; color:var(--muted); line-height:1.6; }
+    .how-text h4 {
+      font-size:11px; font-weight:700; color:var(--ink);
+      margin-bottom:2px; font-family:var(--sans);
+    }
+    .how-text p { font-size:10px; color:var(--muted); line-height:1.55; }
 
-    /* 공지 카드 */
-    .notice-cards { display:flex; flex-direction:column; gap:8px; }
-    .notice-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 11px 14px 11px 18px;
-      font-size: 11px;
-      color: var(--ink2);
-      line-height: 1.65;
-      position: relative;
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--ink); color: var(--paper);
+      font-family: var(--serif);
+      font-size: clamp(13px, 1.4vw, 16px); font-weight: 700;
+      letter-spacing: .04em;
+      padding: 14px 36px;
+      border: 2px solid var(--ink); border-radius: 4px;
+      cursor: pointer; transition: all .22s;
+      margin-bottom: 14px;
+      position: relative; overflow: hidden;
     }
-    .notice-card::before {
-      content:'';
-      position:absolute; top:0; left:0;
-      width:4px; height:100%;
-      border-radius:4px 0 0 4px;
+    .cta-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--accent);
+      transform: translateX(-101%);
+      transition: transform .3s ease;
     }
-    .notice-card.ko::before { background:linear-gradient(180deg,var(--accent1),#60a5fa); }
-    .notice-card.en::before { background:linear-gradient(180deg,var(--accent2),#a78bfa); }
-    .notice-head { display:flex; align-items:center; gap:5px; margin-bottom:4px; }
-    .notice-head span { font-weight:700; font-size:11px; color:var(--ink); }
+    .cta-btn:hover::before { transform: translateX(0); }
+    .cta-btn:hover { border-color: var(--accent); }
+    .cta-btn span, .cta-btn i { position: relative; z-index: 1; }
+    .cta-btn i { font-size: 12px; transition: transform .2s; }
+    .cta-btn:hover i { transform: translateX(4px); }
+
+    .bottom-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .donate-link img { height:24px; border-radius:4px; opacity:.8; transition:opacity .2s; }
+    .donate-link:hover img { opacity:1; }
+    .bottom-meta { font-size:10px; color:var(--muted); letter-spacing:.03em; }
+    .bottom-meta a { color:var(--muted); text-decoration:none; }
+    .bottom-meta a:hover { color:var(--ink3); }
+    #member-count { font-size:10px; color:var(--muted); letter-spacing:.03em; }
 
     /* ─── Coming Soon ─── */
     .coming-page {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 24px;
-      gap: 14px;
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:40px 24px; gap:12px;
     }
-    .coming-icon {
-      width: 80px; height: 80px;
-      background: linear-gradient(135deg,#f0f4ff,#e8e0ff);
-      border: 1.5px solid #ddd6fe;
-      border-radius: 22px;
-      display: flex; align-items:center; justify-content:center;
-      font-size: 38px;
-      box-shadow: 0 6px 24px rgba(99,102,241,.1);
-      animation: float 3.5s ease-in-out infinite;
+    .coming-glyph {
+      font-family:var(--serif);
+      font-size:64px; color:rgba(26,20,16,.08); line-height:1; margin-bottom:4px;
     }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     .coming-badge {
-      display:inline-flex; align-items:center; gap:5px;
-      background:#fff; color:var(--accent2);
-      font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-      padding:5px 14px; border-radius:999px; border:1.5px solid #e0e7ff;
+      font-size:10px; font-weight:500; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--muted); border:1px solid var(--border); padding:4px 12px; border-radius:3px;
     }
-    .coming-badge::before { content:''; width:6px; height:6px; background:linear-gradient(135deg,var(--accent2),var(--accent3)); border-radius:50%; }
-    .coming-page h2 { font-size:clamp(22px,3.5vw,36px); font-weight:800; color:var(--ink); line-height:1.2; }
-    .coming-page p  { font-size:13px; color:var(--muted); max-width:320px; line-height:1.7; }
-    .progress-track { width:180px; height:4px; background:var(--border); border-radius:999px; overflow:hidden; }
-    .progress-fill  { height:100%; background:linear-gradient(90deg,var(--accent1),var(--accent3)); border-radius:999px; animation:progressAnim 2.4s ease-in-out infinite alternate; }
+    .coming-page h2 {
+      font-family:var(--serif);
+      font-size:clamp(22px,3vw,34px); font-weight:700; color:var(--ink); line-height:1.2;
+    }
+    .coming-page p { font-size:12px; color:var(--muted); max-width:280px; line-height:1.7; }
+    .progress-track { width:120px; height:2px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .progress-fill  { height:100%; background:var(--accent); border-radius:999px; animation:progressAnim 2.4s ease-in-out infinite alternate; }
     @keyframes progressAnim { from{width:6%} to{width:75%} }
 
-    /* ──────────────────────────────
-       AUTH GATE
-    ────────────────────────────── */
+    /* ─── Auth Gate ─── */
     #auth-gate {
       display:none; position:fixed; inset:0;
-      background:linear-gradient(135deg,#eff6ff 0%,#e0e7ff 100%);
-      z-index:500;
+      background:var(--paper); z-index:500;
       flex-direction:column; align-items:center; justify-content:center;
       text-align:center; padding:24px;
     }
     #auth-gate.visible { display:flex; }
-    .gate-icon {
-      width:70px; height:70px;
-      background:rgba(255,255,255,.8); border:2px solid #c7d2fe;
-      border-radius:20px; display:flex; align-items:center; justify-content:center;
-      font-size:32px; margin-bottom:18px;
-      box-shadow: 0 6px 20px rgba(99,102,241,.12);
+    #auth-gate::before {
+      content:'語'; position:absolute;
+      font-family:var(--serif);
+      font-size:clamp(200px,30vw,400px); font-weight:900;
+      color:rgba(26,20,16,.04);
+      top:50%; left:50%; transform:translate(-50%,-50%);
+      pointer-events:none; user-select:none;
     }
+    .gate-inner { position:relative; z-index:1; }
     .gate-title {
-      font-family:'Noto Serif KR',serif;
-      font-size:clamp(20px,4vw,28px); font-weight:700; color:var(--ink);
-      margin-bottom:8px;
-      background:linear-gradient(135deg,var(--accent1),var(--accent3));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      font-family:var(--serif);
+      font-size:clamp(22px,4vw,34px); font-weight:700; color:var(--ink);
+      margin-bottom:4px; letter-spacing:-.01em;
     }
-    .gate-desc { font-size:13px; color:var(--muted); margin-bottom:24px; max-width:320px; line-height:1.7; }
-    .gate-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+    .gate-title em { color:var(--accent); font-style:normal; }
+    .gate-sub { font-size:12px; color:var(--muted); margin-bottom:8px; letter-spacing:.03em; }
+    .gate-divider { width:32px; height:2px; background:var(--accent); border-radius:1px; margin:0 auto 24px; }
+    .gate-desc { font-size:13px; color:var(--ink3); margin-bottom:28px; line-height:1.75; max-width:300px; }
+    .gate-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; }
     .gate-btn-login {
-      padding:11px 28px; border:2px solid var(--accent2); background:#fff;
-      color:var(--accent2); font-weight:700; font-size:13px; border-radius:999px;
-      cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif;
+      padding:10px 28px; border:1px solid var(--ink); background:transparent;
+      color:var(--ink); font-weight:500; font-size:13px; border-radius:3px;
+      cursor:pointer; transition:all .18s; font-family:var(--sans);
     }
-    .gate-btn-login:hover { background:#f5f3ff; }
+    .gate-btn-login:hover { background:var(--paper2); }
     .gate-btn-signup {
-      padding:11px 28px; background:linear-gradient(135deg,var(--accent2),var(--accent1));
-      border:none; color:#fff; font-weight:700; font-size:13px; border-radius:999px;
-      cursor:pointer; box-shadow:0 4px 16px rgba(99,102,241,.35); transition:all .2s;
-      font-family:'DM Sans',sans-serif;
+      padding:10px 28px; background:var(--ink); border:1px solid var(--ink);
+      color:var(--paper); font-weight:500; font-size:13px; border-radius:3px;
+      cursor:pointer; transition:all .18s; font-family:var(--sans);
     }
-    .gate-btn-signup:hover { transform:translateY(-2px); }
-    .gate-guest {
-      margin-top:14px; font-size:12px; color:var(--muted);
-    }
-    .gate-guest a { color:var(--accent2); font-weight:700; cursor:pointer; text-decoration:underline; }
+    .gate-btn-signup:hover { background:var(--accent); border-color:var(--accent); }
+    .gate-guest { font-size:11px; color:var(--muted); }
+    .gate-guest a { color:var(--accent); cursor:pointer; text-decoration:underline; font-weight:500; }
 
-    /* ─── 비회원 배너 ─── */
+    /* ─── Guest Banner ─── */
     #guest-banner {
       display:none; position:fixed; bottom:0; left:0; right:0;
-      background:linear-gradient(135deg,#1e293b,#0f172a); color:#fff;
-      z-index:400; padding:10px 16px;
-      align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
-      box-shadow:0 -4px 20px rgba(0,0,0,.18);
+      background:var(--ink); color:var(--paper);
+      z-index:400; padding:10px 20px;
+      align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
     }
     #guest-banner.visible { display:flex; }
-    .guest-banner-text { font-size:12px; color:rgba(255,255,255,.8); text-align:center; }
-    .guest-banner-text strong { color:#fbbf24; }
-    .guest-banner-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .guest-banner-text { font-size:11px; color:rgba(245,240,232,.75); }
+    .guest-banner-text strong { color:#f5d07a; }
+    .guest-banner-btns { display:flex; gap:8px; }
     .guest-btn {
-      padding:7px 18px; font-size:12px; font-weight:700; border-radius:999px;
-      cursor:pointer; transition:all .2s; white-space:nowrap; font-family:'DM Sans',sans-serif;
+      padding:5px 16px; font-size:11px; font-weight:500;
+      border-radius:3px; cursor:pointer; transition:all .18s;
+      white-space:nowrap; font-family:var(--sans);
     }
-    .guest-btn.primary { border:2px solid var(--accent2); background:var(--accent2); color:#fff; }
-    .guest-btn.primary:hover { background:#4f46e5; }
-    .guest-btn.secondary { border:2px solid rgba(255,255,255,.3); background:transparent; color:#fff; }
-    .guest-btn.secondary:hover { background:rgba(255,255,255,.1); }
+    .guest-btn.primary  { background:var(--accent); border:1px solid var(--accent); color:#fff; }
+    .guest-btn.primary:hover { background:#a93226; }
+    .guest-btn.secondary{ background:transparent; border:1px solid rgba(245,240,232,.35); color:var(--paper); }
+    .guest-btn.secondary:hover { border-color:var(--paper); }
 
-    /* ──────────────────────────────
-       MODALS
-    ────────────────────────────── */
+    /* ─── Modals ─── */
     .modal-overlay {
       display:none; position:fixed; inset:0;
-      background:rgba(15,23,42,.5); backdrop-filter:blur(4px);
+      background:rgba(26,20,16,.45); backdrop-filter:blur(3px);
       z-index:1000; align-items:center; justify-content:center; padding:16px;
     }
     .modal-overlay.open { display:flex; }
     .modal-box {
-      background:#fff; border-radius:22px; padding:36px 32px;
-      width:100%; max-width:440px; max-height:92vh; overflow-y:auto;
-      box-shadow:0 20px 60px rgba(0,0,0,.16);
-      animation:modalIn .25s cubic-bezier(.34,1.3,.64,1);
-      position:relative;
+      background:var(--paper); border-radius:6px; padding:36px 32px;
+      width:100%; max-width:420px; max-height:92vh; overflow-y:auto;
+      box-shadow:0 20px 60px rgba(26,20,16,.25);
+      animation:modalIn .22s ease both; position:relative;
+      border:1px solid var(--border);
     }
-    @keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
+    @keyframes modalIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     .modal-close {
-      position:absolute; top:16px; right:18px;
-      background:#f3f4f6; border:none; width:30px; height:30px;
-      border-radius:50%; font-size:14px; cursor:pointer; color:#6b7280;
-      display:flex; align-items:center; justify-content:center; transition:background .2s;
+      position:absolute; top:14px; right:16px;
+      background:none; border:none; width:28px; height:28px; border-radius:3px;
+      font-size:14px; cursor:pointer; color:var(--muted);
+      display:flex; align-items:center; justify-content:center; transition:all .18s;
     }
-    .modal-close:hover { background:#e5e7eb; }
+    .modal-close:hover { background:var(--paper2); color:var(--ink); }
     .modal-title {
-      font-size:22px; font-weight:800; margin-bottom:4px; letter-spacing:-.02em;
-      background:linear-gradient(135deg,var(--accent1),var(--accent3));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      font-family:var(--serif); font-size:20px; font-weight:700; color:var(--ink);
+      margin-bottom:2px; letter-spacing:-.01em;
     }
-    .modal-title.danger { background:none; -webkit-text-fill-color:var(--danger); color:var(--danger); }
-    .modal-sub { font-size:13px; color:var(--muted); margin-bottom:22px; }
-    .modal-switch { font-size:12px; color:var(--muted); text-align:center; margin-top:16px; }
-    .modal-switch a { color:var(--accent2); font-weight:700; cursor:pointer; text-decoration:none; }
+    .modal-title.danger { color:var(--danger); }
+    .modal-sub { font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .modal-divider { width:24px; height:2px; background:var(--accent); border-radius:1px; margin-bottom:20px; }
+    .modal-switch { font-size:11px; color:var(--muted); text-align:center; margin-top:14px; }
+    .modal-switch a { color:var(--accent); font-weight:500; cursor:pointer; text-decoration:none; }
     .modal-switch a:hover { text-decoration:underline; }
 
-    .form-group { margin-bottom:13px; }
-    .form-group label { display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:5px; }
+    .form-group { margin-bottom:12px; }
+    .form-group label { display:block; font-size:11px; font-weight:500; color:var(--ink2); margin-bottom:4px; letter-spacing:.02em; }
     .form-group label .req { color:var(--danger); margin-left:2px; }
     .form-input {
-      width:100%; padding:10px 12px; border:1.5px solid var(--border);
-      border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px;
-      color:var(--ink); background:#fafafa; transition:border-color .2s, box-shadow .2s; outline:none;
+      width:100%; padding:9px 11px;
+      border:1px solid var(--border); border-radius:4px;
+      font-family:var(--sans); font-size:13px; color:var(--ink);
+      background:var(--white); transition:border-color .18s; outline:none;
     }
-    .form-input:focus { border-color:var(--accent2); background:#fff; box-shadow:0 0 0 3px rgba(99,102,241,.1); }
+    .form-input:focus { border-color:var(--ink2); }
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
-    .agree-box { background:#f8faff; border:1.5px solid #e0e7ff; border-radius:10px; padding:12px 14px; margin-bottom:16px; }
-    .agree-label { display:flex; align-items:flex-start; gap:8px; cursor:pointer; font-size:11.5px; color:#4b5563; line-height:1.6; }
-    .agree-label input[type=checkbox] { width:16px; height:16px; accent-color:var(--accent2); flex-shrink:0; margin-top:2px; }
+    .agree-box {
+      background:rgba(255,255,255,.5); border:1px solid var(--border);
+      border-radius:4px; padding:11px 13px; margin-bottom:14px;
+    }
+    .agree-label { display:flex; align-items:flex-start; gap:7px; cursor:pointer; font-size:11px; color:var(--ink3); line-height:1.6; }
+    .agree-label input[type=checkbox] { width:14px; height:14px; accent-color:var(--accent); flex-shrink:0; margin-top:2px; }
 
     .btn-submit {
-      width:100%; padding:12px; background:linear-gradient(135deg,var(--accent2),var(--accent1));
-      color:#fff; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
-      border:none; border-radius:10px; cursor:pointer;
-      box-shadow:0 4px 16px rgba(99,102,241,.3); transition:transform .2s, box-shadow .2s;
+      width:100%; padding:11px;
+      background:var(--ink); color:var(--paper);
+      font-family:var(--sans); font-size:13px; font-weight:500;
+      border:1px solid var(--ink); border-radius:4px;
+      cursor:pointer; transition:all .18s; letter-spacing:.02em;
     }
-    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,.4); }
-    .btn-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-    .btn-submit-danger {
-      width:100%; padding:12px;
-      background:linear-gradient(135deg,var(--danger),#dc2626);
-      color:#fff; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
-      border:none; border-radius:10px; cursor:pointer;
-      box-shadow:0 4px 16px rgba(239,68,68,.25); transition:transform .2s;
-    }
-    .btn-submit-danger:hover { transform:translateY(-2px); }
-    .btn-submit-danger:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .btn-submit:hover { background:var(--accent); border-color:var(--accent); }
+    .btn-submit:disabled { opacity:.5; cursor:not-allowed; }
 
-    .form-msg { font-size:12px; text-align:center; margin-top:10px; padding:9px 12px; border-radius:8px; display:none; }
-    .form-msg.error   { display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
-    .form-msg.success { display:block; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; }
+    .btn-submit-danger {
+      width:100%; padding:11px;
+      background:var(--danger); color:#fff;
+      font-family:var(--sans); font-size:13px; font-weight:500;
+      border:1px solid var(--danger); border-radius:4px;
+      cursor:pointer; transition:all .18s;
+    }
+    .btn-submit-danger:hover { background:#a93226; }
+    .btn-submit-danger:disabled { opacity:.5; cursor:not-allowed; }
+
+    .form-msg { font-size:11px; text-align:center; margin-top:9px; padding:8px 12px; border-radius:4px; display:none; }
+    .form-msg.error   { display:block; background:#fdf3f2; color:var(--danger); border:1px solid #f5c6c2; }
+    .form-msg.success { display:block; background:#f0faf4; color:var(--success); border:1px solid #b7e4c7; }
 
     .modal-danger-zone {
-      background:#fef2f2; border:1.5px solid #fecaca; border-radius:12px;
-      padding:14px 16px; margin-bottom:16px; display:flex; gap:10px; align-items:flex-start;
+      background:#fdf3f2; border:1px solid #f5c6c2; border-radius:4px;
+      padding:12px 14px; margin-bottom:14px; display:flex; gap:9px; align-items:flex-start;
     }
-    .modal-danger-text { font-size:12px; color:#b91c1c; line-height:1.65; }
+    .modal-danger-text { font-size:11px; color:#8b2020; line-height:1.6; }
     .modal-danger-text strong { font-weight:700; }
 
     #captcha-box { display:none; margin-bottom:10px; }
 
     .btn-google {
-      width:100%; padding:11px; background:#fff; color:#374151;
-      font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
-      border:1.5px solid var(--border); border-radius:10px; cursor:pointer;
-      display:flex; align-items:center; justify-content:center; gap:8px;
-      transition:all .2s; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:14px;
+      width:100%; padding:10px; background:var(--white); color:var(--ink2);
+      font-family:var(--sans); font-size:12px; font-weight:400;
+      border:1px solid var(--border); border-radius:4px;
+      cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+      transition:all .18s; margin-bottom:12px;
     }
-    .btn-google:hover { background:#f9fafb; border-color:#d1d5db; }
-    .btn-google svg { width:18px; height:18px; flex-shrink:0; }
+    .btn-google:hover { border-color:var(--ink3); }
+    .btn-google svg { width:16px; height:16px; flex-shrink:0; }
+
     .divider-or {
-      display:flex; align-items:center; gap:10px; margin-bottom:13px;
-      color:var(--muted); font-size:12px;
+      display:flex; align-items:center; gap:10px; margin-bottom:12px;
+      color:var(--muted); font-size:11px;
     }
     .divider-or::before, .divider-or::after { content:''; flex:1; height:1px; background:var(--border); }
 
     /* ─── 반응형 ─── */
-    @media (max-width: 768px) {
-      html, body { overflow: auto; }         /* 모바일에선 스크롤 허용 */
-      .shell { grid-template-rows: 56px 1fr; height: auto; min-height: 100vh; }
-      .content-area { overflow: auto; }
-      #page-dict.active { grid-template-columns: 1fr; grid-template-rows: auto auto; }
-      .left-panel  { padding: 28px 20px; border-right:none; border-bottom:1px solid var(--border); }
-      .right-panel { padding: 20px 16px; }
-      .header-nav  { display:none; }
-      .hamburger   { display:block; }
-      .main-title  { font-size: clamp(16px, 5vw, 26px); white-space: normal; }
-      .main-desc   { white-space: normal; }
-      .main-desc-en { white-space: normal; }
+    @media (max-width: 640px) {
+      html, body { overflow:auto; }
+      .shell { grid-template-rows:52px 1fr; height:auto; min-height:100vh; }
+      .content-area { overflow:auto; }
+      #page-dict.active { justify-content:flex-start; padding:40px 0; }
+      .main-title { white-space:normal; font-size:clamp(24px,7vw,36px); }
+      .how-row { flex-direction:column; align-items:center; }
+      .how-item { max-width:100%; width:100%; }
+      .header-nav { display:none; }
+      .hamburger  { display:block; }
+      .deco-line  { display:none; }
+      #page-dict.active::before { font-size:200px; opacity:.03; }
     }
-    @media (min-width: 769px) { .hamburger { display:none; } }
+    @media (min-width: 641px) { .hamburger { display:none; } }
   </style>
 </head>
 <body>
 
   <!-- ══ AUTH GATE ══ -->
   <div id="auth-gate" class="visible">
-    <div class="gate-icon">🔐</div>
-    <div class="gate-title">Dr.Shim's Korean Lab</div>
-    <p class="gate-desc">서비스를 이용하려면 로그인이 필요합니다.<br/>Please log in to use the service.</p>
-    <div class="gate-btns">
-      <button class="gate-btn-login"  onclick="openModal('login')">로그인 / Login</button>
-      <button class="gate-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
+    <div class="gate-inner">
+      <div class="gate-title">Dr.<em>Shim</em>'s Korean Lab</div>
+      <div class="gate-sub">한국어 학습 도구 모음</div>
+      <div class="gate-divider"></div>
+      <p class="gate-desc">서비스를 이용하려면 로그인이 필요합니다.<br/>Please log in to use the service.</p>
+      <div class="gate-btns">
+        <button class="gate-btn-login"  onclick="openModal('login')">로그인 / Login</button>
+        <button class="gate-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
+      </div>
+      <p class="gate-guest">또는 &nbsp;<a onclick="startGuestMode()">비회원으로 3회 체험 / Try 3 times as guest</a></p>
     </div>
-    <p class="gate-guest">또는 &nbsp;<a onclick="startGuestMode()">비회원으로 3회 체험 / Try 3 times as guest</a></p>
   </div>
 
   <!-- ══ GUEST BANNER ══ -->
   <div id="guest-banner">
     <div class="guest-banner-text">
-      비회원 체험 중 · <strong id="guest-count-text">3회</strong> 남음 · 로그인하면 무제한 이용 가능
-      <br/><small style="color:rgba(255,255,255,.45);">Guest mode · Unlimited access after login.</small>
+      비회원 체험 중 &nbsp;·&nbsp; <strong id="guest-count-text">3회</strong> 남음 &nbsp;·&nbsp; 로그인 시 무제한 이용
     </div>
     <div class="guest-banner-btns">
       <button class="guest-btn primary"   onclick="openModal('login')">로그인</button>
@@ -664,7 +560,8 @@
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('login')">✕</button>
       <div class="modal-title">로그인</div>
-      <div class="modal-sub">Welcome back! / 돌아오신 것을 환영합니다</div>
+      <div class="modal-sub">Welcome back</div>
+      <div class="modal-divider"></div>
       <div class="form-group">
         <label>아이디 (ID)<span class="req">*</span></label>
         <input class="form-input" id="login-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username"/>
@@ -676,7 +573,7 @@
       <div class="form-msg" id="login-msg"></div>
       <div id="captcha-box"><div id="turnstile-container"></div></div>
       <button class="btn-submit" id="login-submit" onclick="doLogin()">로그인 / Login</button>
-      <div class="divider-or" style="margin-top:13px;">또는 / or</div>
+      <div class="divider-or" style="margin-top:12px;">또는 / or</div>
       <button class="btn-google" onclick="googleLogin()">
         <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         Google로 로그인 / Sign in with Google
@@ -690,7 +587,8 @@
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('signup')">✕</button>
       <div class="modal-title">회원가입</div>
-      <div class="modal-sub">Create your account / 계정을 만들어 보세요</div>
+      <div class="modal-sub">Create your account</div>
+      <div class="modal-divider"></div>
       <div class="form-row">
         <div class="form-group">
           <label>아이디<span class="req">*</span></label>
@@ -716,7 +614,7 @@
         <input class="form-input" id="su-email" type="email" placeholder="example@email.com" autocomplete="email"/>
       </div>
       <div class="form-group">
-        <label>전화번호 <small style="color:var(--muted)">(선택)</small></label>
+        <label>전화번호 <small style="color:var(--muted);font-weight:400">(선택)</small></label>
         <input class="form-input" id="su-phone" type="tel" placeholder="010-0000-0000"/>
       </div>
       <div class="agree-box">
@@ -724,17 +622,16 @@
           <input type="checkbox" id="su-agree"/>
           <span>
             아래 사항에 동의합니다. (필수)<br/>
-            ① 수집 항목: 아이디, 이름, 국적, 이메일, 전화번호(선택)<br/>
+            ① 수집 항목: 아이디·이름·국적·이메일·전화번호(선택)<br/>
             ② 수집 목적: 회원 관리, 서비스 제공, 광고·마케팅<br/>
-            ③ 보유 기간: 회원 탈퇴 시까지<br/>
-            ④ 제3자 제공: 광고·서비스 개선 목적에 한해 제공될 수 있음<br/>
-            <a href="https://shim-hyunju.github.io/privacy.html" target="_blank" style="color:var(--accent2);font-weight:700;">📄 개인정보 처리방침 전문 보기</a>
+            ③ 보유 기간: 탈퇴 시까지 &nbsp; ④ 제3자 제공: 광고·개선 목적 한함<br/>
+            <a href="https://shim-hyunju.github.io/privacy.html" target="_blank" style="color:var(--accent);font-weight:500;">📄 개인정보 처리방침 전문 보기</a>
           </span>
         </label>
       </div>
       <div class="form-msg" id="signup-msg"></div>
       <button class="btn-submit" id="signup-submit" onclick="doSignup()">회원가입 완료 / Sign Up</button>
-      <div class="divider-or" style="margin-top:13px;">또는 / or</div>
+      <div class="divider-or" style="margin-top:12px;">또는 / or</div>
       <button class="btn-google" onclick="googleLogin()">
         <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         Google로 가입 / Sign up with Google
@@ -749,8 +646,9 @@
       <button class="modal-close" onclick="closeModal('withdraw')">✕</button>
       <div class="modal-title danger">회원탈퇴</div>
       <div class="modal-sub">Delete Account / 계정 영구 삭제</div>
+      <div class="modal-divider" style="background:var(--danger)"></div>
       <div class="modal-danger-zone">
-        <div style="font-size:20px;flex-shrink:0">⚠️</div>
+        <div style="font-size:18px;flex-shrink:0;margin-top:1px">⚠️</div>
         <div class="modal-danger-text"><strong>탈퇴 시 모든 개인정보가 즉시 삭제되며 복구할 수 없습니다.</strong><br/>All personal data will be permanently deleted.</div>
       </div>
       <div class="form-group"><label>아이디 (ID)<span class="req">*</span></label><input class="form-input" id="wd-username" type="text" placeholder="가입 시 사용한 아이디"/></div>
@@ -763,10 +661,8 @@
 
   <!-- ══ SHELL ══ -->
   <div class="shell">
-
-    <!-- 헤더 -->
     <header>
-      <div class="header-logo">Dr.Shim's Korean Lab</div>
+      <div class="header-logo">Dr.<em style="color:var(--accent);font-style:normal">Shim</em>'s Korean Lab</div>
 
       <nav class="header-nav" id="mainNav">
         <button class="nav-btn active" onclick="showPage('dict')"  id="nav-dict">친절한 한국어 검색 사전</button>
@@ -777,7 +673,7 @@
       </nav>
 
       <div class="header-auth">
-        <div id="auth-buttons">
+        <div id="auth-buttons" style="display:flex;gap:6px;">
           <button class="btn-login"  onclick="openModal('login')">로그인</button>
           <button class="btn-signup" onclick="openModal('signup')">회원가입</button>
         </div>
@@ -793,7 +689,6 @@
       </button>
     </header>
 
-    <!-- 모바일 메뉴 -->
     <div class="mobile-menu" id="mobileMenu">
       <button class="nav-btn active" onclick="showPage('dict',true)" id="mnav-dict">친절한 한국어 검색 사전</button>
       <button class="nav-btn"        onclick="showPage('cs1', true)" id="mnav-cs1">준비 중 1</button>
@@ -802,130 +697,106 @@
       <button class="nav-btn"        onclick="showPage('cs4', true)" id="mnav-cs4">준비 중 4</button>
     </div>
 
-    <!-- 콘텐츠 -->
     <div class="content-area">
 
       <!-- ── PAGE: 사전 ── -->
       <div class="page active" id="page-dict">
+        <div class="deco-line"></div>
 
-        <!-- 왼쪽 -->
-        <div class="left-panel">
-          <div class="eyebrow"><span class="eyebrow-dot"></span> Tool 01 · Dr.Shim's Korean Lab</div>
+        <div class="main-card">
+          <div class="tool-tag">Tool 01 &nbsp;·&nbsp; Dr.Shim's Korean Lab</div>
+
           <h1 class="main-title">친절한 한국어 검색 사전</h1>
-          <p class="main-subtitle">A Kindly Korean Search Dictionary</p>
-          <p class="main-desc">한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요!</p>
-          <p class="main-desc-en">Find words, compounds &amp; sentences easily.</p>
+          <div class="title-underline"></div>
 
-          <div class="feature-chips">
-            <span class="chip"><i class="fas fa-search"></i> 다양한 검색 단위</span>
-            <span class="chip"><i class="fas fa-language"></i> 다국어 번역</span>
-            <span class="chip"><i class="fas fa-lightbulb"></i> 문맥 이해</span>
+          <p class="main-subtitle">A Kindly Korean Search Dictionary</p>
+          <p class="main-desc">한국어 단어, 복합 어휘, 문장까지 쉽고 편리하게 찾아보세요.</p>
+
+          <div class="feature-row">
+            <div class="feature-item"><i class="fas fa-search"></i> 다양한 검색 단위</div>
+            <div class="feature-sep"></div>
+            <div class="feature-item"><i class="fas fa-language"></i> 다국어 번역</div>
+            <div class="feature-sep"></div>
+            <div class="feature-item"><i class="fas fa-lightbulb"></i> 문맥 이해</div>
           </div>
 
-          <!-- 사용법 (시작 버튼 위) -->
-          <div class="left-how-cards">
-            <div class="left-how-card">
+          <div class="how-row">
+            <div class="how-item">
               <div class="how-num">1</div>
-              <div class="how-text-wrap">
-                <h4>한국어만 입력하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Enter Korean Only</span></h4>
+              <div class="how-text">
+                <h4>한국어만 입력하세요</h4>
                 <p>이 사전은 한국어 어휘만 제공합니다. 외국어는 입력하지 마세요.</p>
               </div>
             </div>
-            <div class="left-how-card">
+            <div class="how-item">
               <div class="how-num">2</div>
-              <div class="how-text-wrap">
-                <h4>문장 단위로 검색하세요 <span style="color:var(--muted);font-weight:400;font-size:10px">/ Search by Sentence</span></h4>
+              <div class="how-text">
+                <h4>문장 단위로 검색하세요</h4>
                 <p>문장 전체를 입력하면 문맥에 맞는 어휘를 더 정확히 찾을 수 있습니다.</p>
               </div>
             </div>
           </div>
 
           <button class="cta-btn" onclick="goToDict()">
-            지금 시작하기! / Let's Get Started!
-            <span class="cta-arrow">→</span>
+            <span>지금 시작하기 &nbsp;/&nbsp; Let's Get Started</span>
+            <i class="fas fa-arrow-right"></i>
           </button>
 
-          <div class="donate-row">
-            <img src="static/images/drShim.png" alt="Dr.Shim" class="donate-avatar"
-              onerror="this.src='https://placehold.co/36x36/dbeafe/3b82f6?text=S'"/>
-            <span style="font-size:11px;color:var(--muted)">후원 / Donate ▶</span>
+          <div class="bottom-row">
             <a class="donate-link" href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener">
               <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=Dr.shim&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00" alt="Donate"/>
             </a>
+            <span class="bottom-meta">
+              © Dr.Shim All rights reserved &nbsp;·&nbsp;
+              <a href="mailto:love3462@nate.com">love3462@nate.com</a>
+            </span>
+            <span id="member-count">회원 수를 불러올 수 없습니다</span>
           </div>
         </div>
+      </div>
 
-        <!-- 오른쪽 -->
-        <div class="right-panel">
-
-          <!-- 공지 -->
-          <div>
-            <div class="panel-section-title">공지 / Notice</div>
-            <div class="notice-cards">
-              <div class="notice-card ko">
-                <div class="notice-head"><span>🇰🇷</span><span>공지</span></div>
-                이 프로그램은 구글 크롬에서 정상 작동합니다. 그 외 브라우저에서는 '발음 듣기' 등 일부 기능이 작동하지 않을 수 있습니다. 무료 API 및 호스팅 서비스를 이용하므로 처리 속도가 느리거나 트래픽 제한으로 오류가 발생할 수 있습니다.
-              </div>
-              <div class="notice-card en">
-                <div class="notice-head"><span>🌐</span><span>Notice</span></div>
-                This program works normally in Chrome. Some features may not work in other browsers. Free APIs and hosting services are used, so execution errors may occur due to traffic limits or slow processing.
-              </div>
-            </div>
-          </div>
-
-          <!-- 저작권 -->
-          <div style="text-align:center; padding: 4px 0 2px;">
-            <p style="font-size:11px;color:var(--muted)">© Dr.Shim All rights reserved &nbsp;·&nbsp; <a href="mailto:love3462@nate.com" style="color:var(--muted)">love3462@nate.com</a></p>
-            <p id="member-count" style="text-align:center; font-size:11px; color:#888; margin-top:10px;">회원 수: 불러오는 중...</p>
-          </div>
-
-        </div><!-- /right-panel -->
-
-      </div><!-- /page-dict -->
-
-      <!-- ── COMING SOON 페이지들 ── -->
+      <!-- ── COMING SOON ── -->
       <div class="page" id="page-cs1">
         <div class="coming-page">
-          <div class="coming-icon">🔬</div>
-          <div class="coming-badge">준비 중 / Coming Soon</div>
-          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <div class="coming-glyph">語</div>
+          <div class="coming-badge">Coming Soon · 준비 중</div>
+          <h2>새로운 도구 준비 중입니다</h2>
           <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
           <div class="progress-track"><div class="progress-fill"></div></div>
         </div>
       </div>
       <div class="page" id="page-cs2">
         <div class="coming-page">
-          <div class="coming-icon">✏️</div>
-          <div class="coming-badge">준비 중 / Coming Soon</div>
-          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <div class="coming-glyph">文</div>
+          <div class="coming-badge">Coming Soon · 준비 중</div>
+          <h2>새로운 도구 준비 중입니다</h2>
           <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
           <div class="progress-track"><div class="progress-fill"></div></div>
         </div>
       </div>
       <div class="page" id="page-cs3">
         <div class="coming-page">
-          <div class="coming-icon">📖</div>
-          <div class="coming-badge">준비 중 / Coming Soon</div>
-          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <div class="coming-glyph">讀</div>
+          <div class="coming-badge">Coming Soon · 준비 중</div>
+          <h2>새로운 도구 준비 중입니다</h2>
           <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
           <div class="progress-track"><div class="progress-fill"></div></div>
         </div>
       </div>
       <div class="page" id="page-cs4">
         <div class="coming-page">
-          <div class="coming-icon">🎓</div>
-          <div class="coming-badge">준비 중 / Coming Soon</div>
-          <h2>새로운 도구<br/>준비 중입니다</h2>
+          <div class="coming-glyph">學</div>
+          <div class="coming-badge">Coming Soon · 준비 중</div>
+          <h2>새로운 도구 준비 중입니다</h2>
           <p>더 유익한 한국어 학습 도구를 만들고 있습니다.<br/>A new Korean learning tool is being prepared.</p>
           <div class="progress-track"><div class="progress-fill"></div></div>
         </div>
       </div>
 
-    </div><!-- /content-area -->
-  </div><!-- /shell -->
+    </div>
+  </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // ─── CAPTCHA ───────────────────────────────────
+  <script>
     let captchaToken = null;
     let turnstileWidgetId = null;
 
@@ -933,8 +804,7 @@
 
     function renderCaptcha() {
       const container = document.getElementById('turnstile-container');
-      container.innerHTML = '';
-      turnstileWidgetId = null;
+      container.innerHTML = ''; turnstileWidgetId = null;
       turnstileWidgetId = turnstile.render(container, {
         sitekey: '0x4AAAAAACsRndMrjUbzBlq-',
         callback: onCaptchaSuccess
@@ -951,20 +821,17 @@
       if (c) c.innerHTML = '';
     }
 
-    // ─── 설정 ──────────────────────────────────────
-    const API_BASE        = 'https://drshim.pythonanywhere.com/api';
-    const GOOGLE_CLIENT_ID= '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
-    const TOKEN_KEY       = 'drshim_token';
-    const GUEST_MAX       = 3;
-    const GUEST_KEY       = 'drshim_guest_count';
-    const GUEST_DATE      = 'drshim_guest_date';
+    const API_BASE         = 'https://drshim.pythonanywhere.com/api';
+    const GOOGLE_CLIENT_ID = '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
+    const TOKEN_KEY        = 'drshim_token';
+    const GUEST_MAX        = 3;
+    const GUEST_KEY        = 'drshim_guest_count';
+    const GUEST_DATE       = 'drshim_guest_date';
 
-    // ─── 토큰 ──────────────────────────────────────
     function saveToken(t)  { sessionStorage.setItem(TOKEN_KEY, t); }
     function getToken()    { return sessionStorage.getItem(TOKEN_KEY); }
     function removeToken() { sessionStorage.removeItem(TOKEN_KEY); }
 
-    // ─── 비회원 ────────────────────────────────────
     function getGuestCount() {
       const today = new Date().toDateString();
       if (localStorage.getItem(GUEST_DATE) !== today) {
@@ -975,8 +842,7 @@
     }
     function incrementGuestCount() {
       const c = getGuestCount() + 1;
-      localStorage.setItem(GUEST_KEY, String(c));
-      return c;
+      localStorage.setItem(GUEST_KEY, String(c)); return c;
     }
     function isGuestMode() { return sessionStorage.getItem('drshim_guest') === '1'; }
 
@@ -1004,7 +870,6 @@
       document.getElementById('guest-count-text').textContent = remaining + '회';
     }
 
-    // ─── 페이지 전환 ───────────────────────────────
     const pages = ['dict','cs1','cs2','cs3','cs4'];
 
     function showPage(id, closeMobile) {
@@ -1031,7 +896,6 @@
       icon.className = open ? 'fas fa-times' : 'fas fa-bars';
     }
 
-    // ─── 모달 ──────────────────────────────────────
     function openModal(type) {
       document.getElementById('modal-' + type).classList.add('open');
       if (type === 'login' || type === 'signup') clearMsg(type);
@@ -1040,8 +904,7 @@
       document.getElementById('modal-' + type).classList.remove('open');
     }
     function switchModal(from, to) {
-      closeModal(from);
-      setTimeout(() => openModal(to), 150);
+      closeModal(from); setTimeout(() => openModal(to), 150);
     }
 
     document.querySelectorAll('.modal-overlay').forEach(el => {
@@ -1051,18 +914,15 @@
       if (e.key === 'Enter') doLogin();
     });
 
-    // ─── 메시지 ────────────────────────────────────
     function showMsg(id, text, type) {
       const el = document.getElementById(id);
-      el.textContent = text;
-      el.className = 'form-msg ' + type;
+      el.textContent = text; el.className = 'form-msg ' + type;
     }
     function clearMsg(scope) {
       const el = document.getElementById(scope + '-msg');
       if (el) el.className = 'form-msg';
     }
 
-    // ─── UI 상태 ───────────────────────────────────
     function setLoggedIn(name) {
       document.getElementById('auth-gate').classList.remove('visible');
       document.getElementById('auth-buttons').style.display = 'none';
@@ -1077,7 +937,6 @@
       sessionStorage.removeItem('drshim_guest');
     }
 
-    // ─── 토큰 검증 (페이지 로드) ───────────────────
     async function checkAuth() {
       const token = getToken();
       if (!token) {
@@ -1089,16 +948,14 @@
       }
       try {
         const res  = await fetch(`${API_BASE}/verify-token`, {
-          method: 'GET',
-          headers: { 'Authorization': 'Bearer ' + token }
+          method:'GET', headers:{'Authorization':'Bearer '+token}
         });
         const data = await res.json();
         if (res.ok) { setLoggedIn(data.name); }
-        else         { removeToken(); setLoggedOut(); }
+        else { removeToken(); setLoggedOut(); }
       } catch { removeToken(); setLoggedOut(); }
     }
 
-    // ─── Google 로그인 ─────────────────────────────
     function googleLogin() {
       if (!window.google) { alert('Google 로그인을 불러오는 중입니다. 잠시 후 다시 시도해주세요.'); return; }
       google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, auto_select: false });
@@ -1121,7 +978,6 @@
       } catch { alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.'); }
     }
 
-    // ─── 로그인 ────────────────────────────────────
     async function doLogin() {
       const username = document.getElementById('login-username').value.trim();
       const password = document.getElementById('login-password').value;
@@ -1136,15 +992,12 @@
           body: JSON.stringify({ username, password, captcha_token: captchaToken || null })
         });
         const data = await res.json();
-
         if (res.ok) {
           captchaToken = null;
           document.getElementById('captcha-box').style.display = 'none';
-          resetCaptcha();
-          saveToken(data.token);
+          resetCaptcha(); saveToken(data.token);
           document.getElementById('modal-login').classList.remove('open');
-          setLoggedIn(data.name);
-          return;
+          setLoggedIn(data.name); return;
         }
         if (res.status === 401) {
           captchaToken = null;
@@ -1159,15 +1012,13 @@
           captchaToken = null;
           showMsg('login-msg', data.error || '봇 검증을 완료해주세요.', 'error');
           document.getElementById('captcha-box').style.display = 'block';
-          renderCaptcha();
-          return;
+          renderCaptcha(); return;
         }
         showMsg('login-msg', data.error || '로그인 실패', 'error');
       } catch { showMsg('login-msg','서버 연결 실패','error'); }
       finally  { btn.disabled = false; btn.textContent = '로그인 / Login'; }
     }
 
-    // ─── 회원가입 ──────────────────────────────────
     async function doSignup() {
       const username    = document.getElementById('su-username').value.trim();
       const password    = document.getElementById('su-password').value;
@@ -1191,29 +1042,24 @@
         });
         const data = await res.json();
         if (res.ok) { showMsg('signup-msg','회원가입이 완료되었습니다! 로그인해주세요.','success'); setTimeout(()=>switchModal('signup','login'),1800); }
-        else         { showMsg('signup-msg', data.error||'회원가입에 실패했습니다.','error'); }
+        else { showMsg('signup-msg', data.error||'회원가입에 실패했습니다.','error'); }
       } catch { showMsg('signup-msg','서버에 연결할 수 없습니다.','error'); }
       finally  { btn.disabled = false; btn.textContent = '회원가입 완료 / Sign Up'; }
     }
 
-    // ─── 사전 이동 ─────────────────────────────────
     function goToDict() {
       const token = getToken();
-      if (token) { window.open('https://shimgoon.pythonanywhere.com/?token=' + encodeURIComponent(token), '_blank'); return; }
+      if (token) { window.open('https://shimgoon.pythonanywhere.com/?token='+encodeURIComponent(token),'_blank'); return; }
       if (isGuestMode()) {
-        const used = incrementGuestCount();
-        updateGuestBanner();
+        const used = incrementGuestCount(); updateGuestBanner();
         if (used > GUEST_MAX) return;
-        window.open('https://shimgoon.pythonanywhere.com/?guest=1', '_blank');
-        return;
+        window.open('https://shimgoon.pythonanywhere.com/?guest=1','_blank'); return;
       }
       openModal('login');
     }
 
-    // ─── 로그아웃 ──────────────────────────────────
     function doLogout() { removeToken(); setLoggedOut(); }
 
-    // ─── 회원탈퇴 ──────────────────────────────────
     async function doWithdraw() {
       const username = document.getElementById('wd-username').value.trim();
       const password = document.getElementById('wd-password').value;
@@ -1230,25 +1076,35 @@
         if (!loginRes.ok) { showMsg('withdraw-msg','아이디 또는 비밀번호가 올바르지 않습니다.','error'); return; }
 
         const delRes  = await fetch(`${API_BASE}/delete-account`, {
-          method:'DELETE', headers:{ 'Authorization':'Bearer '+loginData.token }
+          method:'DELETE', headers:{'Authorization':'Bearer '+loginData.token}
         });
         const delData = await delRes.json();
         if (delRes.ok) {
           showMsg('withdraw-msg','탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.','success');
           removeToken();
-          setTimeout(()=>{ closeModal('withdraw'); setLoggedOut(); document.getElementById('wd-username').value=''; document.getElementById('wd-password').value=''; }, 2000);
+          setTimeout(()=>{
+            closeModal('withdraw'); setLoggedOut();
+            document.getElementById('wd-username').value='';
+            document.getElementById('wd-password').value='';
+          }, 2000);
         } else { showMsg('withdraw-msg', delData.error||'탈퇴 처리 중 오류가 발생했습니다.','error'); }
       } catch { showMsg('withdraw-msg','서버에 연결할 수 없습니다.','error'); }
       finally  { btn.disabled = false; btn.textContent = '탈퇴하기 / Delete My Account'; }
     }
 
-    // ─── 초기화 ────────────────────────────────────
     checkAuth();
 
-    // ─── 회원 수 ────────────────────────────────────
     async function loadMemberCount() {
       try {
-        const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
+        const res  = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
-          "회원 �
+          "회원 수: " + (data.count ?? data.user_count ?? '?') + "명";
+      } catch {
+        document.getElementById("member-count").textContent = "회원 수를 불러올 수 없습니다";
+      }
+    }
+    loadMemberCount();
+  </script>
+</body>
+</html>
