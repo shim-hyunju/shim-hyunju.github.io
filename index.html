@@ -588,6 +588,7 @@
         Google로 로그인 / Sign in with Google
       </button>
       <div class="modal-switch">계정이 없으신가요? <a onclick="switchModal('login','signup')">회원가입 하기</a></div>
+      <div class="modal-switch" style="margin-top:6px;">아이디/비밀번호를 잊으셨나요? <a onclick="switchModal('login','find-id')">아이디 찾기</a> &nbsp;·&nbsp; <a onclick="switchModal('login','find-pw')">비밀번호 재설정</a></div>
     </div>
   </div>
 
@@ -646,6 +647,52 @@
         Google로 가입 / Sign up with Google
       </button>
       <div class="modal-switch">이미 계정이 있으신가요? <a onclick="switchModal('signup','login')">로그인 하기</a></div>
+    </div>
+  </div>
+
+  <!-- ══ FIND-ID MODAL ══ -->
+  <div class="modal-overlay" id="modal-find-id">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('find-id')">✕</button>
+      <div class="modal-title">아이디 찾기</div>
+      <div class="modal-sub">Find your ID</div>
+      <div class="modal-divider"></div>
+      <div class="form-group">
+        <label>이름<span class="req">*</span></label>
+        <input class="form-input" id="fi-name" type="text" placeholder="가입 시 입력한 이름"/>
+      </div>
+      <div class="form-group">
+        <label>이메일<span class="req">*</span></label>
+        <input class="form-input" id="fi-email" type="email" placeholder="가입 시 입력한 이메일"/>
+      </div>
+      <div class="form-msg" id="find-id-msg"></div>
+      <button class="btn-submit" id="find-id-submit" onclick="doFindId()">아이디 찾기</button>
+      <div class="modal-switch" style="margin-top:10px;"><a onclick="switchModal('find-id','login')">← 로그인으로 돌아가기</a></div>
+    </div>
+  </div>
+
+  <!-- ══ FIND-PW MODAL ══ -->
+  <div class="modal-overlay" id="modal-find-pw">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('find-pw')">✕</button>
+      <div class="modal-title">비밀번호 재설정</div>
+      <div class="modal-sub">Reset Password</div>
+      <div class="modal-divider"></div>
+      <div class="form-group">
+        <label>아이디<span class="req">*</span></label>
+        <input class="form-input" id="fp-username" type="text" placeholder="가입 시 사용한 아이디"/>
+      </div>
+      <div class="form-group">
+        <label>이메일<span class="req">*</span></label>
+        <input class="form-input" id="fp-email" type="email" placeholder="가입 시 입력한 이메일"/>
+      </div>
+      <div class="form-msg" id="find-pw-msg"></div>
+      <div id="find-pw-result" style="display:none;background:#f0faf4;border:1px solid #b7e4c7;border-radius:4px;padding:12px 14px;margin-bottom:10px;text-align:center;">
+        <div style="font-size:11px;color:#2d7a4f;margin-bottom:6px;">임시 비밀번호가 발급되었습니다. 로그인 후 반드시 변경해주세요.</div>
+        <div id="find-pw-code" style="font-family:monospace;font-size:18px;font-weight:700;color:#1a1410;letter-spacing:.1em;"></div>
+      </div>
+      <button class="btn-submit" id="find-pw-submit" onclick="doResetPw()">임시 비밀번호 발급</button>
+      <div class="modal-switch" style="margin-top:10px;"><a onclick="switchModal('find-pw','login')">← 로그인으로 돌아가기</a></div>
     </div>
   </div>
 
@@ -1069,6 +1116,51 @@
     }
 
     function doLogout() { removeToken(); setLoggedOut(); }
+
+    async function doFindId() {
+      const name  = document.getElementById('fi-name').value.trim();
+      const email = document.getElementById('fi-email').value.trim();
+      if (!name || !email) { showMsg('find-id-msg', '이름과 이메일을 모두 입력해주세요.', 'error'); return; }
+      const btn = document.getElementById('find-id-submit');
+      btn.disabled = true; btn.textContent = '조회 중...';
+      try {
+        const res  = await fetch(`${API_BASE}/find-username`, {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ name, email })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showMsg('find-id-msg', `아이디: ${data.username}`, 'success');
+        } else {
+          showMsg('find-id-msg', data.error || '일치하는 계정을 찾을 수 없습니다.', 'error');
+        }
+      } catch { showMsg('find-id-msg', '서버 연결 실패', 'error'); }
+      finally  { btn.disabled = false; btn.textContent = '아이디 찾기'; }
+    }
+
+    async function doResetPw() {
+      const username = document.getElementById('fp-username').value.trim();
+      const email    = document.getElementById('fp-email').value.trim();
+      if (!username || !email) { showMsg('find-pw-msg', '아이디와 이메일을 모두 입력해주세요.', 'error'); return; }
+      const btn = document.getElementById('find-pw-submit');
+      btn.disabled = true; btn.textContent = '처리 중...';
+      try {
+        const res  = await fetch(`${API_BASE}/reset-password`, {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ username, email })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('find-pw-msg').className = 'form-msg';
+          document.getElementById('find-pw-code').textContent = data.temp_password;
+          document.getElementById('find-pw-result').style.display = 'block';
+          btn.style.display = 'none';
+        } else {
+          showMsg('find-pw-msg', data.error || '일치하는 계정을 찾을 수 없습니다.', 'error');
+          btn.disabled = false; btn.textContent = '임시 비밀번호 발급';
+        }
+      } catch { showMsg('find-pw-msg', '서버 연결 실패', 'error'); btn.disabled = false; btn.textContent = '임시 비밀번호 발급'; }
+    }
 
     async function doWithdraw() {
       const username = document.getElementById('wd-username').value.trim();
