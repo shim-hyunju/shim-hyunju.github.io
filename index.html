@@ -259,6 +259,38 @@
       color: var(--muted); letter-spacing: .02em; margin-bottom: 32px;
     }
 
+    /* ─── 소개 텍스트 블록 ─── */
+    .intro-block {
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 640px;
+    }
+    .intro-lead {
+      font-family: var(--serif);
+      font-size: clamp(14px, 1.5vw, 17px);
+      font-weight: 700;
+      color: var(--ink2);
+      letter-spacing: -.01em;
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+    }
+    .intro-lead::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+      margin: 6px auto 0;
+    }
+    .intro-body {
+      font-size: clamp(12px, 1.2vw, 14px);
+      color: var(--ink3);
+      line-height: 1.75;
+      margin-bottom: 4px;
+    }
+
     .feature-row {
       display: flex; align-items: center; justify-content: center;
       gap: 0; margin-bottom: 32px; flex-wrap: wrap;
@@ -276,12 +308,12 @@
       margin-bottom: 32px; width: 100%; justify-content: center;
     }
     .how-item {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-bottom: 32px; flex-wrap: wrap;
+      display: flex; align-items: flex-start; justify-content: flex-start;
+      gap: 12px; margin-bottom: 0; flex-wrap: nowrap;
       background: rgba(255,255,255,.55);
       border: 1px solid var(--border);
-      border-radius: 6px; padding: 10px 14px;
-      flex: 1; max-width: 600px; text-align: left;
+      border-radius: 6px; padding: 12px 16px;
+      flex: 1; max-width: 340px; text-align: left;
       transition: border-color .2s;
     }
     .how-item:hover { border-color: var(--accent); }
@@ -769,10 +801,10 @@
             <div class="title-underline"></div>
           </div>
 
-          <div>
-            <p h3>형태소 분석 기반의 친절한 한국어 분석 사전!</p>
-            <p h3>모르는 한국어가 있는데, 그것이 단어인지, 문법 표현인지 모르겠다고요?</p>
-            <p h3>모르는 부분 그대로, 또는 문장 전체를 입력하는 방식으로 알고 싶은 단어, 문법 표현을 쉽고 편리하게 찾아보세요.</p>
+          <div class="intro-block">
+            <p class="intro-lead">형태소 분석 기반의 친절한 한국어 분석 사전!</p>
+            <p class="intro-body">모르는 한국어가 있는데, 그것이 단어인지, 문법 표현인지 모르겠다고요?</p>
+            <p class="intro-body">모르는 부분 그대로, 또는 문장 전체를 입력하는 방식으로 알고 싶은 단어, 문법 표현을 쉽고 편리하게 찾아보세요.</p>
           </div>
 
           <div class="feature-row">
@@ -783,18 +815,20 @@
             <div class="feature-item"><i class="fas fa-lightbulb"></i>Google Translater 기반의 다국어 번역</div>
           </div>
 
-          <div class="how-item">
-            <div class="how-num">1</div>
-            <div class="how-text">
-              <h4>한국어만 입력하세요</h4>
-              <p>이 사전은 한국어 어휘만 제공합니다. 다른 언어들로 검색하면 안돼요.</p>
+          <div class="how-row">
+            <div class="how-item">
+              <div class="how-num">1</div>
+              <div class="how-text">
+                <h4>한국어만 입력하세요</h4>
+                <p>이 사전은 한국어 어휘만 제공합니다. 다른 언어들로 검색하면 안돼요.</p>
+              </div>
             </div>
-          </div>
-          <div class="how-item">
-            <div class="how-num">2</div>
-            <div class="how-text">
-              <h4>표현, 또는 문장 단위로 검색하세요</h4>
-              <p>덩어리 표현 그대로 입력할 때 맥락에 맞는 어휘를 더욱 정확히 찾을 수 있습니다.</p>
+            <div class="how-item">
+              <div class="how-num">2</div>
+              <div class="how-text">
+                <h4>표현, 또는 문장 단위로 검색하세요</h4>
+                <p>덩어리 표현 그대로 입력할 때 맥락에 맞는 어휘를 더욱 정확히 찾을 수 있습니다.</p>
+              </div>
             </div>
           </div>
 
@@ -808,7 +842,7 @@
               <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a kfc&emoji=🍗&slug=Dr.shim&button_colour=FF5F5F&font_colour=ffffff&font_family=Bree&outline_colour=000000&coffee_colour=FFDD00" alt="Donate"/>
             </a>
             <span class="bottom-meta">
-              © Dr.Shim All rights reserved &nbsp;·&nbsp;love3462@gmail.com
+              © Dr.Shim All rights reserved &nbsp;·&nbsp;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="731f1c05164047454133141e121a1f5d101c1e">[email&#160;protected]</a>
             </span>
             <span id="member-count">회원 수를 불러올 수 없습니다</span>
           </div>
@@ -856,7 +890,7 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     let captchaToken = null;
     let turnstileWidgetId = null;
 
@@ -1204,14 +1238,4 @@
         const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
-          "회원 수: " + data.count + "명";
-      } catch (e) {
-        document.getElementById("member-count").textContent =
-          "회원 수를 불러올 수 없습니다.";
-      }
-    }
-    loadMemberCount();
-
-  </script>
-</body>
-</html>
+          "회원 수: " + data.
