@@ -1238,4 +1238,13 @@
         const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
-          "회원 수: " + data.
+          "회원 수: " + data.count + "명";
+      } catch {
+        document.getElementById("member-count").textContent = "";
+      }
+    }
+
+    loadMemberCount();
+  </script>
+</body>
+</html>
