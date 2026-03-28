@@ -913,7 +913,7 @@
       if (c) c.innerHTML = '';
     }
 
-    const API_BASE         = 'https://drshim.pythonanywhere.com/api';
+    const API_BASE         = 'https://shimgoon.pythonanywhere.com/api';
     const GOOGLE_CLIENT_ID = '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
     const TOKEN_KEY        = 'drshim_token';
     const GUEST_MAX        = 3;
@@ -1233,7 +1233,7 @@
 
     async function loadMemberCount() {
       try {
-        const res = await fetch("https://DrShim.pythonanywhere.com/api/user-count");
+        const res = await fetch("https://shimgoon.pythonanywhere.com/api/user-count");
         const data = await res.json();
         document.getElementById("member-count").textContent =
           "회원 수: " + data.count + "명";
