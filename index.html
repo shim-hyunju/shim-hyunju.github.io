@@ -581,14 +581,14 @@
         <button class="gate-btn-login"  onclick="openModal('login')">로그인 / Login</button>
         <button class="gate-btn-signup" onclick="openModal('signup')">회원가입 / Sign Up</button>
       </div>
-      <p class="gate-guest">또는 &nbsp;<a onclick="startGuestMode()">비회원으로 3회 체험 / Try 3 times as guest</a></p>
+      <p class="gate-guest">또는 &nbsp;<a onclick="startGuestMode()">비회원으로 1회 체험 / Try 1 times as guest</a></p>
     </div>
   </div>
 
   <!-- ══ GUEST BANNER ══ -->
   <div id="guest-banner">
     <div class="guest-banner-text">
-      비회원 체험 중 &nbsp;·&nbsp; <strong id="guest-count-text">3회</strong> 남음 &nbsp;·&nbsp; 로그인 시 무제한 이용
+      비회원 체험 중 &nbsp;·&nbsp; <strong id="guest-count-text">1회</strong> 남음 &nbsp;·&nbsp; 로그인 시 무제한 이용
     </div>
     <div class="guest-banner-btns">
       <button class="guest-btn primary"   onclick="openModal('login')">로그인</button>
@@ -916,7 +916,7 @@
     const API_BASE         = 'https://shimgoon.pythonanywhere.com/api';
     const GOOGLE_CLIENT_ID = '1048264306752-q17urklcokt1svo0f3h0k41kp06rgfi7.apps.googleusercontent.com';
     const TOKEN_KEY        = 'drshim_token';
-    const GUEST_MAX        = 3;
+    const GUEST_MAX        = 1;
     const GUEST_KEY        = 'drshim_guest_count';
     const GUEST_DATE       = 'drshim_guest_date';
 
