@@ -940,7 +940,7 @@
 
     function startGuestMode() {
       if (getGuestCount() >= GUEST_MAX) {
-        alert('오늘의 무료 체험 횟수(3회)를 모두 사용하셨습니다.\n로그인하시면 무제한으로 이용하실 수 있습니다.\n\nYou have used all 3 free tries today.\nPlease log in for unlimited access.');
+        alert('오늘의 무료 체험 횟수(1회)를 사용하셨습니다.\n로그인하시면 무제한으로 이용하실 수 있습니다.\n\nYou have used 1 free tries today.\nPlease log in for unlimited access.');
         return;
       }
       sessionStorage.setItem('drshim_guest', '1');
