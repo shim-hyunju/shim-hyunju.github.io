@@ -567,65 +567,45 @@
     }
     @media (min-width: 641px) { .hamburger { display:none; } }
 
-    /* ─── 공지사항(Notice) 스타일 ─── */
-    .notice-area {
+    /* ─── 공지사항 스타일 ─── */
+    .update-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0 32px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(217, 208, 196, 0.5); /* 아주 연한 구분선 */
+      border-bottom: 1px solid rgba(217, 208, 196, 0.5);
       width: 100%;
-      max-width: 540px;
-      margin: 0 auto 32px;
-      background: var(--paper2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 14px 20px;
-      text-align: left;
-      position: relative;
+      max-width: 600px;
       animation: fadeUp .6s ease both .2s;
     }
 
-    .notice-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .update-label {
+      font-family: var(--sans);
       font-size: 11px;
       font-weight: 700;
       color: var(--accent);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-
-    .notice-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .notice-item {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--ink2);
-      line-height: 1.5;
-    }
-
-    .notice-date {
-      font-family: var(--sans);
-      font-size: 11px;
-      color: var(--muted);
+      letter-spacing: 0.1em;
       flex-shrink: 0;
-      min-width: 65px;
     }
 
-    .notice-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .update-content {
+      font-size: 13px;
+      color: var(--ink3);
+      letter-spacing: -0.01em;
+      word-break: keep-all;
     }
 
     @media (max-width: 640px) {
-      .notice-area { margin-bottom: 24px; }
-      .notice-item { font-size: 12px; }
+      .update-line {
+        flex-direction: column;
+        gap: 4px;
+        padding: 10px 16px;
+      }
+      .update-content { font-size: 12px; text-align: center; }
     }
   </style>
 </head>
@@ -889,16 +869,9 @@
                 <p>맥락에 맞는 어휘를 더욱 정확히 찾을 수 있습니다.</p>
               </div>
             </div>
-            <div class="notice-area">
-              <div class="notice-label">
-                <i class="fas fa- megaphone"></i> <span>Recent Updates</span>
-              </div>
-              <ul class="notice-list">
-                <li class="notice-item">
-                  <span class="notice-date">2026.04.26</span>
-                  <span class="notice-text">속담 및 관용구 검색 기능이 추가될 예정임.</span>
-                </li>
-              </ul>
+            <div class="update-line">
+              <span class="update-label">Update</span>
+              <span class="update-content">2026-4-26: 속담 및 관용구 검색 기능이 추가 예정.</span>
             </div>
           </div>
 
