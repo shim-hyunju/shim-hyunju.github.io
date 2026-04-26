@@ -571,14 +571,14 @@
     .update-line {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin: 20px 0 32px;
-      padding: 12px 0;
-      border-top: 1px solid rgba(217, 208, 196, 0.5); /* 아주 연한 구분선 */
-      border-bottom: 1px solid rgba(217, 208, 196, 0.5);
+      justify-content: center; /* 가로 중앙 정렬 */
+      gap: 10px;
+      margin: 10px auto 28px; /* 위아래 간격 및 자동 좌우 중앙 */
+      padding: 10px 0;
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
+      border-top: 1px solid rgba(217, 208, 196, 0.4);
+      border-bottom: 1px solid rgba(217, 208, 196, 0.4);
       animation: fadeUp .6s ease both .2s;
     }
 
@@ -587,25 +587,33 @@
       font-size: 11px;
       font-weight: 700;
       color: var(--accent);
-      text-transform: uppercase;
       letter-spacing: 0.1em;
-      flex-shrink: 0;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* 라벨과 본문 사이의 작은 점 구분선 */
+    .update-sep {
+      width: 3px;
+      height: 3px;
+      background: var(--muted);
+      border-radius: 50%;
+      opacity: 0.5;
     }
 
     .update-content {
       font-size: 13px;
       color: var(--ink3);
-      letter-spacing: -0.01em;
-      word-break: keep-all;
+      letter-spacing: -0.02em;
+      text-align: center;
     }
 
     @media (max-width: 640px) {
       .update-line {
-        flex-direction: column;
-        gap: 4px;
-        padding: 10px 16px;
+        width: 90%;
+        gap: 8px;
       }
-      .update-content { font-size: 12px; text-align: center; }
+      .update-content { font-size: 12px; }
     }
   </style>
 </head>
@@ -869,16 +877,18 @@
                 <p>맥락에 맞는 어휘를 더욱 정확히 찾을 수 있습니다.</p>
               </div>
             </div>
-            <div class="update-line">
-              <span class="update-label">Update</span>
-              <span class="update-content">2026-4-26: 속담 및 관용구 검색 기능이 추가 예정.</span>
-            </div>
           </div>
 
           <button class="cta-btn" onclick="goToDict()">
             <span>지금 시작하기 &nbsp;/&nbsp; Let's Get Started</span>
             <i class="fas fa-arrow-right"></i>
           </button>
+
+          <div class="update-line">
+            <span class="update-label">Update</span>
+            <div class="update-sep"></div>
+            <span class="update-content">2026-4-26 : 속담 및 관용구 검색 기능이 추가 예정임.</span>
+          </div>
 
           <div class="bottom-row">
             <a class="donate-link" href="https://www.buymeacoffee.com/shimgoon" target="_blank" rel="noopener">
