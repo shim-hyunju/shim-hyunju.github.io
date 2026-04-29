@@ -2390,18 +2390,18 @@
 
       checkAuth();
 
-      async function loadMemberCount() {
+      async function loadVisitorCount() {
         try {
-          const res = await fetch(`${API_BASE}/user-count`);
+          const res = await fetch(`${API_BASE}/visitor-count`);
           const data = await res.json();
           document.getElementById("member-count").textContent =
-            "회원 수: " + data.count + "명";
+            "오늘 방문자 수: " + data.count + "명";
         } catch {
           document.getElementById("member-count").textContent = "";
         }
       }
 
-      loadMemberCount();
+      loadVisitorCount();
     </script>
   </body>
 </html>
