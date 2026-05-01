@@ -1201,18 +1201,18 @@
       /* ─── 공지사항 스타일 ─── */
       .update-line {
         display: flex;
-        align-items: center;
-        justify-content: center; /* 가로 중앙 정렬 */
-        gap: 10px;
-        margin: 10px auto 28px; /* 위아래 간격 및 자동 좌우 중앙 */
-        padding: 10px 0;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 12px;
+        margin: 10px auto 28px;
+        padding: 10px;
         width: 100%;
-        max-width: 500px;
+        max-width: 600px;
         border-top: 1px solid rgba(217, 208, 196, 0.4);
         border-bottom: 1px solid rgba(217, 208, 196, 0.4);
         animation: fadeUp 0.6s ease both 0.2s;
       }
-
+      
       .update-label {
         font-family: var(--sans);
         font-size: 11px;
@@ -1221,24 +1221,59 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
         white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 2px;
       }
-
+      
       /* 라벨과 본문 사이의 작은 점 구분선 */
       .update-sep {
-        width: 3px;
-        height: 3px;
-        background: var(--muted);
-        border-radius: 50%;
-        opacity: 0.5;
+        width: 1px;
+        height: 80px;
+        background: rgba(217, 208, 196, 0.6);
+        flex-shrink: 0;
       }
-
+      
       .update-content {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-height: 120px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) var(--paper);
+        flex: 1;
+      }
+      
+      .update-content::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      .update-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      .update-content::-webkit-scrollbar-thumb {
+        background: rgba(217, 208, 196, 0.6);
+        border-radius: 3px;
+      }
+      
+      .update-content::-webkit-scrollbar-thumb:hover {
+        background: var(--ink3);
+      }
+      
+      .update-content li {
         font-size: 13px;
         color: var(--ink3);
         letter-spacing: -0.02em;
-        text-align: center;
+        line-height: 1.6;
+        margin-bottom: 8px;
+        padding: 0 4px;
       }
-
+      
+      .update-content li:last-child {
+        margin-bottom: 0;
+      }
+      
       @media (max-width: 640px) {
         .update-line {
           width: 90%;
@@ -1246,6 +1281,10 @@
         }
         .update-content {
           font-size: 12px;
+          max-height: 100px;
+        }
+        .update-sep {
+          height: 60px;
         }
       }
     </style>
@@ -1834,10 +1873,10 @@
             <div class="update-line">
               <span class="update-label">Update</span>
               <div class="update-sep"></div>
-              <span class="update-content">
+              <ul class="update-content">
                 <li>2026-05-01 한국어기초사전에 없는 TOPIK 복합표현이 추가되었습니다!</li>
                 <li>2026-04-28 속담, 관용구 검색 기능이 추가되었습니다!</li>
-              </span>
+              </ul>
             </div>
 
             <div class="bottom-row">
