@@ -1204,7 +1204,7 @@
         align-items: flex-start;
         justify-content: flex-start;
         gap: 12px;
-        margin: 10px auto 28px;
+        margin: 10px auto 16px;
         padding: 10px;
         width: 100%;
         max-width: 600px;
@@ -1228,7 +1228,8 @@
       /* 라벨과 본문 사이의 작은 점 구분선 */
       .update-sep {
         width: 1px;
-        height: 80px;
+        height: auto;
+        align-items: center;
         background: rgba(217, 208, 196, 0.6);
         flex-shrink: 0;
       }
@@ -1237,8 +1238,8 @@
         list-style: none;
         margin: 0;
         padding: 0;
-        max-height: 120px;
-        overflow-y: auto;
+        max-height: none;
+        overflow-y: hidden;
         scrollbar-width: thin;
         scrollbar-color: var(--border) var(--paper);
         flex: 1;
